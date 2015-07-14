@@ -1,0 +1,10 @@
+{
+	"includes": {
+		"controller": [
+			"PedalController"
+		],
+		"connection": [
+			"MidiConnection"
+		]
+	}
+}

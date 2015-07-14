@@ -1,0 +1,23 @@
+{
+  "name": "MultistompEditor",
+  "version": "0.0.0",
+  "authors": [
+    "SrMouraSilva <mateus.moura@hotmail.com>"
+  ],
+  "main": "index.html",
+  "moduleType": [
+    "es6"
+  ],
+  "keywords": [
+    "Multistomp;",
+    "Pedal"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
