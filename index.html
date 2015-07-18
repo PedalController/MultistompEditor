@@ -3,13 +3,24 @@
     <head>
         <meta charset="utf-8">
         <title></title>
-        <script src="dist/js/producao.js" charset="utf-8"></script>
+        <script src="dist/cache/babel.js" charset="utf-8"></script>
     </head>
     <body>
+        <div id="pedalboard">
+            <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+
         <script type="text/javascript">
-            window.onload = function() {
+            window.addEventListener("load", function() {
                 controller = new PedalController(null);
-            }
+            });
         </script>
     </body>
 </html>

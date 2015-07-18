@@ -1,6 +1,6 @@
 "use scrict";
 
-class PedalController implements OnMultistompListenner, OnUpdateListenner {
+export class PedalController implements OnMultistompListenner, OnUpdateListenner {
 
 	// bolean
 	started;

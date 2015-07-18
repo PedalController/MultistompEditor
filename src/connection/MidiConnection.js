@@ -1,4 +1,7 @@
-class MidiConnection implements MidiReaderListenner {
+"use scrict";
+
+
+export class MidiConnection implements MidiReaderListenner {
 
     /** Multistomp */
 	multistomp;

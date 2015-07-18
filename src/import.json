@@ -1,10 +1,31 @@
 {
 	"includes": {
+		"architecture/error": [
+			"ImplementationError"
+		],
+		"architecture/util": [
+			"Optional"
+		],
 		"controller": [
 			"PedalController"
 		],
 		"connection": [
 			"MidiConnection"
+		],
+		"domain/multistomp": [
+			"Effect",
+			"Multistomp",
+			"MultistompMessageConverter",
+			"Param",
+			"Patch"
+		],
+		"domain/multistomp/message": [
+			"ChangeMessage",
+			"Details",
+			"MultistompCause"
+		],
+		"multistomp/simulator": [
+			"MultistompSimulator"
 		]
 	}
 }

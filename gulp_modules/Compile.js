@@ -49,7 +49,7 @@ var Compile = {
 
 	babel: function(config) {
     return gulp.src(config.src.cache.concat)
-        .pipe(babel({stage: 0}))
+        .pipe(babel({stage: 0, modules: "ignore"}))
 		.pipe(rename(config.name.babel))
         .pipe(gulp.dest(config.cache));
 	},
