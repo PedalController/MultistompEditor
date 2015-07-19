@@ -1,0 +1,67 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<dom-module id="pedal-body">
+  <link rel="stylesheet" href="style.css" charset="utf-8">
+  <style>
+    :host {
+        display: block;
+
+        --pedal-body-color: red;
+        --pedal-body-color-dark: #bb0000;
+        --pedal-body-color-dark2: #dd0000;
+        --pedal-body-color-light: #ff5555;
+    }
+
+    .pedal {
+        background-color: var(--pedal-body-color);
+
+        box-shadow: 10px 30px 20px -5px rgba(0, 0, 0, 0.2),
+
+                    0px -5px 0px var(--pedal-body-color-light),
+                    0px 4px 0px var(--pedal-body-color-dark2),
+                    0px 25px 0px var(--pedal-body-color-dark),
+
+                    3px -3px 0px var(--pedal-body-color-dark),
+                    3px 25px 0px var(--pedal-body-color-dark),
+                    -3px -3px 0px var(--pedal-body-color-dark),
+                    -3px 25px 0px var(--pedal-body-color-dark),
+
+                    inset 20px 100px 200px -70px rgba(255,255,255,0.4);
+
+        border-left: 3px solid var(--pedal-body-color-dark);
+    }
+  </style>
+
+  <template>
+      <div data-color="{{color}}" class="pedal">
+          <content></content>
+      </div>
+  </template>
+
+<script>
+"use strict";
+
+class PedalBodyElement {
+    constructor() {
+        Polymer(PedalBodyElement.prototype);
+    }
+
+    get is() {
+        return "pedal-body";
+    }
+
+    get properties() {
+      return {
+        color: {
+          type: String,
+          value: "red"
+        },
+        datatest: String
+      };
+    }
+}
+
+new PedalBodyElement();
+
+</script>
+</dom-module>

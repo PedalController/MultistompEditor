@@ -4,17 +4,23 @@
         <meta charset="utf-8">
         <title></title>
         <link rel="stylesheet" href="dist/css.css" charset="utf-8">
+
+        <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+        <link rel="import" href="bower_components/polymer/polymer.html">
+
+        <link rel="import" href="dist/web-components/guitar-pedal/guitar-pedal.html">
+
         <script src="dist/cache/babel.js" charset="utf-8"></script>
     </head>
     <body>
         <div id="pedalboard">
             <ul>
-                <li><button type="button">Pedal 1</button></li>
-                <li><button type="button">Pedal 2</button></li>
-                <li><button type="button">Pedal 3</button></li>
-                <li><button type="button">Pedal 4</button></li>
-                <li><button type="button">Pedal 5</button></li>
-                <li><button type="button">Pedal 6</button></li>
+                <li><guitar-pedal name="Compressor"></guitar-pedal></li>
+                <li><guitar-pedal name="Compressor" color="yellow"></guitar-pedal></li>
+                <li><guitar-pedal name="Compressor" color="blue"></guitar-pedal></li>
+                <li><guitar-pedal name="Compressor"></guitar-pedal></li>
+                <li><guitar-pedal name="Compressor"></guitar-pedal></li>
+                <li><guitar-pedal name="Compressor"></guitar-pedal></li>
             </ul>
         </div>
 
@@ -27,10 +33,10 @@
                         controller = new PedalController(new ZoomGSeries(9, 5, 5));
                         controller.on();
 
-                        var buttons = document.querySelectorAll("button");
+                        var pedals = document.querySelectorAll("guitar-pedal");
 
-                        for (let i=0; i<buttons.length; i++) {
-                            buttons[i].onclick = function(argument) {
+                        for (let i=0; i<pedals.length; i++) {
+                            pedals[i].click = function(argument) {
                                 controller.toogleEffect(i);
                             }.bind(this);
                         }

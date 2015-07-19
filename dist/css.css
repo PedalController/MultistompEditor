@@ -8,7 +8,10 @@ body {
 }
 
 #pedalboard {
-
+    --pedal-body-color: #0000ff;
+    --pedal-body-color-dark: #0000bb;
+    --pedal-body-color-dark2: #0000dd;
+    --pedal-body-color-light: #5555ff;
 }
 #pedalboard ul {
     padding: 0;
@@ -28,7 +31,7 @@ body {
     height: 50vh;
 }
 
-li button {
-    width: 100%;
-    height: 40%;
+guitar-pedal {
+    min-width: 160px;
+    height: 250px;
 }

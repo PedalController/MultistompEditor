@@ -1,0 +1,99 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../pedal-body/pedal-body.html">
+<link rel="import" href="../pedal-knob/pedal-knob.html">
+
+<dom-module id="guitar-pedal">
+  <link rel="stylesheet" href="style.css" charset="utf-8">
+
+  <style is="custom-style">
+      :host {
+          display: inline-block;
+      }
+
+      pedal-body[color=blue] {
+          --pedal-body-color: #0000ff;
+          --pedal-body-color-dark: #0000bb;
+          --pedal-body-color-dark2: #0000dd;
+          --pedal-body-color-light: #5555ff;
+      }
+      pedal-body[color=red] {
+      }
+
+      pedal-body[color=yellow] {
+          --pedal-body-color: #FFDC00;
+          --pedal-body-color-dark: #FAC800;
+          --pedal-body-color-dark2: #FAB400;
+          --pedal-body-color-light: #FFF000;
+      }
+  </style>
+  <template>
+      <pedal-body id="pedal-body" color="{{color}}">
+
+        <div class="knobs">
+            <pedal-knob></pedal-knob>
+            <pedal-knob></pedal-knob>
+            <pedal-knob></pedal-knob>
+            <pedal-knob></pedal-knob>
+            <pedal-knob></pedal-knob>
+            <pedal-knob></pedal-knob>
+        </div>
+        <div class="knobs">
+            <pedal-knob></pedal-knob>
+            <pedal-knob></pedal-knob>
+            <pedal-knob></pedal-knob>
+        </div>
+
+        <div id="pedal-name">{{name}}</div>
+
+        <div id="pedal-led" class="led red"></div>
+
+        <button on-click="notify">{{toStatus}}</button>
+    </pedal-body>
+  </template>
+
+<script>
+"use strict";
+
+class GuitarPedalElement {
+    constructor() {
+        Polymer(GuitarPedalElement.prototype);
+    }
+
+    get is() {
+        return "guitar-pedal";
+    }
+
+    get properties() {
+      return {
+        name: String,
+        color: {
+            type:String,
+            value: "red"
+        },
+        actived: true
+      };
+    }
+
+    ready() {
+        this.$["pedal-body"].setAttribute("color", this.color);
+        this.listenner = function() {};
+        this.toStatus = this.actived ? "Disable" : "Active";
+    }
+
+    set click(value) {
+        this.listenner = value;
+    }
+
+    notify(evento, algo) {
+        this.listenner();
+
+        this.actived = !this.actived;
+        this.toStatus = this.actived ? "Disable" : "Active";
+
+        this.$["pedal-led"].classList.toggle("actived");
+    }
+}
+new GuitarPedalElement();
+
+</script>
+</dom-module>
