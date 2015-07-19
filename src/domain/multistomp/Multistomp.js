@@ -69,7 +69,7 @@ export class Multistomp implements OnChangeListenner<Patch> {
 		let details = new Details(Details.TypeChange.PATCH_NUMBER, this.idCurrentPatch);
 
 		let newMessage = new ChangeMessage(MultistompCause.MULTISTOMP, this, details);
-		//this.notify(newMessage);
+		this.notify(newMessage);
 	}
 
     /**

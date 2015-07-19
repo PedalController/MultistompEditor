@@ -27,8 +27,8 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 
 		this.pedal.addListenner(this);
 
-		this.controllerListenners.add(new Log("Controller"));
-		this.realMultistompListenners.add(new Log("Real Multistomp"));
+		this.controllerListenners.push(new Log("Controller"));
+		this.realMultistompListenners.push(new Log("Real Multistomp"));
 	}
 
 	/*************************************************/
@@ -44,25 +44,12 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 
 		this.connection.send(this.pedal.start());
 		this.realChange = false; // FIXME - GAMBIARRA
-		//onChange(message)
-		//this.connection.send(message)
-		//notify(realMultistompListenners, message)
-		//sleep();
-	}
-
-	/*
-	public void sleep() {
-		try {
-			Thread.sleep(50);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/** Close connection and turn off the pedal
 	 */
 	off() {
-		if (!this,started)
+		if (!this.started)
 			return;
 
 		this.started = false;
@@ -101,43 +88,43 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 	 * @param idEffect int
 	 */
 	toogleEffect(idEffect) {
-		this.pedal.currentPatch().effects().get(idEffect).toggle();
+		this.pedal.currentPatch().effects[idEffect].toggle();
 	}
 
 	/**
 	 * @param idEffect int
 	 */
 	hasActived(idEffect) {
-		return this.pedal.currentPatch().effects().get(idEffect).hasActived();
+		return this.pedal.currentPatch().effects[idEffect].hasActived();
 	}
 
 	/**
 	 * @param idEffect int
 	 */
 	activeEffect(idEffect) {
-		this.pedal.currentPatch().effects().get(idEffect).active();
+		this.pedal.currentPatch().effects[idEffect].active();
 	}
 
 	/**
 	 * @param idEffect int
 	 */
 	disableEffect(idEffect) {
-		this.pedal.currentPatch().effects().get(idEffect).disable();
+		this.pedal.currentPatch().effects[idEffect].disable();
 	}
 
 	/**
-	 * @param idEffect int
-	 * @param idParam int
-	 * @param value int
+	 * @param int idEffect
+	 * @param int idParam
+	 * @param int value
 	 */
 	setEffectParam(idEffect, idParam, value) {
-		this.pedal.currentPatch().effects().get(idEffect).params().get(idParam).setValue(value);
+		this.pedal.currentPatch().effects[idEffect].params[idParam].setValue(value);
 	}
 
 	/** @return Amount of effects that the current patch has
 	 */
 	getAmountEffects() {
-		return this.pedal.currentPatch().effects().size();
+		return this.pedal.currentPatch().effects.length;
 	}
 
 	/** @return listenner OnMultistompListenner
@@ -190,7 +177,7 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 	 * @param messages Messages
 	 */
 	notify(listenners, messages) {
-		for (listenner of listenners)
+		for (let listenner of listenners)
 			listenner.onChange(messages);
 	}
 

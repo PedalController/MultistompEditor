@@ -3,23 +3,40 @@
     <head>
         <meta charset="utf-8">
         <title></title>
+        <link rel="stylesheet" href="dist/css.css" charset="utf-8">
         <script src="dist/cache/babel.js" charset="utf-8"></script>
     </head>
     <body>
         <div id="pedalboard">
             <ul>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li><button type="button">Pedal 1</button></li>
+                <li><button type="button">Pedal 2</button></li>
+                <li><button type="button">Pedal 3</button></li>
+                <li><button type="button">Pedal 4</button></li>
+                <li><button type="button">Pedal 5</button></li>
+                <li><button type="button">Pedal 6</button></li>
             </ul>
         </div>
 
         <script type="text/javascript">
+            var controller;
             window.addEventListener("load", function() {
-                controller = new PedalController(null);
+                "use strict";
+                setTimeout(
+                    function() {
+                        controller = new PedalController(new ZoomGSeries(9, 5, 5));
+                        controller.on();
+
+                        var buttons = document.querySelectorAll("button");
+
+                        for (let i=0; i<buttons.length; i++) {
+                            buttons[i].onclick = function(argument) {
+                                controller.toogleEffect(i);
+                            }.bind(this);
+                        }
+                    },
+                    1000
+                );
             });
         </script>
     </body>

@@ -60,7 +60,7 @@ export class Effect implements OnChangeListenner<Param> {
 	setState(state) {
 		this.state = state;
 
-		let details = new Details(TypeChange.PEDAL_STATUS, state ? 1 : 0);
+		let details = new Details(Details.TypeChange.PEDAL_STATUS, state ? 1 : 0);
 
 		let message = new ChangeMessage(MultistompCause.EFFECT, this, details);
 		this.notify(message);
@@ -70,7 +70,7 @@ export class Effect implements OnChangeListenner<Param> {
      * @return {Boolean}
      */
 	hasActived() {
-		return state;
+		return this.state;
 	}
 
     /**
@@ -79,13 +79,6 @@ export class Effect implements OnChangeListenner<Param> {
 	addParam(param) {
 		this.params.push(param);
 		param.setListenner(this);
-	}
-
-    /**
-     * @return {List<Param>}
-     */
-	params() {
-		return this.params;
 	}
 
     /**
@@ -116,7 +109,7 @@ export class Effect implements OnChangeListenner<Param> {
 	 */
 	//@Override
 	onChange(message) {
-		newMessage = new ChangeMessage(MultistompCause.SUPER, this, message);
+		let newMessage = new ChangeMessage(MultistompCause.SUPER, this, message);
 		this.notify(newMessage);
 	}
 

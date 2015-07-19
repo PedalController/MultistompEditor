@@ -4,18 +4,35 @@
 			"ImplementationError"
 		],
 		"architecture/util": [
+			"BinarioUtil",
 			"Optional"
 		],
 		"controller": [
+			"PedalCompany",
 			"PedalController"
 		],
 		"connection": [
 			"MidiConnection"
 		],
+		"connection/codification": [
+			"MessageDecoderFactory",
+			"MessageEncoderFactory"
+		],
+		"connection/transport": [
+			"MidiTransmition",
+			"MidiSender"
+		],
+		"domain": [
+			"PedalType"
+		],
+		"domain/message": [
+			"CommonCause",
+			"Messages"
+		],
 		"domain/multistomp": [
 			"Effect",
 			"Multistomp",
-			"MultistompMessageConverter",
+			"MultistompMessagesConverter",
 			"Param",
 			"Patch"
 		],
@@ -25,7 +42,15 @@
 			"MultistompCause"
 		],
 		"multistomp/simulator": [
+			"Log",
 			"MultistompSimulator"
+		],
+		"multistomp/zoom/gseries": [
+			"ZoomGSeries",
+			"ZoomGSeriesCause",
+			"ZoomGSeriesEffect",
+			"ZoomGSeriesMessageEncoder",
+			"ZoomGSeriesMessages"
 		]
 	}
 }

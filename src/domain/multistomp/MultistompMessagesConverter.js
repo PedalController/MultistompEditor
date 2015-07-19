@@ -8,17 +8,16 @@ export class MultistompMessagesConverter {
      */
 	static convert(message) {
 		let msg = null;
-		let details = Messages.Details();
+		let details = new Messages.Details();
 
 		if (message.is(MultistompCause.MULTISTOMP))
-			msg = convertToPatch(message, details);
+			msg = this.convertToPatch(message, details);
 
 		else if (message.is(MultistompCause.EFFECT))
-			msg = convertStatusEffect(message, details);
+			msg = this.convertStatusEffect(message, details);
 
 		else if (message.is(MultistompCause.PATCH))
-			msg = convertSetParam(message, details);
-
+			msg = this.convertSetParam(message, details);
 
 		if (msg != null)
 			return Messages.For(msg);
@@ -33,9 +32,9 @@ export class MultistompMessagesConverter {
      * @return Message
      */
 	static convertToPatch(message, details) {
-		details.patch = message.causer().getIdCurrentPatch();
+		details.patch = message.causer.getIdCurrentPatch();
 
-		return new Message(CommonCause.TO_PATCH, details);
+		return new Messages.Message(CommonCause.TO_PATCH, details);
 	}
 
     /**
@@ -45,16 +44,16 @@ export class MultistompMessagesConverter {
      * @return Message
      */
 	static convertStatusEffect(message, details) {
-		let patch = message.nextMessage().causer();
-		details.patch = message.causer().patchs().indexOf(patch);
+		let patch = message.nextMessage.causer;
+		details.patch = message.causer.patchs.indexOf(patch);
 
-		let effect = message.realMessage().causer();
-		let idEffect = patch.effects().indexOf(effect);
+		let effect = message.realMessage().causer;
+		let idEffect = patch.effects.indexOf(effect);
 
 		details.effect = idEffect;
 		let cause = effect.hasActived() ? CommonCause.ACTIVE_EFFECT : CommonCause.DISABLE_EFFECT;
 
-		return new Message(cause, details);
+		return new Messages.Message(cause, details);
 	}
 
     /**
@@ -64,14 +63,14 @@ export class MultistompMessagesConverter {
      * @return Message
      */
 	static convertSetParam(message, details) {
-		let patch = message.nextMessage().causer();
-		let effect = message.nextMessage().nextMessage().causer();
-		let idEffect = patch.effects().indexOf(effect);
+		let patch = message.nextMessage.causer;
+		let effect = message.nextMessage.nextMessage.causer;
+		let idEffect = patch.effects.indexOf(effect);
 
 		details.effect = idEffect;
-		details.param = effect.params().indexOf(message.realMessage().causer());
-		details.value = message.realMessage().causer().getValue();
+		details.param = effect.params.indexOf(message.realMessage().causer);
+		details.value = message.realMessage().causer.getValue();
 
-		return new Message(CommonCause.SET_PARAM, details);
+		return new Messages.Message(CommonCause.SET_PARAM, details);
 	}
 }

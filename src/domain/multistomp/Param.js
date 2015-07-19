@@ -49,10 +49,10 @@ export class Param {
 
 		this.currentValue = newValue;
 
-		//let details = new Details(TypeChange.PARAM, currentValue);
+		let details = new Details(Details.TypeChange.PARAM, this.currentValue);
 
-		//let message = new ChangeMessage(MultistompCause.PATCH, this, details);
-		//this.notify(message);
+		let message = new ChangeMessage(MultistompCause.PATCH, this, details);
+		this.notify(message);
 	}
 
     /**
@@ -84,7 +84,7 @@ export class Param {
      * @return int
      */
 	getValue() {
-		return currentValue;
+		return this.currentValue;
 	}
 
     /**

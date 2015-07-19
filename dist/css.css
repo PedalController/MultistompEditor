@@ -1,0 +1,34 @@
+* {
+    box-sizing: border-box !important;
+}
+body {
+    padding: 0;
+    margin: 0;
+    background-color: #5A4E5B;
+}
+
+#pedalboard {
+
+}
+#pedalboard ul {
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#pedalboard li {
+    padding: 0;
+    margin: 10px;
+
+    background-color: #DB9C67;
+    min-width: 100px;
+    width: 31vw;
+    height: 50vh;
+}
+
+li button {
+    width: 100%;
+    height: 40%;
+}

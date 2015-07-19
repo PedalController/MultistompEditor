@@ -9,8 +9,8 @@ export class Details implements Cause {
     /**
      * @return Details
      */
-	NONE() {
-		return new Details(TypeChange.NONE, 0);
+	static NONE() {
+		return new Details(Details.TypeChange.NONE, 0);
 	}
 
     /**

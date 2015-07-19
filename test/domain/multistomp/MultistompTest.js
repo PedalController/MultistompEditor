@@ -1,8 +1,16 @@
 "use strict";
 
 describe("Multistomp", function() {
+    var pedaleira;
+
+    beforeEach(function() {
+        //pedaleira = new MultistompSimulator(5);
+        pedaleira = new MultistompSimulator(5);
+        pedaleira.addListenner(new Log("Test"));
+    });
+
     it("nextPatchTest()", function() {
-        let pedaleira = new MultistompSimulator(5);
+        //let pedaleira = new MultistompSimulator(5);
 
         expect(0).toBe(pedaleira.getIdCurrentPatch());
         pedaleira.nextPatch();
@@ -11,7 +19,7 @@ describe("Multistomp", function() {
     });
 
     it("nextPatchLimitTest()", function() {
-        let pedaleira = new MultistompSimulator(5);
+        //let pedaleira = new MultistompSimulator(5);
 
         expect(0).toBe(pedaleira.getIdCurrentPatch());
         pedaleira.toPatch(4);
@@ -22,7 +30,7 @@ describe("Multistomp", function() {
     });
 
     it("toPatchTest()", function() {
-        let pedaleira = new MultistompSimulator(5);
+        //let pedaleira = new MultistompSimulator(5);
 
         expect(0).toBe(pedaleira.getIdCurrentPatch());
 
@@ -32,7 +40,7 @@ describe("Multistomp", function() {
 
 
     it("toPatchLimitsTest()", function() {
-        let pedaleira = new MultistompSimulator(5);
+        //let pedaleira = new MultistompSimulator(5);
 
         expect(0).toBe(pedaleira.getIdCurrentPatch());
 
@@ -50,7 +58,7 @@ describe("Multistomp", function() {
     });
 
     it("beforePatchTest()", function() {
-        let pedaleira = new MultistompSimulator(5);
+        //let pedaleira = new MultistompSimulator(5);
 
         expect(0).toBe(pedaleira.getIdCurrentPatch());
 
@@ -65,7 +73,7 @@ describe("Multistomp", function() {
     });
 
     it("beforePatchLimitTest()", function() {
-        let pedaleira = new MultistompSimulator(5);
+        //let pedaleira = new MultistompSimulator(5);
 
         expect(0).toBe(pedaleira.getIdCurrentPatch());
 

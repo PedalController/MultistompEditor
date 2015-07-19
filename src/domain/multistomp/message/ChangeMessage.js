@@ -86,7 +86,7 @@ export class ChangeMessage<Causer> {
      * @param ChangeMessage<?> nextMessage
      */
     _constructorMessage(cause, causer, nextMessage) {
-		this._ChangeMessageDetails(cause, causer, Details.NONE());
+		this._constructorDetails(cause, causer, Details.NONE());
 		this.nextMessage = nextMessage;
 	}
 
@@ -101,20 +101,6 @@ export class ChangeMessage<Causer> {
 		this.details = details;
 	}
 
-	/** Who shot
-     * @return Causer
-     */
-	causer() {
-		return this.causer;
-	}
-
-	/** What has changed
-     * @return Cause
-     */
-	cause() {
-		return cause;
-	}
-
 	/** Details of what has changed
      * @return Details
      */
@@ -123,18 +109,11 @@ export class ChangeMessage<Causer> {
 	}
 
     /**
-     * @return ChangeMessage<?>
-     */
-	nextMessage() {
-		return nextMessage;
-	}
-
-    /**
      * @param Cause cause
      * @return {Boolean}
      */
 	is(cause) {
-		return cause.equals(this.realMessage().cause());
+		return cause === this.realMessage().cause;
 	}
 
     /**
@@ -143,8 +122,8 @@ export class ChangeMessage<Causer> {
 	realMessage() {
 		let message = this;
 
-		while (message.cause() == MultistompCause.SUPER)
-			message = message.nextMessage();
+		while (message.cause == MultistompCause.SUPER)
+			message = message.nextMessage;
 
 		return message;
 	}

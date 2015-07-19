@@ -14,6 +14,13 @@ export class Optional {
     }
 
     isPresent() {
-        return this.content == null;
+        return this.content !== null;
+    }
+
+    get() {
+        if (!this.isPresent())
+            throw new Error("NullPointerException");
+
+        return this.content;
     }
 }
