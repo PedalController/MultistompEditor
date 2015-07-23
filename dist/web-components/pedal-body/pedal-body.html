@@ -1,4 +1,5 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-image/iron-image.html">
 
 <dom-module id="pedal-body">
   <link rel="stylesheet" href="style.css" charset="utf-8">
@@ -30,12 +31,19 @@
 
         border-left: 3px solid var(--pedal-body-color-dark);
     }
+    .full {
+        position: inherit;
+        top: 0;
+        width:  100%;
+        height: 100%;
+    }
   </style>
 
   <template>
       <div data-color="{{color}}" class="pedal">
           <content></content>
       </div>
+      <iron-image class="full"></iron-image>
   </template>
 
 <script>

@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../pedal-body/pedal-body.html">
 <link rel="import" href="../pedal-knob/pedal-knob.html">
+<link rel="import" href="../webaudio-knob/webaudio-knob.html">
 
 <dom-module id="guitar-pedal">
   <link rel="stylesheet" href="style.css" charset="utf-8">
@@ -41,6 +42,7 @@
             <pedal-knob></pedal-knob>
             <pedal-knob></pedal-knob>
             <pedal-knob></pedal-knob>
+            <webaudio-knob value="0" min="-127" max="127" sprites="100"></webaudio-knob>
         </div>
 
         <div id="pedal-name">{{name}}</div>

@@ -1,10 +1,39 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+<script src="../../js/conic-gradient.js" charset="utf-8"></script>
+
 <dom-module id="pedal-knob">
   <link rel="stylesheet" href="style.css" charset="utf-8">
   <style>
+    * {
+        box-sizing: border-box !important;
+    }
     :host {
         display: inline-block;
+    }
+    .new-knob {
+      width: 50px;
+      height:50px;
+
+      border-radius: 50%; /* make it round */
+
+      background: conic-gradient(black, #666);
+    }
+
+    .new-knob::before {
+        content:'';
+        margin-left: calc(10% - 3px);
+        width:  35px;
+        height: 35px;
+
+        border-radius: 50%;
+
+        display: inline-block;
+
+        border: 3px solid black;
+        background: black;
+        box-shadow: inset 5px 5px 50px 0 #444;
     }
   </style>
 
