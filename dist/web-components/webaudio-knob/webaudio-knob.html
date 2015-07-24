@@ -3,16 +3,21 @@
 <dom-module id="webaudio-knob">
 
 <style>
-  :host *
+  :host {
       display: inline-block;
+
+      width: 40px;
+      height: 40px;
   }
   #knob {
+    width: 100%;
+    height: 100%;
+
     cursor: pointer;
-    width: 64px;
-    height: 64px;
     background-position-y: -64px;
     position: relative;
   }
+
   #value-tip {
     opacity: 0;
     border: solid 1px #666;
@@ -27,7 +32,7 @@
   }
 </style>
   <template>
-    <div class="knob" id="knob" on-mousedown="mousedown">
+    <div id="knob" on-mousedown="mousedown">
       <span id="value-tip">{{value}}</span>
     </div>
   </template>
@@ -70,21 +75,37 @@ class WebAudioKnobElement {
         },
         step:  {
             type:Number,
-            value: 3
+            value: 1
         },
         sprites: {
-            type:String,
-            value: 30
-        },
-        diameter: {
             type:Number,
-            value: 64
+            value: 24
         },
         src: {
             type:String,
-            value: 'dist/web-components/webaudio-knob/MiniBrute.png'
+            value: 'dist/web-components/webaudio-knob/plastic_knob.png'
+        },
+        isSprite: {
+            type: Boolean,
+            value: true
         }
       };
+    }
+
+    attached() {
+        let sprite = new Image();
+        sprite.onload = function() { this.calculeSprites(sprite); }.bind(this);
+        sprite.src = this.src;
+
+        this.$['knob'].style.backgroundImage = 'url('+this.src+')';
+        this.$['knob'].style.backgroundSize = this.offsetSize() + "px";
+    }
+
+    calculeSprites(sprite) {
+        this.isSprite = !(sprite.width == sprite.height);
+
+        if (this.isSprite)
+            this.sprites = sprite.height/sprite.width;
     }
 
     mousemove(e) {
@@ -103,24 +124,40 @@ class WebAudioKnobElement {
 
     update(value) {
         this.value = value < this.min ? this.min : value > this.max ? this.max : value;
-        var range = this.max - this.min;
-        var value = '-' + ~~(this.sprites / range * (range - this.min + this.value) + 1) * this.diameter + 'px';
 
-        if('backgroundPositionY' in this.$['knob'].style)
-            this.$['knob'].style.backgroundPositionY = value;
+        let knob = this.$['knob'];
+        if (this.isSprite)
+            this.updateByImage(knob, this.value);
         else
-            this.$['knob'].style.backgroundPosition="center " + value;
-
-        console.log(this.value);
-        this.$['knob'].style.transform = 'rotate('+this.value+'deg)';
+            this.updateByRodate(knob, this.value);
 
         this.fire('change');
     }
 
+    updateByImage(knob, value) {
+        var range = this.max - this.min;
+        var value = '-' + ~~(this.sprites / range * (range - this.min + this.value) + 1) * this.offsetSize() + 'px';
+
+        if('backgroundPositionY' in knob.style)
+            knob.style.backgroundPositionY = value;
+        else
+            knob.style.backgroundPosition="center " + value;
+    }
+
+    updateByRodate(knob, value) {
+        let angle = this.calculeAngle(this.value);
+        knob.style.transform = 'rotate('+angle+'deg)';
+    }
+
+    calculeAngle(value) {
+        let angleMin = 30;
+        let angleRange = 360 - 2 * angleMin;
+
+        let range = this.max - this.min;
+        return angleMin + angleRange * this.value / range;
+    }
+
     ready() {
-        this.$['knob'].style.width = this.diameter+'px';
-        this.$['knob'].style.height = this.diameter+'px';
-        this.$['knob'].style.background = 'url('+this.src+')';
         this.update.bind(this)(this.value);
     }
 
@@ -137,6 +174,13 @@ class WebAudioKnobElement {
         window.addEventListener('mousemove', this.boundMousemove, true);
         window.addEventListener('mouseup', this.boundCancel, true);
         e.preventDefault();
+    }
+
+    offsetSize() {
+        let knob = this.$['knob'];
+        let tamanho = knob.clientWidth < knob.clientHeight ? knob.clientWidth : knob.clientHeight;
+
+        return tamanho;
     }
 }
 
