@@ -3,6 +3,11 @@
 export class ImplemetationError extends Error {
 }
 
+"use strict"
+
+export class DeviceNotFoundError extends Error {
+}
+
 "use strict";
 
 export class BinarioUtil {
@@ -17,6 +22,118 @@ export class BinarioUtil {
 
 		return `[${returned}]`;
 	}
+}
+
+"use strict";
+
+export class MidiMessageTester {
+
+    // TestsResults
+	tests;
+
+    // MidiMessage
+	message;
+
+    /**
+     * @param MidiMessage message
+     */
+	constructor(message) {
+		this.message = message;
+	}
+
+    /**
+     * @return MidiMessageTester
+     */
+	init() {
+		this.tests = new Tests();
+
+		return this;
+	}
+
+    /**
+     * @return boolean
+     */
+	test() {
+		return this.tests.finalResult();
+	}
+
+    /**
+     * @param byte[] bytes
+     * @return {Boolean}
+     */
+	isLessThen(bytes) {
+		this.tests.add(this.message.length < bytes.length);
+
+		return this;
+	}
+
+    /**
+     * @param byte[] bytes
+     * @return MidiMessageTester
+     */
+	startingWith(bytes) {
+		if (!(bytes.length <= this.message.length)) {
+			this.tests.add(false);
+
+			return this;
+		}
+
+		for (let i=0; i < bytes.length; i++)
+			if (bytes[i] != this.message[i])
+				this.tests.add(false);
+
+		this.tests.add(true);
+
+		return this;
+	}
+
+    /**
+     * @param int size
+     * @return MidiMessageTester
+     */
+	sizeIs(size) {
+		this.tests.add(this.message.length == size);
+
+		return this;
+	}
+
+    /**
+     * @param byte[] bytes
+     * @return MidiMessageTester
+     */
+	endingWith(bytes) {
+		if (!(bytes.length <= this.message.length)) {
+			this.tests.add(false);
+
+			return this;
+		}
+
+		for (let i=1; i<=bytes.length; i++)
+			if (bytes[bytes.length-i] != this.message[this.message.length-i])
+				this.tests.add(false);
+
+		this.tests.add(true);
+
+		return this;
+	}
+}
+
+export class Tests {
+
+    result = true;
+
+    /**
+     * @param boolean result
+     */
+    add(result) {
+        if (this.result == false)
+            return;
+        this.result = result;
+    }
+
+    finalResult() {
+        return this.result;
+    }
 }
 
 "use strict";
@@ -44,6 +161,52 @@ export class Optional {
 
         return this.content;
     }
+}
+
+"use strict";
+
+// FIXME - Fazer SimpleInterface utilizar também um genérico deste
+export class MultistompChanger {
+
+    // PedalController
+	controller;
+
+    /**
+     * @param PedalController controller
+     * @return
+     */
+	constructor(controller) {
+		this.controller = controller;
+	}
+
+    /**
+     * @param Message message
+     */
+	attempt(message) {
+        console.log(message);
+		if (message.is(CommonCause.TO_PATCH))
+			this.controller.toPatch(message.details.patch);
+
+		else if (message.is(CommonCause.ACTIVE_EFFECT) && message.details.patch == Details.NULL)
+			this.controller.activeEffect(message.details.effect);
+
+		else if (message.is(CommonCause.ACTIVE_EFFECT) && message.details.patch != Details.NULL)
+			this.controller.multistomp().patchs().get(message.details.patch).effects().get(message.details.effect).active();
+
+		else if (message.is(CommonCause.DISABLE_EFFECT) && message.details.patch == Details.NULL)
+			this.controller.disableEffect(message.details.effect);
+
+		else if (message.is(CommonCause.DISABLE_EFFECT) && message.details.patch != Details.NULL)
+			this.controller.multistomp().patchs().get(message.details.patch).effects().get(message.details.effect).disable();
+
+		else if (message.is(CommonCause.SET_PARAM)) {
+			let idEffect = message.details.effect;
+			let idParam  = message.details.param;
+			let newValue = message.details.value;
+
+			this.controller.setEffectParam(idEffect, idParam, newValue);
+		}
+	}
 }
 
 "use strict";
@@ -248,9 +411,9 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 		this.realChange = true;
 
 		let changer = new MultistompChanger(this);
-		messages.forEach(message => changer.attempt(message));
+		messages.forEach((message) => changer.attempt(message));
 
-		this.notify(realMultistompListenners, messages);
+		this.notify(this.realMultistompListenners, messages);
 	}
 
 	/**
@@ -276,6 +439,54 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 	send(messages) {
 		this.connection.send(messages);
 		this.realChange = true;
+	}
+}
+
+"use strict";
+
+export class PedalControllerFactory {
+
+	/**
+	 * Search the pedal connected on PC
+	 * @return PedalController
+	 */
+	static searchPedal() {
+		for (let multistomp of PedalType.values)
+			if (this.isConnected(multistomp))
+				return this.getPedal(multistomp);
+
+		return new PedalController(new NullMultistomp());
+	}
+
+    /**
+     * @param PedalType multistomp
+     * @return {Boolean}
+     */
+	static isConnected(multistomp) {
+		return MidiTransmition.findDevices(multistomp).length != 0;
+	}
+
+    /**
+     * @param PedalType pedalType
+     * @return PedalController
+     */
+	static getPedal(pedalType) {
+		let pedal;
+		let company = pedalType.getCompany();
+
+		if (company == PedalCompany.ZoomCorp)
+			pedal = new ZoomMultistompFactory().generate(pedalType);
+
+		else if (company == PedalCompany.Roland)
+			pedal = new NullMultistomp();
+
+		else if (company == PedalCompany.Line6)
+			pedal = new NullMultistomp();
+
+		else
+			pedal = new NullMultistomp();
+
+		return new PedalController(pedal);
 	}
 }
 
@@ -308,7 +519,7 @@ export class MidiConnection implements MidiReaderListenner {
 		this.multistomp = multistomp;
 
 		this.sender = new MidiSender(pedalType);
-		this.reader = {start:() => {}, stop:() => {}, setListenner:() => {}};//new MidiReader(pedalType);
+		this.reader = new MidiReader(pedalType);
 		this.reader.setListenner(this);
 
 		this.encoder = MessageEncoderFactory.For(pedalType);
@@ -379,7 +590,7 @@ export class MidiConnection implements MidiReaderListenner {
 			return;
 		}
 
-		messagesDecoded = this.decoder.decode(message, this.multistomp);
+		let messagesDecoded = this.decoder.decode(message, this.multistomp);
 
     	if (this.listenner.isPresent())
 			this.listenner.get().update(messagesDecoded);
@@ -401,11 +612,10 @@ export class MessageDecoderFactory {
      * @return MessageEncoder
      */
 	static For(pedalType) {
-		//if (PedalType.G3 == pedalType)
-		//	return new ZoomGSeriesMessageDecoder();
+		if (PedalType.G3 == pedalType)
+			return new ZoomGSeriesMessageDecoder();
 
-		//throw new Error("MessageDecoder not found for: " + pedalType);
-		return null;
+		throw new Error("MessageDecoder not found for: " + pedalType);
 	}
 }
 
@@ -439,9 +649,10 @@ export class MidiTransmition {
 
 		let device = this.locateDeviceIn(devices);
 
-		if (!device.isPresent())
-			throw new DeviceNotFoundException("Midi "+deviceType()+" device not found for: " + pedalType + " ("+pedalType.getUSBName()+")");
-		else
+		if (!device.isPresent()) {
+            console.log("Midi "+this.deviceType()+" device not found for: " + pedalType + " ("+pedalType.getUSBName()+")");
+			throw new DeviceNotFoundError("Midi "+this.deviceType()+" device not found for: " + pedalType + " ("+pedalType.getUSBName()+")");
+		}else
 			this.device = device.get();
 	}
 
@@ -502,6 +713,8 @@ class MidiSystem {
     onStart(midiAccess) {
         this.midiInputs  = midiAccess.inputs;
         this.midiOutputs = midiAccess.outputs;
+
+        console.log("Connected");
     }
 
     onError(midiAccess) {
@@ -529,6 +742,58 @@ window.addEventListener("load", function() {
         midiSystem.onError.bind(midiSystem)
     );
 });
+
+"use strict";
+
+/**
+ * Send the messages to real Multistomp
+ */
+export class MidiReader extends MidiTransmition {
+
+	//MidiReaderListenner
+	listenner;
+
+    /**
+     * @param PedalType pedalType
+     */
+	constructor(pedalType) {
+		super(pedalType);
+
+		this.device.onmidimessage = (message) => this.send(message);
+	}
+
+	/**
+	 * @param MidiDevice device
+	 * @return {Boolean}
+	 */
+	//@Override
+	isThis(device) {
+		return device.type == this.deviceType();
+	}
+
+	/**
+	 * @return {String}
+	 */
+	//@Override
+	deviceType() {
+		return "input";
+	}
+
+	/*************************************************/
+	/**
+	 * @param MidiReaderListenner listenner
+	 */
+	setListenner(listenner) {
+		this.listenner = listenner;
+	}
+
+    /**
+     * @param MidiMessage message
+     */
+	send(message) {
+		this.listenner.onDataReceived(message.data);
+	}
+}
 
 "use strict";
 
@@ -573,6 +838,8 @@ export class MidiSender extends MidiTransmition {
 
 export class PedalType {
 
+    static values = new Array();
+
     // String
     name;
     // PedalCompany
@@ -589,6 +856,8 @@ export class PedalType {
     	this.name = name;
     	this.company = company;
     	this.USBName = USBName;
+
+        PedalType.values.push(this)
     }
 
     /**
@@ -620,7 +889,7 @@ export class PedalType {
 	 * that is corresponding Pedal
 	 */
 	getUSBName() {
-		return USBName;
+		return this.USBName;
 	}
 }
 
@@ -1576,7 +1845,7 @@ export class Details implements Cause {
      */
 	//@Override
 	toString() {
-		return `({this.type} {this.newValue})`;
+		return `(${this.type} ${this.newValue})`;
 	}
 }
 
@@ -1685,6 +1954,55 @@ export class MultistompSimulator extends Multistomp {
     //@Override
 	getPedalType() {
 		return PedalType.Null;
+	}
+}
+
+"use strict";
+
+export class NullMultistomp extends Multistomp {
+
+    // Strnig
+	MSG_ERROR = "Pedal Unknown is unimplemented";
+
+	constructor() {
+        super();
+		this.addPatch(new Patch(0));
+		console.log(this.MSG_ERROR);
+	}
+
+	/**
+	 * @return PedalType
+	 */
+	//@Override
+	getPedalType() {
+		return PedalType.Null;
+	}
+
+	/**
+	 * @return Messages
+	 */
+	//@Override
+	start() {
+		return Messages.Empty();
+	}
+}
+
+"use strict";
+
+export class ZoomMultistompFactory implements MultistompFactory {
+
+	/**
+	 * @param PedalType type
+	 * @return Multistomp
+	 */
+	//@Override
+	generate(type) {
+		if (type == PedalType.G2Nu)
+			return new ZoomG2Nu();
+		else if (type == PedalType.G3)
+			return new ZoomGSeries(100, 6, 8);
+		else
+			return new ZoomGSeries(0, 5, 9);
 	}
 }
 
@@ -1810,6 +2128,59 @@ export class ZoomGSeriesEffect implements ZoomEffect {
 			return effect;
 		}
 	});
+}
+
+"use strict";
+
+export class ZoomGSeriesMessageDecoder implements MessageDecoder {
+
+    //List<MessageDecoder>
+	decoders;
+
+	constructor() {
+		this.decoders = new Array();
+
+		this.decoders.push(new ZoomGSeriesPatchDecoder());
+		//this.decoders.push(new ZoomGSeriesActiveEffectDecoder());
+		//this.decoders.push(new ZoomGSeriesDisableEffectDecoder());
+		this.decoders.push(new ZoomGSeriesSelectPatchDecoder());
+		//this.decoders.push(new ZoomGSeriesSetValueParamDecoder());
+	}
+
+	/**
+	 * @param MidiMessage message
+	 * @return {Boolean}
+	 */
+	//@Override
+	isForThis(message) {
+		return this.decodeFor(message).isPresent();
+	}
+
+	/**
+	 * @param MidiMessage message
+	 * @param Multistomp  multistomp
+	 * @return Messages
+	 */
+	decode(message, multistomp) {
+		let decoder = this.decodeFor(message);
+
+		if (decoder.isPresent())
+			return decoder.get().decode(message, multistomp);
+
+		throw new Error("The message isn't for this implementation");
+	}
+
+    /**
+     * @param MidiMessage message
+     * @return Optional<MessageDecoder>
+     */
+	decodeFor(message) {
+		for (let decoder of this.decoders)
+			if (decoder.isForThis(message))
+				return Optional.of(decoder);
+
+		return Optional.empty();
+	}
 }
 
 "use strict";
@@ -2071,5 +2442,171 @@ export class ZoomGSeriesMessages {
 		details.value  = newEffect;
 
 		return Messages.For(new Messages.Message(ZoomGSeriesCause.SET_EFFECT, details));
+	}
+}
+
+"use strict";
+
+export class AbstractZoomGSeriesPatchDecoder implements MessageDecoder {
+
+	//@Override
+	/**
+	 * @param MidiMessage message
+	 * @return {Boolean}
+	 */
+	isForThis(message) {
+		let tester = new MidiMessageTester(message);
+
+		return tester.init().sizeIs(this.size()).test();
+	}
+
+    /**
+     * @return {[type]}
+     */
+	size() {}
+
+	//@Override
+	/**
+	 * @param MidiMessage message
+	 * @param Multistomp multistomp
+	 * @return Messages
+	 */
+	decode(message, multistomp) {
+		const PATCHES = this.patches();
+
+		let effects = multistomp.currentPatch().effects();
+
+		let messages = Messages.Empty();
+		for (let i = 0; i < PATCHES.length; i++) {
+			let patch = PATCHES[i];
+
+			let actived = this.hasActived(message, patch);
+			if (this.refressAll() || (actived && !effects.get(i).hasActived()))
+				messages.add(this.generateMessageFor(actived, i));
+		}
+
+		return messages;
+	}
+
+    /**
+     * @return {Boolean}
+     */
+	refressAll() {}
+
+    /**
+     * @return int[]
+     */
+	patches() {}
+
+    /**
+     * @param boolean actived
+     * @param int     effect
+     * @return Messages.Message
+     */
+	generateMessageFor(actived, effect) {
+		let cause = actived ? CommonCause.ACTIVE_EFFECT : CommonCause.DISABLE_EFFECT;
+
+		let details = new Details();
+		details.effect = effect;
+
+		return new Messages.Message(cause, details);
+	}
+
+    /**
+     * @param MidiMessage message
+     * @param int         position
+     * @return {Boolean}
+     */
+	hasActived(message, position) {
+		const LSB = 0x01; // Least Significant Bit
+
+		let actived = message.getMessage()[position] & LSB;
+
+		return actived == 1;
+	}
+}
+
+"use strict";
+
+export class ZoomGSeriesPatchDecoder extends AbstractZoomGSeriesPatchDecoder {
+
+	static PATCH = 7;
+
+	/**
+	 * @param MidiMessage message
+	 * @param Multistomp  multistomp
+	 * @return Messages
+	 */
+	//@Override
+	decode(message, multistomp) {
+		let returned = super.decode(message, multistomp);
+
+		const patch = message.getMessage()[ZoomGSeriesPatchDecoder.PATCH];
+		returned.forEach((messagem) => messagem.details().patch = patch);
+
+		return returned;
+	}
+
+	/**
+	 * @return int
+	 */
+	//@Override
+	size() {
+		return 120;
+	}
+
+	/**
+	 * @return int[]
+	 */
+	//@Override
+	patches() {
+		return [6+5, 19+5, 33+5, 47+5, 60+5, 74+5];
+	}
+
+	/**
+	 * @return Boolean
+	 */
+	//@Override
+	refressAll() {
+		return true;
+	}
+}
+
+"use strict";
+
+/**
+ * c0 PATCH
+ */
+export class ZoomGSeriesSelectPatchDecoder implements MessageDecoder {
+
+	static PATCH = 1;
+
+    /**
+     * @param MidiMessage message
+     * @return {Boolean}
+     */
+	//@Override
+	isForThis(message) {
+		let begin = [0xc0];
+
+		let tester = new MidiMessageTester(message);
+
+		return tester.init()
+					 .sizeIs(2)
+				     .startingWith(begin)
+				     .test();
+	}
+
+	/**
+	 * @param MidiMessage message
+	 * @param Multistomp  multistomp
+	 * @return Messages
+	 */
+	//@Override
+	decode(message, multistomp) {
+		let details = new Messages.Details();
+		details.patch = message[ZoomGSeriesSelectPatchDecoder.PATCH];
+
+		return Messages.For(new Messages.Message(CommonCause.TO_PATCH, details));
 	}
 }

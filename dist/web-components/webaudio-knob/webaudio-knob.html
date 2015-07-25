@@ -1,48 +1,32 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 
 <dom-module id="webaudio-knob">
+    <link rel="stylesheet" href="webaudio-knob.css" charset="utf-8">
+    <style is="custom-style">
+        :host {
+            display: inline-block;
 
-<style>
-  :host {
-      display: inline-block;
-
-      width: 40px;
-      height: 40px;
-  }
-  #knob {
-    width: 100%;
-    height: 100%;
-
-    cursor: pointer;
-    background-position-y: -64px;
-    position: relative;
-  }
-
-  #value-tip {
-    opacity: 0;
-    border: solid 1px #666;
-    background-color: #eee;
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 1px 4px;
-    font-size: 10px;
-    font-family: Helvetica;
-    transition: opacity 0.3s;
-  }
-</style>
-  <template>
-    <div id="knob" on-mousedown="mousedown">
-      <span id="value-tip">{{value}}</span>
-    </div>
-  </template>
+            min-width: 40px;
+            min-height: 40px;
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+    <template>
+        <div id="knob" on-mousedown="mousedown">
+            <span id="value-tip">{{value}}</span>
+        </div>
+        <div class="knob-title">{{title}}</div>
+    </template>
 <script>
 "use strict";
 
 class WebAudioKnobElement {
     constructor() {
-        this.startPos = null;
+        this.startPos = 0;
         this.startVal = 0;
+        this.sprites = 24;
+        this.isSprite = true;
 
         Polymer(WebAudioKnobElement.prototype);
     }
@@ -53,17 +37,10 @@ class WebAudioKnobElement {
 
     get properties() {
       return {
-        startPos: {
-            type:Number,
-            value: 0
-        },
-        startVal: {
-            type:Number,
-            value: 0
-        },
         value: {
             type:Number,
-            value: 0
+            value: 0,
+            observer: 'valueChanged'
         },
         min: {
             type:Number,
@@ -77,41 +54,43 @@ class WebAudioKnobElement {
             type:Number,
             value: 1
         },
-        sprites: {
-            type:Number,
-            value: 24
-        },
         src: {
             type:String,
             value: 'dist/web-components/webaudio-knob/plastic_knob.png'
         },
-        isSprite: {
-            type: Boolean,
-            value: true
+        title: String,
+        listener: {
+            type:Object,
+            value:null
         }
       };
     }
 
     attached() {
-        let sprite = new Image();
-        sprite.onload = function() { this.calculeSprites(sprite); }.bind(this);
-        sprite.src = this.src;
-
         this.$['knob'].style.backgroundImage = 'url('+this.src+')';
         this.$['knob'].style.backgroundSize = this.offsetSize() + "px";
+
+        let sprite = new Image();
+
+        sprite.onload = function() {
+            this.calculeSprites(sprite);
+            this.update(this.value);
+        }.bind(this);
+
+        sprite.src = this.src;
     }
 
     calculeSprites(sprite) {
         this.isSprite = !(sprite.width == sprite.height);
 
         if (this.isSprite)
-            this.sprites = sprite.height/sprite.width;
+            this.sprites = sprite.height/sprite.width - 1;
     }
 
     mousemove(e) {
-      var offset = (this.startPos - e.pageY) || 0;
-      var value = this.startVal + (e.shiftKey ? ~~(offset / 3) : this.step * offset);
-      this.update.bind(this)(value);
+        var offset = (this.startPos - e.pageY) || 0;
+        var value = this.startVal + (e.shiftKey ? ~~(offset / 3) : this.step * offset);
+        this.update.bind(this)(value);
     }
 
     cancel(e) {
@@ -119,29 +98,27 @@ class WebAudioKnobElement {
         this.$['value-tip'].style.opacity = 0;
         window.removeEventListener('mousemove', this.boundMousemove, true);
         window.removeEventListener('mouseup', this.boundCancel, true);
-        this.fire('cancel');
     }
 
     update(value) {
         this.value = value < this.min ? this.min : value > this.max ? this.max : value;
 
-        let knob = this.$['knob'];
-        if (this.isSprite)
-            this.updateByImage(knob, this.value);
-        else
-            this.updateByRodate(knob, this.value);
-
-        this.fire('change');
+        let update = this.isSprite ? this.updateByImage : this.updateByRodate;
+        update.bind(this)(this.$.knob, this.value);
     }
 
     updateByImage(knob, value) {
-        var range = this.max - this.min;
-        var value = '-' + ~~(this.sprites / range * (range - this.min + this.value) + 1) * this.offsetSize() + 'px';
+        let valueY = '-' + ~~(this.sprites * this.calculePercentual(value)) * this.offsetSize() + 'px';
 
         if('backgroundPositionY' in knob.style)
-            knob.style.backgroundPositionY = value;
+            knob.style.backgroundPositionY = valueY;
         else
-            knob.style.backgroundPosition="center " + value;
+            knob.style.backgroundPosition="center " + valueY;
+    }
+
+    calculePercentual(value) {
+        let range = this.max - this.min;
+        return value / range;
     }
 
     updateByRodate(knob, value) {
@@ -155,14 +132,6 @@ class WebAudioKnobElement {
 
         let range = this.max - this.min;
         return angleMin + angleRange * this.value / range;
-    }
-
-    ready() {
-        this.update.bind(this)(this.value);
-    }
-
-    valueChanged(oldVal, newVal) {
-        this.update.bind(this)(newVal);
     }
 
     mousedown(e) {
@@ -181,6 +150,13 @@ class WebAudioKnobElement {
         let tamanho = knob.clientWidth < knob.clientHeight ? knob.clientWidth : knob.clientHeight;
 
         return tamanho;
+    }
+
+    valueChanged(newValue, oldValue) {
+        if (this.listener)
+            this.listenner.onKnobChange(this, this.value);
+
+        this.update(newValue);
     }
 }
 

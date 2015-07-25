@@ -41,7 +41,7 @@ export class Details implements Cause {
      */
 	//@Override
 	toString() {
-		return `({this.type} {this.newValue})`;
+		return `(${this.type} ${this.newValue})`;
 	}
 }
 

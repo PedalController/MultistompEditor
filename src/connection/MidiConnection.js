@@ -27,7 +27,7 @@ export class MidiConnection implements MidiReaderListenner {
 		this.multistomp = multistomp;
 
 		this.sender = new MidiSender(pedalType);
-		this.reader = {start:() => {}, stop:() => {}, setListenner:() => {}};//new MidiReader(pedalType);
+		this.reader = new MidiReader(pedalType);
 		this.reader.setListenner(this);
 
 		this.encoder = MessageEncoderFactory.For(pedalType);
@@ -98,7 +98,7 @@ export class MidiConnection implements MidiReaderListenner {
 			return;
 		}
 
-		messagesDecoded = this.decoder.decode(message, this.multistomp);
+		let messagesDecoded = this.decoder.decode(message, this.multistomp);
 
     	if (this.listenner.isPresent())
 			this.listenner.get().update(messagesDecoded);

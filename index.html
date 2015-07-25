@@ -13,6 +13,10 @@
         <script src="dist/cache/babel.js" charset="utf-8"></script>
     </head>
     <body>
+        <header id="patchDetails">
+            <span id="patchName">Patch Name</span>
+            <span id="patchNumber">00</span>
+        </header>
         <div id="pedalboard">
             <ul>
                 <li><guitar-pedal name="Compressor"></guitar-pedal></li>
@@ -30,7 +34,7 @@
                 "use strict";
                 setTimeout(
                     function() {
-                        controller = new PedalController(new ZoomGSeries(9, 5, 5));
+                        controller = PedalControllerFactory.searchPedal();
                         controller.on();
 
                         var pedals = document.querySelectorAll("guitar-pedal");

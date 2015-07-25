@@ -1,15 +1,19 @@
 {
 	"includes": {
 		"architecture/error": [
-			"ImplementationError"
+			"ImplementationError",
+			"DeviceNotFoundError"
 		],
 		"architecture/util": [
 			"BinarioUtil",
+			"MidiMessageTester",
 			"Optional"
 		],
 		"controller": [
+			"MultistompChanger",
 			"PedalCompany",
-			"PedalController"
+			"PedalController",
+			"PedalControllerFactory"
 		],
 		"connection": [
 			"MidiConnection"
@@ -20,6 +24,7 @@
 		],
 		"connection/transport": [
 			"MidiTransmition",
+			"MidiReader",
 			"MidiSender"
 		],
 		"domain": [
@@ -45,12 +50,24 @@
 			"Log",
 			"MultistompSimulator"
 		],
+		"multistomp/nulo": [
+			"NullMultistomp"
+		],
+		"multistomp/zoom": [
+			"ZoomMultistompFactory"
+		],
 		"multistomp/zoom/gseries": [
 			"ZoomGSeries",
 			"ZoomGSeriesCause",
 			"ZoomGSeriesEffect",
+			"ZoomGSeriesMessageDecoder",
 			"ZoomGSeriesMessageEncoder",
 			"ZoomGSeriesMessages"
+		],
+		"multistomp/zoom/gseries/decoder": [
+			"AbstractZoomGSeriesPatchDecoder",
+			"ZoomGSeriesPatchDecoder",
+			"ZoomGSeriesSelectPatchDecoder"
 		]
 	}
 }

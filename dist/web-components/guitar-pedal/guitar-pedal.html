@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../pedal-body/pedal-body.html">
 <link rel="import" href="../webaudio-knob/webaudio-knob.html">
+<link rel="import" href="../pedal-led/pedal-led.html">
 
 <dom-module id="guitar-pedal">
   <link rel="stylesheet" href="style.css" charset="utf-8">
@@ -27,26 +28,18 @@
       }
   </style>
   <template>
-      <pedal-body id="pedal-body" color="{{color}}">
-
+      <pedal-body id="pedal-body" color="{{color}}" image="http://localhost:8080/dist/metallic.png">
+          <content></content>
         <div class="knobs">
-            <webaudio-knob value="0" min="0" max="50"></webaudio-knob>
-            <webaudio-knob value="0" min="0" max="100"></webaudio-knob>
-            <webaudio-knob value="0" min="0" max="50"></webaudio-knob>
-            <webaudio-knob value="0" min="0" max="100"></webaudio-knob>
-            <webaudio-knob value="0" min="0" max="50"></webaudio-knob>
-            <webaudio-knob src="../webaudio-knob/MiniBrute.png" value="0" min="0" max="100"></webaudio-knob>
+            <webaudio-knob title="value" value="0" min="0" max="50"></webaudio-knob>
+            <pedal-led id="led"></pedal-led>
+            <webaudio-knob value="25" min="0" max="50"></webaudio-knob>
         </div>
         <div class="knobs">
-            <webaudio-knob value="0" min="0" max="50"></webaudio-knob>
-            <webaudio-knob value="0" min="0" max="100"></webaudio-knob>
-            <webaudio-knob value="25" min="0" max="50"></webaudio-knob>
-            <webaudio-knob value="0" min="0" max="100"></webaudio-knob>
+            <webaudio-knob src="../webaudio-knob/MiniBrute.png" value="0" min="0" max="100"></webaudio-knob>
         </div>
 
         <div id="pedal-name">{{name}}</div>
-
-        <div id="pedal-led" class="led red"></div>
 
         <button on-click="notify">{{toStatus}}</button>
     </pedal-body>
@@ -91,7 +84,7 @@ class GuitarPedalElement {
         this.actived = !this.actived;
         this.toStatus = this.actived ? "Disable" : "Active";
 
-        this.$["pedal-led"].classList.toggle("actived");
+        this.$["led"].toggle();
     }
 }
 new GuitarPedalElement();

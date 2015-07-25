@@ -13,9 +13,10 @@ export class MidiTransmition {
 
 		let device = this.locateDeviceIn(devices);
 
-		if (!device.isPresent())
-			throw new DeviceNotFoundException("Midi "+deviceType()+" device not found for: " + pedalType + " ("+pedalType.getUSBName()+")");
-		else
+		if (!device.isPresent()) {
+            console.log("Midi "+this.deviceType()+" device not found for: " + pedalType + " ("+pedalType.getUSBName()+")");
+			throw new DeviceNotFoundError("Midi "+this.deviceType()+" device not found for: " + pedalType + " ("+pedalType.getUSBName()+")");
+		}else
 			this.device = device.get();
 	}
 

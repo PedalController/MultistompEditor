@@ -2,6 +2,8 @@
 
 export class PedalType {
 
+    static values = new Array();
+
     // String
     name;
     // PedalCompany
@@ -18,6 +20,8 @@ export class PedalType {
     	this.name = name;
     	this.company = company;
     	this.USBName = USBName;
+
+        PedalType.values.push(this)
     }
 
     /**
@@ -49,7 +53,7 @@ export class PedalType {
 	 * that is corresponding Pedal
 	 */
 	getUSBName() {
-		return USBName;
+		return this.USBName;
 	}
 }
 

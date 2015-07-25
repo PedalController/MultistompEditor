@@ -1,11 +1,28 @@
 * {
     box-sizing: border-box !important;
 }
+
 body {
     padding: 0;
     margin: 0;
     background-color: #5A4E5B;
 }
+
+#patchDetails {
+    height: 10vh;
+
+    font-size: 3.5em;
+}
+
+    #patchDetails #patchName {
+        width: 70vw;
+        text-align: center;
+        display: inline-block;
+    }
+
+    #patchDetails #patchNumber {
+
+    }
 
 #pedalboard {
     --pedal-body-color: #0000ff;
@@ -28,7 +45,7 @@ body {
     background-color: #DB9C67;
     min-width: 100px;
     width: 31vw;
-    height: 50vh;
+    height: calc(45vh - 20px);
 }
 
 guitar-pedal {

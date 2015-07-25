@@ -167,9 +167,9 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 		this.realChange = true;
 
 		let changer = new MultistompChanger(this);
-		messages.forEach(message => changer.attempt(message));
+		messages.forEach((message) => changer.attempt(message));
 
-		this.notify(realMultistompListenners, messages);
+		this.notify(this.realMultistompListenners, messages);
 	}
 
 	/**

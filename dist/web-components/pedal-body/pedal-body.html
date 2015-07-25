@@ -1,8 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/iron-image/iron-image.html">
 
 <dom-module id="pedal-body">
-  <link rel="stylesheet" href="style.css" charset="utf-8">
+  <link rel="stylesheet" href="pedal-body.css" charset="utf-8">
   <style>
     :host {
         display: block;
@@ -40,10 +39,9 @@
   </style>
 
   <template>
-      <div data-color="{{color}}" class="pedal">
+      <div id="pedal-body" data-color="{{color}}" class="pedal">
           <content></content>
       </div>
-      <iron-image class="full"></iron-image>
   </template>
 
 <script>
@@ -64,8 +62,16 @@ class PedalBodyElement {
           type: String,
           value: "red"
         },
-        datatest: String
+        image: {
+          type: String,
+          value: null
+        },
       };
+    }
+
+    ready() {
+        if (this.image != null)
+            this.$["pedal-body"].style.backgroundImage = "url("+this.image+")";
     }
 }
 
