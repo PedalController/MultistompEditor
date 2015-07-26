@@ -144,7 +144,7 @@ export class ZoomGSeriesMessageEncoder implements MessageEncoder {
      * @return MidiMessage
      */
 	requestSpecificPatchDetails(message) {
-		let patch = message.details().patch;
+		let patch = message.details.patch;
 
 		let CURRENT_PATCH = [
 			0xF0,  0x52, 0x00,

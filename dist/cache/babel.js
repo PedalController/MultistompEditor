@@ -1,12 +1,340 @@
 "use strict";
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+var HomeController = (function () {
+	function HomeController(presenter) {
+		_classCallCheck(this, HomeController);
+
+		this.presenter = presenter;
+
+		this.patchDetails = null;
+		this.pedalboard = null;
+
+		this.inicializarComponentes();
+	}
+
+	_createClass(HomeController, [{
+		key: "inicializarComponentes",
+		value: function inicializarComponentes() {
+			this.patchDetails = new PatchDetailsComponent("patchDetails");
+			this.pedalboard = new PedalboardComponent("pedalboard", this);
+		}
+	}, {
+		key: "setTitle",
+		value: function setTitle(title) {
+			this.patchDetails.setName(title);
+		}
+	}, {
+		key: "active",
+		value: function active(effect) {
+			this.pedalboard.pedals[effect].active();
+		}
+	}, {
+		key: "disable",
+		value: function disable(effect) {
+			this.pedalboard.pedals[effect].disable();
+		}
+	}, {
+		key: "toogleEffectOf",
+		value: function toogleEffectOf(index) {
+			this.presenter.toogleEffectOf(index);
+		}
+	}]);
+
+	return HomeController;
+})();
+
+var PatchDetailsComponent = (function () {
+	function PatchDetailsComponent(patchDetailsId) {
+		_classCallCheck(this, PatchDetailsComponent);
+
+		var patchDetails = document.getElementById(patchDetailsId);
+
+		this.nameElement = patchDetails.querySelector("#patchName");
+		this.numberElement = patchDetails.querySelector("#patchNumber");
+	}
+
+	_createClass(PatchDetailsComponent, [{
+		key: "setName",
+		value: function setName(name) {
+			this.nameElement.innerHTML = name;
+		}
+	}, {
+		key: "setNumber",
+		value: function setNumber(number) {
+			this.numberElement.innerHTML = number;
+		}
+	}]);
+
+	return PatchDetailsComponent;
+})();
+
+var PedalboardComponent = function PedalboardComponent(pedalboardId, controller) {
+	var _this = this;
+
+	_classCallCheck(this, PedalboardComponent);
+
+	this.pedals = document.getElementById(pedalboardId).querySelectorAll("guitar-pedal");
+
+	var _loop = function (i) {
+		var pedal = _this.pedals[i];
+		pedal.click = function () {
+			return controller.toogleEffectOf(i);
+		};
+	};
+
+	for (var i = 0; i < this.pedals.length; i++) {
+		_loop(i);
+	}
+};
+
+"use strict";
+
+var Pagina = (function () {
+	function Pagina(router) {
+		_classCallCheck(this, Pagina);
+
+		this["router"] = router;
+	}
+
+	_createClass(Pagina, [{
+		key: "barra",
+		value: function barra() {
+			return this["router"].barra;
+		}
+	}, {
+		key: "router",
+		value: function router() {
+			return this["router"];
+		}
+	}, {
+		key: "inicializar",
+
+		/** Realiza as ações de inicialização
+   * quando a tela é chamada
+   */
+		value: function inicializar() {}
+	}, {
+		key: "finalizar",
+
+		/** Realiza as ações de encerramento
+   */
+		value: function finalizar() {}
+	}]);
+
+	return Pagina;
+})();
+
+"use strict";
+
+var HomePagina = (function (_Pagina) {
+	_inherits(HomePagina, _Pagina);
+
+	function HomePagina(router) {
+		_classCallCheck(this, HomePagina);
+
+		_get(Object.getPrototypeOf(HomePagina.prototype), "constructor", this).call(this, router);
+		this.controller = new HomeController(this);
+		this.pedal = null;
+	}
+
+	_createClass(HomePagina, [{
+		key: "inicializar",
+		value: function inicializar(parametros) {
+			this.pedal = PedalControllerFactory.searchPedal();
+			this.pedal.on();
+			this.pedal.addListenner(this);
+
+			this.pedal.send(ZoomGSeriesMessages.REQUEST_CURRENT_PATCH_NUMBER());
+		}
+	}, {
+		key: "finalizar",
+		value: function finalizar() {
+			this.pedal.off();
+		}
+	}, {
+		key: "onChange",
+
+		////////////////////////////////////////
+
+		value: function onChange(messages) {
+			var _this2 = this;
+
+			messages.get(CommonCause.ACTIVE_EFFECT).forEach(function (message) {
+				return _this2.updateEffect(message, CommonCause.ACTIVE_EFFECT);
+			});
+			messages.get(CommonCause.DISABLE_EFFECT).forEach(function (message) {
+				return _this2.updateEffect(message, CommonCause.DISABLE_EFFECT);
+			});
+
+			messages.get(CommonCause.TO_PATCH).forEach(function (message) {
+				return _this2.setPatch(message);
+			});
+
+			messages.get(CommonCause.SET_PARAM).forEach(function (message) {
+				return console.log(pedal);
+			});
+
+			messages.get(CommonCause.PATCH_NAME).forEach(function (message) {
+				_this2.controller.setTitle(message.details.value);
+			});
+		}
+	}, {
+		key: "updateEffect",
+		value: function updateEffect(message, cause) {
+			var patch = message.details.patch;
+			var effect = message.details.effect;
+
+			if (patch != this.pedal.multistomp().getIdCurrentPatch()) return;
+
+			if (cause == CommonCause.ACTIVE_EFFECT) this.controller.active(effect);else this.controller.disable(effect);
+		}
+	}, {
+		key: "setPatch",
+		value: function setPatch(message) {
+			var idPatch = message.details.patch;
+
+			this.pedal.send(ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch));
+		}
+	}, {
+		key: "toogleEffectOf",
+		value: function toogleEffectOf(effect) {
+			this.pedal.toogleEffect(effect);
+		}
+	}]);
+
+	return HomePagina;
+})(Pagina);
+
+"use strict";
+
+var PaginaRouter = (function () {
+	function PaginaRouter() {
+		_classCallCheck(this, PaginaRouter);
+
+		this.historico = new Historico();
+
+		this["paginas"] = {};
+		this._adicionarPaginasEm(this["paginas"]);
+	}
+
+	_createClass(PaginaRouter, [{
+		key: "_adicionarPaginasEm",
+		value: function _adicionarPaginasEm(dicionario) {
+			dicionario["home"] = new HomePagina(this);
+		}
+	}, {
+		key: "_irParaPagina",
+		value: function _irParaPagina(pagina, parametros) {
+			var paginaAtual = this.historico.atual();
+
+			if (paginaAtual) paginaAtual.pagina.finalizar();
+
+			paginaAtual = new PaginaHistorico(this["paginas"][pagina], parametros);
+			this.historico.atual(paginaAtual);
+
+			paginaAtual.pagina.inicializar(parametros);
+		}
+	}, {
+		key: "irParaPaginaHome",
+		value: function irParaPaginaHome() {
+			this._irParaPagina("home");
+		}
+	}, {
+		key: "irParaPaginaAnterior",
+		value: function irParaPaginaAnterior() {
+			if (this.historico.size() <= 1) return;
+
+			var paginaAtual = this.historico.voltar();
+			paginaAtual.pagina.finalizar();
+
+			paginaAtual = this.historico.atual();
+			paginaAtual.pagina.inicializar(paginaAtual.parametros);
+		}
+	}]);
+
+	return PaginaRouter;
+})();
+
+var Historico = (function () {
+	function Historico() {
+		_classCallCheck(this, Historico);
+
+		this.pilha = new Pilha();
+	}
+
+	_createClass(Historico, [{
+		key: "atual",
+		value: function atual(novoAtual) {
+			if (novoAtual) this.pilha.add(novoAtual);else return this.pilha.last();
+		}
+	}, {
+		key: "anterior",
+		value: function anterior() {
+			return this.pilha.last();
+		}
+	}, {
+		key: "voltar",
+		value: function voltar() {
+			return this.pilha.pop();
+		}
+	}, {
+		key: "size",
+		value: function size() {
+			return this.pilha.size();
+		}
+	}]);
+
+	return Historico;
+})();
+
+var Pilha = (function () {
+	function Pilha() {
+		_classCallCheck(this, Pilha);
+
+		this.lista = [];
+	}
+
+	_createClass(Pilha, [{
+		key: "add",
+		value: function add(elemento) {
+			this.lista.push(elemento);
+		}
+	}, {
+		key: "last",
+		value: function last() {
+			return this.lista[this.lista.length - 1];
+		}
+	}, {
+		key: "pop",
+		value: function pop() {
+			return this.lista.pop();
+		}
+	}, {
+		key: "size",
+		value: function size() {
+			return this.lista.length;
+		}
+	}]);
+
+	return Pilha;
+})();
+
+var PaginaHistorico = function PaginaHistorico(pagina, parametros) {
+	_classCallCheck(this, PaginaHistorico);
+
+	this.pagina = pagina;
+	this.parametros = parametros;
+};
+
+"use strict";
 
 var ImplemetationError = (function (_Error) {
 	_inherits(ImplemetationError, _Error);
@@ -272,14 +600,13 @@ var MultistompChanger = (function () {
    * @param Message message
    */
 		value: function attempt(message) {
-			console.log(message);
-			if (message.is(CommonCause.TO_PATCH)) this.controller.toPatch(message.details.patch);else if (message.is(CommonCause.ACTIVE_EFFECT) && message.details.patch == Details.NULL) this.controller.activeEffect(message.details.effect);else if (message.is(CommonCause.ACTIVE_EFFECT) && message.details.patch != Details.NULL) this.controller.multistomp().patchs().get(message.details.patch).effects().get(message.details.effect).active();else if (message.is(CommonCause.DISABLE_EFFECT) && message.details.patch == Details.NULL) this.controller.disableEffect(message.details.effect);else if (message.is(CommonCause.DISABLE_EFFECT) && message.details.patch != Details.NULL) this.controller.multistomp().patchs().get(message.details.patch).effects().get(message.details.effect).disable();else if (message.is(CommonCause.SET_PARAM)) {
+			if (message.is(CommonCause.TO_PATCH)) this.controller.toPatch(message.details.patch);else if (message.is(CommonCause.ACTIVE_EFFECT) && message.details.patch == Details.NULL) this.controller.activeEffect(message.details.effect);else if (message.is(CommonCause.ACTIVE_EFFECT) && message.details.patch != Details.NULL) this.controller.multistomp().patchs[message.details.patch].effects[message.details.effect].active();else if (message.is(CommonCause.DISABLE_EFFECT) && message.details.patch == Details.NULL) this.controller.disableEffect(message.details.effect);else if (message.is(CommonCause.DISABLE_EFFECT) && message.details.patch != Details.NULL) this.controller.multistomp().patchs[message.details.patch].effects[message.details.effect].disable();else if (message.is(CommonCause.SET_PARAM)) {
 				var idEffect = message.details.effect;
 				var idParam = message.details.param;
 				var newValue = message.details.value;
 
 				this.controller.setEffectParam(idEffect, idParam, newValue);
-			}
+			} else if (message.is(CommonCause.PATCH_NAME)) this.controller.multistomp().currentPatch().name = message.details.value;
 		}
 	}]);
 
@@ -1073,14 +1400,14 @@ var MidiReader = (function (_MidiTransmition) {
   */
 
 	function MidiReader(pedalType) {
-		var _this = this;
+		var _this3 = this;
 
 		_classCallCheck(this, MidiReader);
 
 		_get(Object.getPrototypeOf(MidiReader.prototype), "constructor", this).call(this, pedalType);
 
 		this.device.onmidimessage = function (message) {
-			return _this.send(message);
+			return _this3.send(message);
 		};
 	}
 
@@ -1268,6 +1595,8 @@ CommonCause.GENERAL_VOLUME = "GENERAL_VOLUME";
 
 // Patch
 CommonCause.PATCH_VOLUME = "PATCH_VOLUME";
+CommonCause.PATCH_NAME = "PATCH_NAME";
+
 // Effect
 CommonCause.ACTIVE_EFFECT = "ACTIVE_EFFECT";
 CommonCause.DISABLE_EFFECT = "DISABLE_EFFECT";
@@ -1371,10 +1700,10 @@ var Messages = (function () {
    * @param Messages messages
    */
 		value: function concatWith(messages) {
-			var _this2 = this;
+			var _this4 = this;
 
 			messages.forEach(function (message) {
-				return _this2.addMessage(message);
+				return _this4.addMessage(message);
 			});
 		}
 	}, {
@@ -1954,7 +2283,7 @@ var MultistompMessagesConverter = (function () {
 			var msg = null;
 			var details = new Messages.Details();
 
-			if (message.is(MultistompCause.MULTISTOMP)) msg = this.convertToPatch(message, details);else if (message.is(MultistompCause.EFFECT)) msg = this.convertStatusEffect(message, details);else if (message.is(MultistompCause.PATCH)) msg = this.convertSetParam(message, details);
+			if (message.is(MultistompCause.MULTISTOMP)) msg = this.convertToPatch(message, details);else if (message.is(MultistompCause.PATCH)) msg = this.convertPatch(message, details);else if (message.is(MultistompCause.EFFECT)) msg = this.convertStatusEffect(message, details);else if (message.is(MultistompCause.PARAM)) msg = this.convertSetParam(message, details);
 
 			if (msg != null) return Messages.For(msg);else return Messages.For();
 		}
@@ -1971,6 +2300,15 @@ var MultistompMessagesConverter = (function () {
 			details.patch = message.causer.getIdCurrentPatch();
 
 			return new Messages.Message(CommonCause.TO_PATCH, details);
+		}
+	}, {
+		key: "convertPatch",
+		value: function convertPatch(message, details) {
+			if (!details.type == Details.TypeChange.PATCH_NAME) return Messages.Empty();
+
+			details.value = message.realMessage().details.newValue;
+
+			return new Messages.Message(CommonCause.PATCH_NAME, details);
 		}
 	}, {
 		key: "convertStatusEffect",
@@ -2060,7 +2398,7 @@ var Param = (function () {
 
 			var details = new Details(Details.TypeChange.PARAM, this.currentValue);
 
-			var message = new ChangeMessage(MultistompCause.PATCH, this, details);
+			var message = new ChangeMessage(MultistompCause.PARAM, this, details);
 			this.notify(message);
 		}
 	}, {
@@ -2177,7 +2515,7 @@ var Patch = (function () {
 	function Patch(id) {
 		_classCallCheck(this, Patch);
 
-		this.name = "";
+		this.patchName = "";
 		this.effects = new Array();
 		this.listenner = Optional.empty();
 
@@ -2247,6 +2585,22 @@ var Patch = (function () {
 		//@Override
 		value: function toString() {
 			return "Patch " + this.id + " - " + this.name + " (" + this.effects.length + ") Effect(s))";
+		}
+	}, {
+		key: "name",
+
+		/*************************************************/
+
+		get: function get() {
+			return this.patchName;
+		},
+		set: function set(name) {
+			this.patchName = name;
+
+			var details = new Details(Details.TypeChange.PATCH_NAME, this.patchName);
+
+			var newMessage = new ChangeMessage(MultistompCause.PATCH, this, details);
+			this.notify(newMessage);
 		}
 	}]);
 
@@ -2488,7 +2842,8 @@ Details.TypeChange = {
 	NONE: "NONE",
 	PEDAL_STATUS: "PEDAL_STATUS",
 	PARAM: "PARAM",
-	PATCH_NUMBER: "PATCH_NUMBER"
+	PATCH_NUMBER: "PATCH_NUMBER",
+	PATCH_NAME: "PATCH_NAME"
 };
 
 "use strict";
@@ -2934,6 +3289,7 @@ var ZoomGSeriesMessageDecoder = (function () {
 
 		this.decoders = new Array();
 
+		this.decoders.push(new ZoomGSeriesNameDecoder());
 		this.decoders.push(new ZoomGSeriesPatchDecoder());
 		//this.decoders.push(new ZoomGSeriesActiveEffectDecoder());
 		//this.decoders.push(new ZoomGSeriesDisableEffectDecoder());
@@ -2950,7 +3306,7 @@ var ZoomGSeriesMessageDecoder = (function () {
    */
 		//@Override
 		value: function isForThis(message) {
-			return this.decodeFor(message).isPresent();
+			return this.decodesFor(message).length > 0;
 		}
 	}, {
 		key: "decode",
@@ -2961,20 +3317,25 @@ var ZoomGSeriesMessageDecoder = (function () {
    * @return Messages
    */
 		value: function decode(message, multistomp) {
-			var decoder = this.decodeFor(message);
+			var decoders = this.decodesFor(message);
 
-			if (decoder.isPresent()) return decoder.get().decode(message, multistomp);
+			var messages = Messages.Empty();
 
-			throw new Error("The message isn't for this implementation");
+			decoders.forEach(function (decoder) {
+				return messages.concatWith(decoder.decode(message, multistomp));
+			});
+
+			if (decoders.length == 0) throw new Error("The message isn't for this implementation");else return messages;
 		}
 	}, {
-		key: "decodeFor",
+		key: "decodesFor",
 
 		/**
    * @param MidiMessage message
    * @return Optional<MessageDecoder>
    */
-		value: function decodeFor(message) {
+		value: function decodesFor(message) {
+			var decoders = new Array();
 			var _iteratorNormalCompletion18 = true;
 			var _didIteratorError18 = false;
 			var _iteratorError18 = undefined;
@@ -2983,7 +3344,7 @@ var ZoomGSeriesMessageDecoder = (function () {
 				for (var _iterator18 = this.decoders[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
 					var decoder = _step18.value;
 
-					if (decoder.isForThis(message)) return Optional.of(decoder);
+					if (decoder.isForThis(message)) decoders.push(decoder);
 				}
 			} catch (err) {
 				_didIteratorError18 = true;
@@ -3000,7 +3361,7 @@ var ZoomGSeriesMessageDecoder = (function () {
 				}
 			}
 
-			return Optional.empty();
+			return decoders;
 		}
 	}]);
 
@@ -3023,50 +3384,50 @@ var ZoomGSeriesMessageEncoder = (function () {
    */
 		//@Override
 		value: function encode(messages) {
-			var _this3 = this;
+			var _this5 = this;
 
 			var retorno = new Array();
 
 			messages.get(CommonCause.TO_PATCH).forEach(function (message) {
-				return retorno.push(_this3.toPatch(message));
+				return retorno.push(_this5.toPatch(message));
 			});
 
 			messages.get(CommonCause.ACTIVE_EFFECT).forEach(function (message) {
-				var messages = _this3.statusEffect(message, CommonCause.ACTIVE_EFFECT);
+				var messages = _this5.statusEffect(message, CommonCause.ACTIVE_EFFECT);
 				messages.forEach(function (message) {
 					return retorno.push(message);
 				});
 			});
 			messages.get(CommonCause.DISABLE_EFFECT).forEach(function (message) {
-				var messages = _this3.statusEffect(message, CommonCause.DISABLE_EFFECT);
+				var messages = _this5.statusEffect(message, CommonCause.DISABLE_EFFECT);
 				messages.forEach(function (message) {
 					return retorno.push(message);
 				});
 			});
 
 			messages.get(CommonCause.SET_PARAM).forEach(function (message) {
-				return retorno.push(_this3.setParam(message));
+				return retorno.push(_this5.setParam(message));
 			});
 
 			messages.get(ZoomGSeriesCause.SET_EFFECT).forEach(function (message) {
-				return retorno.push(_this3.setEffect(message));
+				return retorno.push(_this5.setEffect(message));
 			});
 
 			messages.get(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER).forEach(function (message) {
-				return retorno.push(_this3.requestCurrentPatchNumber(message));
+				return retorno.push(_this5.requestCurrentPatchNumber(message));
 			});
 			messages.get(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS).forEach(function (message) {
-				return retorno.push(_this3.requestCurrentPatchDetails(message));
+				return retorno.push(_this5.requestCurrentPatchDetails(message));
 			});
 			messages.get(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS).forEach(function (message) {
-				return retorno.push(_this3.requestSpecificPatchDetails(message));
+				return retorno.push(_this5.requestSpecificPatchDetails(message));
 			});
 
 			messages.get(ZoomGSeriesCause.LISSEN_ME).forEach(function (message) {
-				return retorno.push(_this3.lissenMe());
+				return retorno.push(_this5.lissenMe());
 			});
 			messages.get(ZoomGSeriesCause.YOU_CAN_TALK).forEach(function (message) {
-				return retorno.push(_this3.youCanTalk());
+				return retorno.push(_this5.youCanTalk());
 			});
 
 			return retorno;
@@ -3182,7 +3543,7 @@ var ZoomGSeriesMessageEncoder = (function () {
    * @return MidiMessage
    */
 		value: function requestSpecificPatchDetails(message) {
-			var patch = message.details().patch;
+			var patch = message.details.patch;
 
 			var CURRENT_PATCH = [0xF0, 0x52, 0x00, 0x5A, 0x09, 0x00, 0x00, patch, 0xF7];
 
@@ -3312,7 +3673,7 @@ var ZoomGSeriesMessages = (function () {
    * @return Messages
    */
 		value: function REQUEST_SPECIFIC_PATCH_DETAILS(idPatch) {
-			var details = new Messages.Detals();
+			var details = new Messages.Details();
 			details.patch = idPatch;
 
 			return Messages.For(new Messages.Message(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS, details));
@@ -3345,7 +3706,7 @@ var ZoomGSeriesMessages = (function () {
    * @return Messages
    */
 		value: function SET_EFFECT(effectPos, newEffect) {
-			var details = new Messages.Detals();
+			var details = new Messages.Details();
 			details.effect = effectPos;
 			details.value = newEffect;
 
@@ -3395,14 +3756,14 @@ var AbstractZoomGSeriesPatchDecoder = (function () {
 		value: function decode(message, multistomp) {
 			var PATCHES = this.patches();
 
-			var effects = multistomp.currentPatch().effects();
+			var effects = multistomp.currentPatch().effects;
 
 			var messages = Messages.Empty();
 			for (var i = 0; i < PATCHES.length; i++) {
 				var patch = PATCHES[i];
 
 				var actived = this.hasActived(message, patch);
-				if (this.refressAll() || actived && !effects.get(i).hasActived()) messages.add(this.generateMessageFor(actived, i));
+				if (this.refressAll() || actived && !effects.get(i).hasActived()) messages.addMessage(this.generateMessageFor(actived, i));
 			}
 
 			return messages;
@@ -3432,7 +3793,7 @@ var AbstractZoomGSeriesPatchDecoder = (function () {
 		value: function generateMessageFor(actived, effect) {
 			var cause = actived ? CommonCause.ACTIVE_EFFECT : CommonCause.DISABLE_EFFECT;
 
-			var details = new Details();
+			var details = new Messages.Details();
 			details.effect = effect;
 
 			return new Messages.Message(cause, details);
@@ -3448,13 +3809,74 @@ var AbstractZoomGSeriesPatchDecoder = (function () {
 		value: function hasActived(message, position) {
 			var LSB = 0x01; // Least Significant Bit
 
-			var actived = message.getMessage()[position] & LSB;
+			var actived = message[position] & LSB;
 
 			return actived == 1;
 		}
 	}]);
 
 	return AbstractZoomGSeriesPatchDecoder;
+})();
+
+"use strict";
+
+var ZoomGSeriesNameDecoder = (function () {
+	function ZoomGSeriesNameDecoder() {
+		_classCallCheck(this, ZoomGSeriesNameDecoder);
+	}
+
+	_createClass(ZoomGSeriesNameDecoder, [{
+		key: "isForThis",
+
+		/**
+   * @param MidiMessage message
+   * @return {Boolean}
+   */
+		//@Override
+		value: function isForThis(message) {
+			var tester = new MidiMessageTester(message);
+
+			var patchInfo = tester.init().sizeIs(120).test();
+			var changeName = false; //tester.init().sizeIs(120).test();
+
+			return patchInfo || changeName;
+		}
+	}, {
+		key: "decode",
+
+		/**
+   * @param MidiMessage message
+   * @param Multistomp  multistomp
+   * @return Messages
+   */
+		//@Override
+		value: function decode(message, multistomp) {
+			var details = new Messages.Details();
+
+			var firstChar = ZoomGSeriesNameDecoder.FIRST_LETTER;
+			var lastChar = ZoomGSeriesNameDecoder.LAST_LETTER;
+
+			var name = "";
+			for (var i = firstChar; i < lastChar; i++) {
+				var char = message[i];
+				name += String.fromCharCode(char);
+			}
+
+			details.value = name;
+
+			return Messages.For(new Messages.Message(CommonCause.PATCH_NAME, details));
+		}
+	}], [{
+		key: "FIRST_LETTER",
+		value: 102,
+		enumerable: true
+	}, {
+		key: "LAST_LETTER",
+		value: 102 + 11,
+		enumerable: true
+	}]);
+
+	return ZoomGSeriesNameDecoder;
 })();
 
 "use strict";
@@ -3480,9 +3902,9 @@ var ZoomGSeriesPatchDecoder = (function (_AbstractZoomGSeriesPatchDecoder) {
 		value: function decode(message, multistomp) {
 			var returned = _get(Object.getPrototypeOf(ZoomGSeriesPatchDecoder.prototype), "decode", this).call(this, message, multistomp);
 
-			var patch = message.getMessage()[ZoomGSeriesPatchDecoder.PATCH];
+			var patch = message[ZoomGSeriesPatchDecoder.PATCH];
 			returned.forEach(function (messagem) {
-				return messagem.details().patch = patch;
+				return messagem.details.patch = patch;
 			});
 
 			return returned;

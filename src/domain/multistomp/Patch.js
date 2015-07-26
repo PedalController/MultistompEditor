@@ -5,7 +5,7 @@ export class Patch implements OnChangeListenner<Effect> {
 	id;
 
     /** String */
-	name = "";
+	patchName = "";
 
     /** List<Effect> */
 	effects = new Array();
@@ -33,6 +33,21 @@ export class Patch implements OnChangeListenner<Effect> {
 	addEffect(effect) {
 		this.effects.push(effect);
 		effect.setListenner(this);
+	}
+
+	/*************************************************/
+
+	get name() {
+		return this.patchName;
+	}
+
+	set name(name) {
+		this.patchName = name;
+
+		let details = new Details(Details.TypeChange.PATCH_NAME, this.patchName);
+
+		let newMessage = new ChangeMessage(MultistompCause.PATCH, this, details);
+		this.notify(newMessage);
 	}
 
 	/*************************************************/

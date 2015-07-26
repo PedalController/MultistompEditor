@@ -8,6 +8,7 @@ export class ZoomGSeriesMessageDecoder implements MessageDecoder {
 	constructor() {
 		this.decoders = new Array();
 
+		this.decoders.push(new ZoomGSeriesNameDecoder());
 		this.decoders.push(new ZoomGSeriesPatchDecoder());
 		//this.decoders.push(new ZoomGSeriesActiveEffectDecoder());
 		//this.decoders.push(new ZoomGSeriesDisableEffectDecoder());
@@ -21,7 +22,7 @@ export class ZoomGSeriesMessageDecoder implements MessageDecoder {
 	 */
 	//@Override
 	isForThis(message) {
-		return this.decodeFor(message).isPresent();
+		return this.decodesFor(message).length > 0;
 	}
 
 	/**
@@ -30,23 +31,28 @@ export class ZoomGSeriesMessageDecoder implements MessageDecoder {
 	 * @return Messages
 	 */
 	decode(message, multistomp) {
-		let decoder = this.decodeFor(message);
+		let decoders = this.decodesFor(message);
 
-		if (decoder.isPresent())
-			return decoder.get().decode(message, multistomp);
+		let messages = Messages.Empty();
 
-		throw new Error("The message isn't for this implementation");
+		decoders.forEach((decoder) => messages.concatWith(decoder.decode(message, multistomp)));
+
+		if (decoders.length == 0)
+			throw new Error("The message isn't for this implementation");
+		else
+			return messages;
 	}
 
     /**
      * @param MidiMessage message
      * @return Optional<MessageDecoder>
      */
-	decodeFor(message) {
+	decodesFor(message) {
+		let decoders = new Array();
 		for (let decoder of this.decoders)
 			if (decoder.isForThis(message))
-				return Optional.of(decoder);
+				decoders.push(decoder);
 
-		return Optional.empty();
+		return decoders;
 	}
 }

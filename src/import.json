@@ -1,5 +1,16 @@
 {
 	"includes": {
+
+		"app/controller": [
+			"HomeController"
+		],
+		"app/pagina": [
+			"Pagina",
+			"HomePagina",
+			"PaginaRouter"
+		],
+
+
 		"architecture/error": [
 			"ImplementationError",
 			"DeviceNotFoundError"
@@ -66,6 +77,7 @@
 		],
 		"multistomp/zoom/gseries/decoder": [
 			"AbstractZoomGSeriesPatchDecoder",
+			"ZoomGSeriesNameDecoder",
 			"ZoomGSeriesPatchDecoder",
 			"ZoomGSeriesSelectPatchDecoder"
 		]

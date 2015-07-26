@@ -27,7 +27,7 @@ export class AbstractZoomGSeriesPatchDecoder implements MessageDecoder {
 	decode(message, multistomp) {
 		const PATCHES = this.patches();
 
-		let effects = multistomp.currentPatch().effects();
+		let effects = multistomp.currentPatch().effects;
 
 		let messages = Messages.Empty();
 		for (let i = 0; i < PATCHES.length; i++) {
@@ -35,7 +35,7 @@ export class AbstractZoomGSeriesPatchDecoder implements MessageDecoder {
 
 			let actived = this.hasActived(message, patch);
 			if (this.refressAll() || (actived && !effects.get(i).hasActived()))
-				messages.add(this.generateMessageFor(actived, i));
+				messages.addMessage(this.generateMessageFor(actived, i));
 		}
 
 		return messages;
@@ -59,7 +59,7 @@ export class AbstractZoomGSeriesPatchDecoder implements MessageDecoder {
 	generateMessageFor(actived, effect) {
 		let cause = actived ? CommonCause.ACTIVE_EFFECT : CommonCause.DISABLE_EFFECT;
 
-		let details = new Details();
+		let details = new Messages.Details();
 		details.effect = effect;
 
 		return new Messages.Message(cause, details);
@@ -73,7 +73,7 @@ export class AbstractZoomGSeriesPatchDecoder implements MessageDecoder {
 	hasActived(message, position) {
 		const LSB = 0x01; // Least Significant Bit
 
-		let actived = message.getMessage()[position] & LSB;
+		let actived = message[position] & LSB;
 
 		return actived == 1;
 	}

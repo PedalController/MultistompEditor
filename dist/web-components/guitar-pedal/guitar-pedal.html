@@ -78,13 +78,29 @@ class GuitarPedalElement {
         this.listenner = value;
     }
 
-    notify(evento, algo) {
+    notify(evento) {
         this.listenner();
+    }
 
+    toggle() {
         this.actived = !this.actived;
         this.toStatus = this.actived ? "Disable" : "Active";
 
         this.$["led"].toggle();
+    }
+
+    active() {
+        this.actived = true;
+        this.toStatus = "Disable";
+
+        this.$["led"].active();
+    }
+
+    disable() {
+        this.actived = false;
+        this.toStatus = "Active";
+
+        this.$["led"].disable();
     }
 }
 new GuitarPedalElement();

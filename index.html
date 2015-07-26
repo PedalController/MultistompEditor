@@ -29,21 +29,11 @@
         </div>
 
         <script type="text/javascript">
-            var controller;
+            var router = new PaginaRouter();
             window.addEventListener("load", function() {
-                "use strict";
                 setTimeout(
                     function() {
-                        controller = PedalControllerFactory.searchPedal();
-                        controller.on();
-
-                        var pedals = document.querySelectorAll("guitar-pedal");
-
-                        for (let i=0; i<pedals.length; i++) {
-                            pedals[i].click = function(argument) {
-                                controller.toogleEffect(i);
-                            }.bind(this);
-                        }
+                        router.irParaPaginaHome();
                     },
                     1000
                 );

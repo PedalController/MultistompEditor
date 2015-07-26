@@ -46,6 +46,14 @@ class PedalLedElement {
     toggle() {
         this.$["pedal-led"].classList.toggle("actived");
     }
+
+    active() {
+        this.$["pedal-led"].classList.add("actived");
+    }
+
+    disable() {
+        this.$["pedal-led"].classList.remove("actived");
+    }
 }
 
 new PedalLedElement();

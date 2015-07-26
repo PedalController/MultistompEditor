@@ -7,6 +7,8 @@ CommonCause.GENERAL_VOLUME = "GENERAL_VOLUME";
 
 // Patch
 CommonCause.PATCH_VOLUME = "PATCH_VOLUME";
+CommonCause.PATCH_NAME =  "PATCH_NAME";
+
 // Effect
 CommonCause.ACTIVE_EFFECT = "ACTIVE_EFFECT";
 CommonCause.DISABLE_EFFECT = "DISABLE_EFFECT";

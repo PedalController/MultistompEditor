@@ -13,10 +13,13 @@ export class MultistompMessagesConverter {
 		if (message.is(MultistompCause.MULTISTOMP))
 			msg = this.convertToPatch(message, details);
 
+		else if (message.is(MultistompCause.PATCH))
+			msg = this.convertPatch(message, details);
+
 		else if (message.is(MultistompCause.EFFECT))
 			msg = this.convertStatusEffect(message, details);
 
-		else if (message.is(MultistompCause.PATCH))
+		else if (message.is(MultistompCause.PARAM))
 			msg = this.convertSetParam(message, details);
 
 		if (msg != null)
@@ -35,6 +38,15 @@ export class MultistompMessagesConverter {
 		details.patch = message.causer.getIdCurrentPatch();
 
 		return new Messages.Message(CommonCause.TO_PATCH, details);
+	}
+
+	static convertPatch(message, details) {
+		if (!details.type == Details.TypeChange.PATCH_NAME)
+			return Messages.Empty();
+
+		details.value = message.realMessage().details.newValue;
+
+		return new Messages.Message(CommonCause.PATCH_NAME, details);
 	}
 
     /**

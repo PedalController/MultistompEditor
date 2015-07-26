@@ -51,7 +51,7 @@ export class Param {
 
 		let details = new Details(Details.TypeChange.PARAM, this.currentValue);
 
-		let message = new ChangeMessage(MultistompCause.PATCH, this, details);
+		let message = new ChangeMessage(MultistompCause.PARAM, this, details);
 		this.notify(message);
 	}
 

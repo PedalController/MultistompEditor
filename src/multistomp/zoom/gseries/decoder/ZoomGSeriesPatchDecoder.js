@@ -13,8 +13,8 @@ export class ZoomGSeriesPatchDecoder extends AbstractZoomGSeriesPatchDecoder {
 	decode(message, multistomp) {
 		let returned = super.decode(message, multistomp);
 
-		const patch = message.getMessage()[ZoomGSeriesPatchDecoder.PATCH];
-		returned.forEach((messagem) => messagem.details().patch = patch);
+		const patch = message[ZoomGSeriesPatchDecoder.PATCH];
+		returned.forEach((messagem) => messagem.details.patch = patch);
 
 		return returned;
 	}

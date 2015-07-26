@@ -21,7 +21,7 @@ export class ZoomGSeriesMessages {
      * @return Messages
      */
 	static REQUEST_SPECIFIC_PATCH_DETAILS(idPatch) {
-		let details = new Messages.Detals()
+		let details = new Messages.Details();
 		details.patch = idPatch;
 
 		return Messages.For(new Messages.Message(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS, details));
@@ -48,7 +48,7 @@ export class ZoomGSeriesMessages {
      * @return Messages
      */
 	static SET_EFFECT(effectPos, newEffect) {
-		let details = new Messages.Detals()
+		let details = new Messages.Details()
 		details.effect = effectPos;
 		details.value  = newEffect;
 

@@ -1,3 +1,247 @@
+"use strict";
+
+class HomeController {
+    constructor(presenter) {
+        this.presenter = presenter;
+
+        this.patchDetails = null;
+        this.pedalboard = null;
+
+        this.inicializarComponentes();
+    }
+
+    inicializarComponentes() {
+        this.patchDetails = new PatchDetailsComponent("patchDetails");
+        this.pedalboard = new PedalboardComponent("pedalboard", this);
+    }
+
+    setTitle(title) {
+        this.patchDetails.setName(title);
+    }
+
+    active(effect) {
+        this.pedalboard.pedals[effect].active();
+    }
+
+    disable(effect) {
+        this.pedalboard.pedals[effect].disable();
+    }
+
+    toogleEffectOf(index) {
+        this.presenter.toogleEffectOf(index);
+    }
+}
+
+class PatchDetailsComponent {
+    constructor(patchDetailsId) {
+        let patchDetails = document.getElementById(patchDetailsId);
+
+        this.nameElement = patchDetails.querySelector("#patchName");
+        this.numberElement = patchDetails.querySelector("#patchNumber");
+    }
+
+    setName(name) {
+        this.nameElement.innerHTML = name;
+    }
+
+    setNumber(number) {
+        this.numberElement.innerHTML = number;
+    }
+}
+
+class PedalboardComponent {
+    constructor(pedalboardId, controller) {
+        this.pedals = document.getElementById(pedalboardId).querySelectorAll("guitar-pedal");
+
+        for (let i=0; i<this.pedals.length; i++) {
+            let pedal = this.pedals[i];
+            pedal.click = () => controller.toogleEffectOf(i);
+        }
+    }
+}
+
+"use strict";
+
+class Pagina {
+    constructor(router) {
+        this["router"] = router;
+    }
+
+    barra() {
+        return this["router"].barra;
+    }
+    
+    router() {
+        return this["router"];
+    }
+
+    /** Realiza as ações de inicialização
+     * quando a tela é chamada
+     */
+    inicializar() {
+        
+    }
+    
+    /** Realiza as ações de encerramento
+     */
+    finalizar() {
+        
+    }
+}
+"use strict";
+
+class HomePagina extends Pagina {
+    constructor(router) {
+        super(router);
+        this.controller = new HomeController(this);
+        this.pedal = null;
+    }
+
+    inicializar(parametros) {
+        this.pedal = PedalControllerFactory.searchPedal();
+        this.pedal.on();
+        this.pedal.addListenner(this);
+
+        this.pedal.send(ZoomGSeriesMessages.REQUEST_CURRENT_PATCH_NUMBER());
+    }
+
+    finalizar() {
+        this.pedal.off();
+    }
+
+    ////////////////////////////////////////
+
+    onChange(messages) {
+        messages.get(CommonCause.ACTIVE_EFFECT).forEach(message => this.updateEffect(message, CommonCause.ACTIVE_EFFECT));
+		messages.get(CommonCause.DISABLE_EFFECT).forEach(message => this.updateEffect(message, CommonCause.DISABLE_EFFECT));
+
+		messages.get(CommonCause.TO_PATCH).forEach(message => this.setPatch(message));
+
+		messages.get(CommonCause.SET_PARAM).forEach(message => console.log(pedal));
+
+        messages.get(CommonCause.PATCH_NAME).forEach(message => {this.controller.setTitle(message.details.value)});
+    }
+
+    updateEffect(message, cause) {
+		let patch  = message.details.patch;
+		let effect = message.details.effect;
+
+		if (patch != this.pedal.multistomp().getIdCurrentPatch())
+			return;
+
+		if (cause == CommonCause.ACTIVE_EFFECT)
+			this.controller.active(effect);
+		else
+			this.controller.disable(effect);
+	}
+
+	setPatch(message) {
+		let idPatch = message.details.patch;
+
+		this.pedal.send(ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch));
+	}
+
+	toogleEffectOf(effect) {
+		this.pedal.toogleEffect(effect);
+	}
+}
+
+"use strict";
+
+class PaginaRouter {
+    constructor() {
+        this.historico = new Historico();
+
+        this["paginas"] = {};
+        this._adicionarPaginasEm(this["paginas"]);
+    }
+
+    _adicionarPaginasEm(dicionario) {
+        dicionario["home"] = new HomePagina(this);
+    }
+
+    _irParaPagina(pagina, parametros) {
+        let paginaAtual = this.historico.atual();
+
+        if (paginaAtual)
+            paginaAtual.pagina.finalizar();
+
+        paginaAtual = new PaginaHistorico(this["paginas"][pagina], parametros);
+        this.historico.atual(paginaAtual);
+
+        paginaAtual.pagina.inicializar(parametros);
+    }
+
+    irParaPaginaHome() {
+        this._irParaPagina("home");
+    }
+
+    irParaPaginaAnterior() {
+        if (this.historico.size() <= 1)
+            return;
+
+        let paginaAtual = this.historico.voltar();
+        paginaAtual.pagina.finalizar();
+
+        paginaAtual = this.historico.atual();
+        paginaAtual.pagina.inicializar(paginaAtual.parametros);
+    }
+}
+
+class Historico {
+    constructor() {
+        this.pilha = new Pilha();
+    }
+
+    atual(novoAtual) {
+        if (novoAtual)
+            this.pilha.add(novoAtual);
+        else
+            return this.pilha.last();
+    }
+
+    anterior() {
+        return this.pilha.last();
+    }
+
+    voltar() {
+        return this.pilha.pop();
+    }
+
+    size() {
+	     return this.pilha.size();
+    }
+}
+
+class Pilha {
+    constructor() {
+        this.lista = [];
+    }
+
+    add(elemento) {
+        this.lista.push(elemento);
+    }
+
+    last() {
+        return this.lista[this.lista.length-1];
+    }
+
+    pop() {
+        return this.lista.pop();
+    }
+
+    size() {
+        return this.lista.length;
+    }
+}
+
+class PaginaHistorico {
+    constructor(pagina, parametros) {
+        this.pagina = pagina;
+        this.parametros = parametros;
+    }
+}
+
 "use strict"
 
 export class ImplemetationError extends Error {
@@ -183,7 +427,6 @@ export class MultistompChanger {
      * @param Message message
      */
 	attempt(message) {
-        console.log(message);
 		if (message.is(CommonCause.TO_PATCH))
 			this.controller.toPatch(message.details.patch);
 
@@ -191,13 +434,13 @@ export class MultistompChanger {
 			this.controller.activeEffect(message.details.effect);
 
 		else if (message.is(CommonCause.ACTIVE_EFFECT) && message.details.patch != Details.NULL)
-			this.controller.multistomp().patchs().get(message.details.patch).effects().get(message.details.effect).active();
+			this.controller.multistomp().patchs[message.details.patch].effects[message.details.effect].active();
 
 		else if (message.is(CommonCause.DISABLE_EFFECT) && message.details.patch == Details.NULL)
 			this.controller.disableEffect(message.details.effect);
 
 		else if (message.is(CommonCause.DISABLE_EFFECT) && message.details.patch != Details.NULL)
-			this.controller.multistomp().patchs().get(message.details.patch).effects().get(message.details.effect).disable();
+			this.controller.multistomp().patchs[message.details.patch].effects[message.details.effect].disable();
 
 		else if (message.is(CommonCause.SET_PARAM)) {
 			let idEffect = message.details.effect;
@@ -205,7 +448,10 @@ export class MultistompChanger {
 			let newValue = message.details.value;
 
 			this.controller.setEffectParam(idEffect, idParam, newValue);
-		}
+
+		} else if (message.is(CommonCause.PATCH_NAME))
+			this.controller.multistomp().currentPatch().name = message.details.value;
+
 	}
 }
 
@@ -906,6 +1152,8 @@ CommonCause.GENERAL_VOLUME = "GENERAL_VOLUME";
 
 // Patch
 CommonCause.PATCH_VOLUME = "PATCH_VOLUME";
+CommonCause.PATCH_NAME =  "PATCH_NAME";
+
 // Effect
 CommonCause.ACTIVE_EFFECT = "ACTIVE_EFFECT";
 CommonCause.DISABLE_EFFECT = "DISABLE_EFFECT";
@@ -1378,10 +1626,13 @@ export class MultistompMessagesConverter {
 		if (message.is(MultistompCause.MULTISTOMP))
 			msg = this.convertToPatch(message, details);
 
+		else if (message.is(MultistompCause.PATCH))
+			msg = this.convertPatch(message, details);
+
 		else if (message.is(MultistompCause.EFFECT))
 			msg = this.convertStatusEffect(message, details);
 
-		else if (message.is(MultistompCause.PATCH))
+		else if (message.is(MultistompCause.PARAM))
 			msg = this.convertSetParam(message, details);
 
 		if (msg != null)
@@ -1400,6 +1651,15 @@ export class MultistompMessagesConverter {
 		details.patch = message.causer.getIdCurrentPatch();
 
 		return new Messages.Message(CommonCause.TO_PATCH, details);
+	}
+
+	static convertPatch(message, details) {
+		if (!details.type == Details.TypeChange.PATCH_NAME)
+			return Messages.Empty();
+
+		details.value = message.realMessage().details.newValue;
+
+		return new Messages.Message(CommonCause.PATCH_NAME, details);
 	}
 
     /**
@@ -1493,7 +1753,7 @@ export class Param {
 
 		let details = new Details(Details.TypeChange.PARAM, this.currentValue);
 
-		let message = new ChangeMessage(MultistompCause.PATCH, this, details);
+		let message = new ChangeMessage(MultistompCause.PARAM, this, details);
 		this.notify(message);
 	}
 
@@ -1585,7 +1845,7 @@ export class Patch implements OnChangeListenner<Effect> {
 	id;
 
     /** String */
-	name = "";
+	patchName = "";
 
     /** List<Effect> */
 	effects = new Array();
@@ -1613,6 +1873,21 @@ export class Patch implements OnChangeListenner<Effect> {
 	addEffect(effect) {
 		this.effects.push(effect);
 		effect.setListenner(this);
+	}
+
+	/*************************************************/
+
+	get name() {
+		return this.patchName;
+	}
+
+	set name(name) {
+		this.patchName = name;
+
+		let details = new Details(Details.TypeChange.PATCH_NAME, this.patchName);
+
+		let newMessage = new ChangeMessage(MultistompCause.PATCH, this, details);
+		this.notify(newMessage);
 	}
 
 	/*************************************************/
@@ -1853,7 +2128,8 @@ Details.TypeChange  = {
     NONE:"NONE",
     PEDAL_STATUS: "PEDAL_STATUS",
     PARAM:"PARAM",
-    PATCH_NUMBER:"PATCH_NUMBER"
+    PATCH_NUMBER:"PATCH_NUMBER",
+	PATCH_NAME:"PATCH_NAME"
 }
 
 "use strict";
@@ -2140,6 +2416,7 @@ export class ZoomGSeriesMessageDecoder implements MessageDecoder {
 	constructor() {
 		this.decoders = new Array();
 
+		this.decoders.push(new ZoomGSeriesNameDecoder());
 		this.decoders.push(new ZoomGSeriesPatchDecoder());
 		//this.decoders.push(new ZoomGSeriesActiveEffectDecoder());
 		//this.decoders.push(new ZoomGSeriesDisableEffectDecoder());
@@ -2153,7 +2430,7 @@ export class ZoomGSeriesMessageDecoder implements MessageDecoder {
 	 */
 	//@Override
 	isForThis(message) {
-		return this.decodeFor(message).isPresent();
+		return this.decodesFor(message).length > 0;
 	}
 
 	/**
@@ -2162,24 +2439,29 @@ export class ZoomGSeriesMessageDecoder implements MessageDecoder {
 	 * @return Messages
 	 */
 	decode(message, multistomp) {
-		let decoder = this.decodeFor(message);
+		let decoders = this.decodesFor(message);
 
-		if (decoder.isPresent())
-			return decoder.get().decode(message, multistomp);
+		let messages = Messages.Empty();
 
-		throw new Error("The message isn't for this implementation");
+		decoders.forEach((decoder) => messages.concatWith(decoder.decode(message, multistomp)));
+
+		if (decoders.length == 0)
+			throw new Error("The message isn't for this implementation");
+		else
+			return messages;
 	}
 
     /**
      * @param MidiMessage message
      * @return Optional<MessageDecoder>
      */
-	decodeFor(message) {
+	decodesFor(message) {
+		let decoders = new Array();
 		for (let decoder of this.decoders)
 			if (decoder.isForThis(message))
-				return Optional.of(decoder);
+				decoders.push(decoder);
 
-		return Optional.empty();
+		return decoders;
 	}
 }
 
@@ -2329,7 +2611,7 @@ export class ZoomGSeriesMessageEncoder implements MessageEncoder {
      * @return MidiMessage
      */
 	requestSpecificPatchDetails(message) {
-		let patch = message.details().patch;
+		let patch = message.details.patch;
 
 		let CURRENT_PATCH = [
 			0xF0,  0x52, 0x00,
@@ -2410,7 +2692,7 @@ export class ZoomGSeriesMessages {
      * @return Messages
      */
 	static REQUEST_SPECIFIC_PATCH_DETAILS(idPatch) {
-		let details = new Messages.Detals()
+		let details = new Messages.Details();
 		details.patch = idPatch;
 
 		return Messages.For(new Messages.Message(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS, details));
@@ -2437,7 +2719,7 @@ export class ZoomGSeriesMessages {
      * @return Messages
      */
 	static SET_EFFECT(effectPos, newEffect) {
-		let details = new Messages.Detals()
+		let details = new Messages.Details()
 		details.effect = effectPos;
 		details.value  = newEffect;
 
@@ -2474,7 +2756,7 @@ export class AbstractZoomGSeriesPatchDecoder implements MessageDecoder {
 	decode(message, multistomp) {
 		const PATCHES = this.patches();
 
-		let effects = multistomp.currentPatch().effects();
+		let effects = multistomp.currentPatch().effects;
 
 		let messages = Messages.Empty();
 		for (let i = 0; i < PATCHES.length; i++) {
@@ -2482,7 +2764,7 @@ export class AbstractZoomGSeriesPatchDecoder implements MessageDecoder {
 
 			let actived = this.hasActived(message, patch);
 			if (this.refressAll() || (actived && !effects.get(i).hasActived()))
-				messages.add(this.generateMessageFor(actived, i));
+				messages.addMessage(this.generateMessageFor(actived, i));
 		}
 
 		return messages;
@@ -2506,7 +2788,7 @@ export class AbstractZoomGSeriesPatchDecoder implements MessageDecoder {
 	generateMessageFor(actived, effect) {
 		let cause = actived ? CommonCause.ACTIVE_EFFECT : CommonCause.DISABLE_EFFECT;
 
-		let details = new Details();
+		let details = new Messages.Details();
 		details.effect = effect;
 
 		return new Messages.Message(cause, details);
@@ -2520,9 +2802,54 @@ export class AbstractZoomGSeriesPatchDecoder implements MessageDecoder {
 	hasActived(message, position) {
 		const LSB = 0x01; // Least Significant Bit
 
-		let actived = message.getMessage()[position] & LSB;
+		let actived = message[position] & LSB;
 
 		return actived == 1;
+	}
+}
+
+"use strict";
+
+export class ZoomGSeriesNameDecoder implements MessageDecoder {
+
+	static FIRST_LETTER = 102;
+    static LAST_LETTER  = 102 + 11;
+
+    /**
+     * @param MidiMessage message
+     * @return {Boolean}
+     */
+	//@Override
+	isForThis(message) {
+		let tester = new MidiMessageTester(message);
+
+        let patchInfo = tester.init().sizeIs(120).test();
+        let changeName = false;//tester.init().sizeIs(120).test();
+
+		return patchInfo || changeName;
+	}
+
+	/**
+	 * @param MidiMessage message
+	 * @param Multistomp  multistomp
+	 * @return Messages
+	 */
+	//@Override
+	decode(message, multistomp) {
+		let details = new Messages.Details();
+
+        let firstChar = ZoomGSeriesNameDecoder.FIRST_LETTER;
+        let lastChar  = ZoomGSeriesNameDecoder.LAST_LETTER;
+
+        let name = "";
+        for (let i=firstChar; i<lastChar; i++) {
+            let char = message[i];
+            name += String.fromCharCode(char);
+        }
+
+        details.value = name;
+
+		return Messages.For(new Messages.Message(CommonCause.PATCH_NAME, details));
 	}
 }
 
@@ -2541,8 +2868,8 @@ export class ZoomGSeriesPatchDecoder extends AbstractZoomGSeriesPatchDecoder {
 	decode(message, multistomp) {
 		let returned = super.decode(message, multistomp);
 
-		const patch = message.getMessage()[ZoomGSeriesPatchDecoder.PATCH];
-		returned.forEach((messagem) => messagem.details().patch = patch);
+		const patch = message[ZoomGSeriesPatchDecoder.PATCH];
+		returned.forEach((messagem) => messagem.details.patch = patch);
 
 		return returned;
 	}
