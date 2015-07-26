@@ -336,6 +336,65 @@ var PaginaHistorico = function PaginaHistorico(pagina, parametros) {
 
 "use strict";
 
+var Includer = (function () {
+	function Includer(href) {
+		_classCallCheck(this, Includer);
+
+		var content = document.querySelector("link[rel=\"import\"][href^=\"" + href + "\"]");
+		this.template = content["import"].querySelector("template");
+	}
+
+	_createClass(Includer, [{
+		key: "gerarEm",
+		value: function gerarEm(tag) {
+			var content = document.importNode(this.template.content, true);
+			tag.appendChild(content);
+		}
+	}]);
+
+	return Includer;
+})();
+
+"use strict";
+
+var PedalGerador = (function () {
+	function PedalGerador() {
+		_classCallCheck(this, PedalGerador);
+
+		this.pedals = this.getContentOf("src/app/template/pedal/zoom-g3v2.html");
+
+		console.log(this.pedals);
+	}
+
+	_createClass(PedalGerador, [{
+		key: "getContentOf",
+		value: function getContentOf(href) {
+			return document.querySelector("link[rel=\"import\"][href^=\"" + href + "\"]");
+		}
+	}, {
+		key: "generateFor",
+		value: function generateFor(name) {
+			var knobsTemplate = this.knobsTemplateOf(name);
+
+			var guitarPedal = document.createElement("guitar-pedal");
+			var knobs = document.importNode(knobsTemplate.content, true);
+			guitarPedal.addKnobs(knobs);
+			guitarPedal.name = name;
+
+			return guitarPedal;
+		}
+	}, {
+		key: "knobsTemplateOf",
+		value: function knobsTemplateOf(pedalName) {
+			return this.pedals["import"].querySelector("template[data-name=\"" + pedalName + "\"]");
+		}
+	}]);
+
+	return PedalGerador;
+})();
+
+"use strict";
+
 var ImplemetationError = (function (_Error) {
 	_inherits(ImplemetationError, _Error);
 

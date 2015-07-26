@@ -14,9 +14,13 @@
     </style>
     <template>
         <div id="knob" on-mousedown="mousedown">
-            <span id="value-tip">{{value}}</span>
+            <span id="value-tip">{{tip}}</span>
         </div>
-        <div class="knob-title">{{title}}</div>
+        <div class="knob-name">{{name}}</div>
+
+        <div id="content">
+            <content></content>
+        </div>
     </template>
 <script>
 "use strict";
@@ -27,6 +31,8 @@ class WebAudioKnobElement {
         this.startVal = 0;
         this.sprites = 24;
         this.isSprite = true;
+        this.tip = null;
+        this.tips = [];
 
         Polymer(WebAudioKnobElement.prototype);
     }
@@ -58,12 +64,18 @@ class WebAudioKnobElement {
             type:String,
             value: 'dist/web-components/webaudio-knob/plastic_knob.png'
         },
-        title: String,
+        name: String,
         listener: {
             type:Object,
             value:null
         }
       };
+    }
+
+    get valueTip() {
+        let tipsDefined = !(this.tips === undefined || this.tips.length == 0);
+
+        return tipsDefined ? this.tips[this.value] : this.value;
     }
 
     attached() {
@@ -75,6 +87,9 @@ class WebAudioKnobElement {
         sprite.onload = function() {
             this.calculeSprites(sprite);
             this.update(this.value);
+
+            this.tips = this.findTips();
+            this.tip = this.valueTip;
         }.bind(this);
 
         sprite.src = this.src;
@@ -85,6 +100,18 @@ class WebAudioKnobElement {
 
         if (this.isSprite)
             this.sprites = sprite.height/sprite.width - 1;
+    }
+
+    findTips() {
+        let tipsElement = this.$.content.querySelectorAll("span[data-type=label]");
+
+        let tips = [];
+        for (let i=0; i<tipsElement.length; i++) {
+            let tip = tipsElement[i];
+            tips.push(tip.innerHTML);
+        }
+
+        return tips;
     }
 
     mousemove(e) {
@@ -105,6 +132,8 @@ class WebAudioKnobElement {
 
         let update = this.isSprite ? this.updateByImage : this.updateByRodate;
         update.bind(this)(this.$.knob, this.value);
+
+        this.tip = this.valueTip;
     }
 
     updateByImage(knob, value) {

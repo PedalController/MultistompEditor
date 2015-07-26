@@ -11,6 +11,10 @@
         <link rel="import" href="dist/web-components/guitar-pedal/guitar-pedal.html">
 
         <script src="dist/cache/babel.js" charset="utf-8"></script>
+
+        <link rel="import" href="src/app/template/pedal/zoom-g3v2.html">
+
+        <link href='http://fonts.googleapis.com/css?family=Orbitron|Ubuntu' rel='stylesheet' type='text/css'>
     </head>
     <body>
         <header id="patchDetails">
@@ -34,6 +38,9 @@
                 setTimeout(
                     function() {
                         router.irParaPaginaHome();
+
+                        var a = new PedalGerador();
+                        document.querySelector("#pedalboard").appendChild(a.generateFor("FD COMBO"))
                     },
                     1000
                 );

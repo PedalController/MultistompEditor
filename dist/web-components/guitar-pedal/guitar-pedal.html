@@ -29,19 +29,15 @@
   </style>
   <template>
       <pedal-body id="pedal-body" color="{{color}}" image="http://localhost:8080/dist/metallic.png">
-          <content></content>
-        <div class="knobs">
-            <webaudio-knob title="value" value="0" min="0" max="50"></webaudio-knob>
-            <pedal-led id="led"></pedal-led>
-            <webaudio-knob value="25" min="0" max="50"></webaudio-knob>
-        </div>
-        <div class="knobs">
-            <webaudio-knob src="../webaudio-knob/MiniBrute.png" value="0" min="0" max="100"></webaudio-knob>
-        </div>
+          <pedal-led id="led"></pedal-led>
 
-        <div id="pedal-name">{{name}}</div>
+          <div id="knobs" class="knobs">
+              <content></content>
+          </div>
 
-        <button on-click="notify">{{toStatus}}</button>
+          <div id="pedal-name">{{name}}</div>
+
+          <button on-click="notify">{{toStatus}}</button>
     </pedal-body>
   </template>
 
@@ -101,6 +97,10 @@ class GuitarPedalElement {
         this.toStatus = "Active";
 
         this.$["led"].disable();
+    }
+
+    addKnobs(knobs) {
+        this.$.knobs.appendChild(knobs);
     }
 }
 new GuitarPedalElement();

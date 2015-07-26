@@ -9,65 +9,69 @@
 			"HomePagina",
 			"PaginaRouter"
 		],
+		"app/util": [
+			"Includer",
+			"PedalGerador"
+		],
 
 
-		"architecture/error": [
+		"multistomp-editor/architecture/error": [
 			"ImplementationError",
 			"DeviceNotFoundError"
 		],
-		"architecture/util": [
+		"multistomp-editor/architecture/util": [
 			"BinarioUtil",
 			"MidiMessageTester",
 			"Optional"
 		],
-		"controller": [
+		"multistomp-editor/controller": [
 			"MultistompChanger",
 			"PedalCompany",
 			"PedalController",
 			"PedalControllerFactory"
 		],
-		"connection": [
+		"multistomp-editor/connection": [
 			"MidiConnection"
 		],
-		"connection/codification": [
+		"multistomp-editor/connection/codification": [
 			"MessageDecoderFactory",
 			"MessageEncoderFactory"
 		],
-		"connection/transport": [
+		"multistomp-editor/connection/transport": [
 			"MidiTransmition",
 			"MidiReader",
 			"MidiSender"
 		],
-		"domain": [
+		"multistomp-editor/domain": [
 			"PedalType"
 		],
-		"domain/message": [
+		"multistomp-editor/domain/message": [
 			"CommonCause",
 			"Messages"
 		],
-		"domain/multistomp": [
+		"multistomp-editor/domain/multistomp": [
 			"Effect",
 			"Multistomp",
 			"MultistompMessagesConverter",
 			"Param",
 			"Patch"
 		],
-		"domain/multistomp/message": [
+		"multistomp-editor/domain/multistomp/message": [
 			"ChangeMessage",
 			"Details",
 			"MultistompCause"
 		],
-		"multistomp/simulator": [
+		"multistomp-editor/multistomp/simulator": [
 			"Log",
 			"MultistompSimulator"
 		],
-		"multistomp/nulo": [
+		"multistomp-editor/multistomp/nulo": [
 			"NullMultistomp"
 		],
-		"multistomp/zoom": [
+		"multistomp-editor/multistomp/zoom": [
 			"ZoomMultistompFactory"
 		],
-		"multistomp/zoom/gseries": [
+		"multistomp-editor/multistomp/zoom/gseries": [
 			"ZoomGSeries",
 			"ZoomGSeriesCause",
 			"ZoomGSeriesEffect",
@@ -75,7 +79,7 @@
 			"ZoomGSeriesMessageEncoder",
 			"ZoomGSeriesMessages"
 		],
-		"multistomp/zoom/gseries/decoder": [
+		"multistomp-editor/multistomp/zoom/gseries/decoder": [
 			"AbstractZoomGSeriesPatchDecoder",
 			"ZoomGSeriesNameDecoder",
 			"ZoomGSeriesPatchDecoder",

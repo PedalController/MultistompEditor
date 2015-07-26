@@ -14,6 +14,8 @@ pedal-body {
 }
 
 #pedal-name {
+    margin-top: 45px;
+    margin-bottom: 40px;
     font-family: Arial;
     text-align: center;
 }
