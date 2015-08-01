@@ -2,61 +2,53 @@
 
 export class AbstractZoomGSeriesPatchDecoder implements MessageDecoder {
 
-	//@Override
 	/**
 	 * @param MidiMessage message
 	 * @return {Boolean}
 	 */
+	//@Override
 	isForThis(message) {
 		let tester = new MidiMessageTester(message);
 
-		return tester.init().sizeIs(this.size()).test();
+		return tester.init().sizeIs(this.messageSize()).test();
 	}
 
     /**
      * @return {[type]}
      */
-	size() {}
+	@abstract messageSize() {}
 
-	//@Override
 	/**
 	 * @param MidiMessage message
 	 * @param Multistomp multistomp
 	 * @return Messages
 	 */
-	decode(message, multistomp) {
+	//@Override
+	decode(message) {
 		const PATCHES = this.patches();
 
-		let effects = multistomp.currentPatch().effects;
-
-		let messages = Messages.Empty();
-		for (let i = 0; i < PATCHES.length; i++) {
-			let patch = PATCHES[i];
+		let messages = new Messages();
+		for (let idPedal = 0; idPedal < PATCHES.length; idPedal++) {
+			let patch = PATCHES[idPedal];
 
 			let actived = this.hasActived(message, patch);
-			if (this.refressAll() || (actived && !effects.get(i).hasActived()))
-				messages.addMessage(this.generateMessageFor(actived, i));
+			messages.addMessage(this.generateMessageFor(idPedal, actived));
 		}
 
 		return messages;
 	}
 
     /**
-     * @return {Boolean}
-     */
-	refressAll() {}
-
-    /**
      * @return int[]
      */
-	patches() {}
+	@abstract patches() {}
 
     /**
      * @param boolean actived
      * @param int     effect
      * @return Messages.Message
      */
-	generateMessageFor(actived, effect) {
+	generateMessageFor(effect, actived) {
 		let cause = actived ? CommonCause.ACTIVE_EFFECT : CommonCause.DISABLE_EFFECT;
 
 		let details = new Messages.Details();

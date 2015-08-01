@@ -1,49 +1,29 @@
-"use scrict";
-
-
 export class MidiConnection implements MidiReaderListenner {
 
-    /** Multistomp */
-	multistomp;
-
-    /** MidiSender */
-	sender;
-    /** MidiReader */
-	reader;
-
-    /** MessageEncoder */
-	encoder;
-    /** MessageDecoder */
-	decoder;
+	transmition;
+	codification;
 
     /** Optional<OnUpdateListenner> */
 	listenner = Optional.empty();
 
-    /**
-	 * @param Multistomp multistomp
-     * @param PedalType pedalType
-	 */
-	constructor(multistomp, pedalType) {
-		this.multistomp = multistomp;
+	/** Optional<MidiMessagesAnalyzer> */
+	analyzer = Optional.empty();
 
-		this.sender = new MidiSender(pedalType);
-		this.reader = new MidiReader(pedalType);
-		this.reader.setListenner(this);
+	constructor(pedalType, pedalDevices) {
+		this.transmition = new MidiTransmition(pedalDevices);
+		this.transmition.setOnDataListenerReceived(this);
 
-		this.encoder = MessageEncoderFactory.For(pedalType);
-		this.decoder = MessageDecoderFactory.For(pedalType);
+		this.codification = MessageCodificationFactory.For(pedalType);
 	}
 
 	/*************************************************/
 
 	start() {
-		this.sender.start();
-		this.reader.start();
+		this.transmition.start();
 	}
 
 	stop() {
-		this.sender.stop();
-		this.reader.stop();
+		this.transmition.stop();
 	}
 
 	/*************************************************/
@@ -62,18 +42,18 @@ export class MidiConnection implements MidiReaderListenner {
      * @return List<MidiMessage>
 	 */
 	generateMidiMessages(messages) {
-		return this.encoder.encode(messages);
+		return this.codification.encode(messages);
 	}
 
     /**
      * @param MidiMessage message
      */
 	sendMidiMessage(message) {
+		console.log("PASSAR PARA ANALIZER");
 		console.log("MIDI sended: ");
-		//console.log(message);
-		console.log(" " + BinarioUtil.byteArrayToHex(message));
+		console.log(" " + BinarioUtil.byteArrayToHex(message.message));
 
-		this.sender.send(message);
+		this.transmition.send(message.message);
 	}
 
 	/*************************************************/
@@ -88,17 +68,21 @@ export class MidiConnection implements MidiReaderListenner {
     /**
      * @param message MidiMessage
      */
-	//@Override
+	//@override
 	onDataReceived(message) {
+		console.log("PASSAR PARA ANALIZER");
 		console.log("MIDI received: ");
     	console.log(" " + BinarioUtil.byteArrayToHex(message));
 
-		if (!this.decoder.isForThis(message)) {
+		if (this.analyzer.isPresent())
+			this.analyzer.get().analyze(message);
+
+		if (!this.codification.isForThis(message)) {
 			console.log(" unknown ");
 			return;
 		}
 
-		let messagesDecoded = this.decoder.decode(message, this.multistomp);
+		let messagesDecoded = this.codification.decode(message);
 
     	if (this.listenner.isPresent())
 			this.listenner.get().update(messagesDecoded);

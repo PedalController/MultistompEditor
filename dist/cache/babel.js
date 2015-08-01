@@ -1,5 +1,7 @@
 "use strict";
 
+var _createDecoratedClass = (function () { function defineProperties(target, descriptors, initializers) { for (var i = 0; i < descriptors.length; i++) { var descriptor = descriptors[i]; var decorators = descriptor.decorators; var key = descriptor.key; delete descriptor.key; delete descriptor.decorators; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor || descriptor.initializer) descriptor.writable = true; if (decorators) { for (var f = 0; f < decorators.length; f++) { var decorator = decorators[f]; if (typeof decorator === "function") { descriptor = decorator(target, key, descriptor) || descriptor; } else { throw new TypeError("The decorator for method " + descriptor.key + " is of the invalid type " + typeof decorator); } } if (descriptor.initializer !== undefined) { initializers[key] = descriptor; continue; } } Object.defineProperty(target, key, descriptor); } } return function (Constructor, protoProps, staticProps, protoInitializers, staticInitializers) { if (protoProps) defineProperties(Constructor.prototype, protoProps, protoInitializers); if (staticProps) defineProperties(Constructor, staticProps, staticInitializers); return Constructor; }; })();
+
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -27,9 +29,14 @@ var HomeController = (function () {
 			this.pedalboard = new PedalboardComponent("pedalboard", this);
 		}
 	}, {
-		key: "setTitle",
-		value: function setTitle(title) {
+		key: "setPatchTitle",
+		value: function setPatchTitle(title) {
 			this.patchDetails.setName(title);
+		}
+	}, {
+		key: "setPatchNumber",
+		value: function setPatchNumber(number) {
+			this.patchDetails.setNumber(number);
 		}
 	}, {
 		key: "active",
@@ -69,6 +76,7 @@ var PatchDetailsComponent = (function () {
 	}, {
 		key: "setNumber",
 		value: function setNumber(number) {
+			if (number < 10) number = "0" + number;
 			this.numberElement.innerHTML = number;
 		}
 	}]);
@@ -148,11 +156,26 @@ var HomePagina = (function (_Pagina) {
 	_createClass(HomePagina, [{
 		key: "inicializar",
 		value: function inicializar(parametros) {
-			this.pedal = PedalControllerFactory.searchPedal();
-			this.pedal.on();
-			this.pedal.addListenner(this);
+			var _this2 = this;
 
-			this.pedal.send(ZoomGSeriesMessages.REQUEST_CURRENT_PATCH_NUMBER());
+			var selectPedalPromise = function selectPedalPromise(pedals) {
+				return new Promise(function (resolve, reject) {
+					return resolve(pedals[0]);
+				});
+			};
+			var showPedalController = function showPedalController(pedalController) {
+				console.log(pedalController);
+
+				_this2.pedal = pedalController;
+
+				_this2.pedal.on();
+				_this2.pedal.addListenner(_this2);
+				_this2.pedal.send(ZoomGSeriesMessages.REQUEST_CURRENT_PATCH_NUMBER());
+			};
+
+			var pedalLoader = new PedalLoader(selectPedalPromise);
+
+			pedalLoader.load().then(showPedalController);
 		}
 	}, {
 		key: "finalizar",
@@ -165,25 +188,28 @@ var HomePagina = (function (_Pagina) {
 		////////////////////////////////////////
 
 		value: function onChange(messages) {
-			var _this2 = this;
+			var _this3 = this;
 
-			messages.get(CommonCause.ACTIVE_EFFECT).forEach(function (message) {
-				return _this2.updateEffect(message, CommonCause.ACTIVE_EFFECT);
+			messages.getBy(CommonCause.ACTIVE_EFFECT).forEach(function (message) {
+				return _this3.updateEffect(message, CommonCause.ACTIVE_EFFECT);
 			});
-			messages.get(CommonCause.DISABLE_EFFECT).forEach(function (message) {
-				return _this2.updateEffect(message, CommonCause.DISABLE_EFFECT);
-			});
-
-			messages.get(CommonCause.TO_PATCH).forEach(function (message) {
-				return _this2.setPatch(message);
+			messages.getBy(CommonCause.DISABLE_EFFECT).forEach(function (message) {
+				return _this3.updateEffect(message, CommonCause.DISABLE_EFFECT);
 			});
 
-			messages.get(CommonCause.SET_PARAM).forEach(function (message) {
-				return console.log(pedal);
+			messages.getBy(CommonCause.TO_PATCH).forEach(function (message) {
+				return _this3.setPatch(message);
 			});
 
-			messages.get(CommonCause.PATCH_NAME).forEach(function (message) {
-				_this2.controller.setTitle(message.details.value);
+			messages.getBy(CommonCause.SET_PARAM).forEach(function (message) {
+				return console.log(_this3.pedal);
+			});
+
+			messages.getBy(CommonCause.PATCH_NAME).forEach(function (message) {
+				_this3.controller.setPatchTitle(message.details.value);
+			});
+			messages.getBy(CommonCause.PATCH_NUMBER).forEach(function (message) {
+				_this3.controller.setPatchNumber(message.details.value);
 			});
 		}
 	}, {
@@ -202,6 +228,7 @@ var HomePagina = (function (_Pagina) {
 			var idPatch = message.details.patch;
 
 			this.pedal.send(ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch));
+			this.controller.setPatchNumber(idPatch);
 		}
 	}, {
 		key: "toogleEffectOf",
@@ -388,15 +415,48 @@ var PedalGerador = (function () {
 		value: function knobsTemplateOf(pedalName) {
 			return this.pedals["import"].querySelector("template[data-name=\"" + pedalName + "\"]");
 		}
+	}, {
+		key: "pedalsNames",
+		value: function pedalsNames() {
+			var pedalsNames = [];
+			var pedals = this.pedals["import"].querySelectorAll("template");
+
+			for (var i = 0; i < pedals.length; i++) {
+				var pedal = pedals[i];
+				pedalsNames.push(pedal.getAttribute("data-name"));
+			}
+
+			return pedalsNames;
+		}
 	}]);
 
 	return PedalGerador;
 })();
 
+var ErrorClass = (function (_Error) {
+	_inherits(ErrorClass, _Error);
+
+	function ErrorClass(message) {
+		_classCallCheck(this, ErrorClass);
+
+		_get(Object.getPrototypeOf(ErrorClass.prototype), "constructor", this).call(this);
+
+		if (Error.hasOwnProperty("captureStackTrace")) Error.captureStackTrace(this, this.constructor);else Object.defineProperty(this, "stack", {
+			value: new Error().stack
+		});
+
+		Object.defineProperty(this, "message", {
+			value: message
+		});
+	}
+
+	return ErrorClass;
+})(Error);
+
 "use strict";
 
-var ImplemetationError = (function (_Error) {
-	_inherits(ImplemetationError, _Error);
+var ImplemetationError = (function (_ErrorClass) {
+	_inherits(ImplemetationError, _ErrorClass);
 
 	function ImplemetationError() {
 		_classCallCheck(this, ImplemetationError);
@@ -405,12 +465,12 @@ var ImplemetationError = (function (_Error) {
 	}
 
 	return ImplemetationError;
-})(Error);
+})(ErrorClass);
 
 "use strict";
 
-var DeviceNotFoundError = (function (_Error2) {
-	_inherits(DeviceNotFoundError, _Error2);
+var DeviceNotFoundError = (function (_ErrorClass2) {
+	_inherits(DeviceNotFoundError, _ErrorClass2);
 
 	function DeviceNotFoundError() {
 		_classCallCheck(this, DeviceNotFoundError);
@@ -419,7 +479,41 @@ var DeviceNotFoundError = (function (_Error2) {
 	}
 
 	return DeviceNotFoundError;
-})(Error);
+})(ErrorClass);
+
+var AbstractClassError = (function (_ErrorClass3) {
+	_inherits(AbstractClassError, _ErrorClass3);
+
+	function AbstractClassError(classe) {
+		_classCallCheck(this, AbstractClassError);
+
+		_get(Object.getPrototypeOf(AbstractClassError.prototype), "constructor", this).call(this, "The \"" + classe.constructor.name + "\" class is abstract");
+	}
+
+	return AbstractClassError;
+})(ErrorClass);
+
+var AbstractMethodError = (function (_ErrorClass4) {
+	_inherits(AbstractMethodError, _ErrorClass4);
+
+	function AbstractMethodError(message) {
+		_classCallCheck(this, AbstractMethodError);
+
+		_get(Object.getPrototypeOf(AbstractMethodError.prototype), "constructor", this).call(this, message);
+	}
+
+	return AbstractMethodError;
+})(ErrorClass);
+
+function abstract(target, name, descriptor) {
+	var isMethod = descriptor !== undefined && descriptor.value !== undefined;
+
+	if (isMethod) descriptor.value = function () {
+		if (this.constructor.name == target.constructor.name) throw new AbstractMethodError("The method \"" + name + "\" of \"" + target.constructor.name + "\" is abstract");else throw new AbstractMethodError("The method \"" + name + "\" of \"" + this.constructor.name + "\" is a \"" + target.constructor.name + "\" abstract method. It must be implemented");
+	};
+
+	return descriptor;
+}
 
 "use strict";
 
@@ -467,6 +561,89 @@ var BinarioUtil = (function () {
 	}]);
 
 	return BinarioUtil;
+})();
+
+//@abstract
+
+var MessagesCollection = (function () {
+	function MessagesCollection() {
+		_classCallCheck(this, MessagesCollection);
+
+		this.messages = new Array();
+	}
+
+	_createClass(MessagesCollection, [{
+		key: "add",
+		value: function add(message) {
+			this.messages.push(message);
+
+			return this;
+		}
+	}, {
+		key: "concatWith",
+		value: function concatWith(messages) {
+			var _this4 = this;
+
+			messages.forEach(function (message) {
+				return _this4.add(message);
+			});
+
+			return this;
+		}
+	}, {
+		key: Symbol.iterator,
+
+		/**
+   * @return Iterator<Message>
+   */
+		value: function value() {
+			return this.messages[Symbol.iterator]();
+		}
+	}, {
+		key: "forEach",
+		value: function forEach(funcao) {
+			this.messages.forEach(funcao);
+		}
+	}, {
+		key: "toString",
+
+		/**
+      * @return String
+      */
+		//@Override
+		value: function toString() {
+			var returned = "";
+
+			var _iteratorNormalCompletion2 = true;
+			var _didIteratorError2 = false;
+			var _iteratorError2 = undefined;
+
+			try {
+				for (var _iterator2 = this.messages[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+					var message = _step2.value;
+
+					returned += message.toString();
+				}
+			} catch (err) {
+				_didIteratorError2 = true;
+				_iteratorError2 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion2 && _iterator2["return"]) {
+						_iterator2["return"]();
+					}
+				} finally {
+					if (_didIteratorError2) {
+						throw _iteratorError2;
+					}
+				}
+			}
+
+			return returned;
+		}
+	}]);
+
+	return MessagesCollection;
 })();
 
 "use strict";
@@ -659,13 +836,33 @@ var MultistompChanger = (function () {
    * @param Message message
    */
 		value: function attempt(message) {
-			if (message.is(CommonCause.TO_PATCH)) this.controller.toPatch(message.details.patch);else if (message.is(CommonCause.ACTIVE_EFFECT) && message.details.patch == Details.NULL) this.controller.activeEffect(message.details.effect);else if (message.is(CommonCause.ACTIVE_EFFECT) && message.details.patch != Details.NULL) this.controller.multistomp().patchs[message.details.patch].effects[message.details.effect].active();else if (message.is(CommonCause.DISABLE_EFFECT) && message.details.patch == Details.NULL) this.controller.disableEffect(message.details.effect);else if (message.is(CommonCause.DISABLE_EFFECT) && message.details.patch != Details.NULL) this.controller.multistomp().patchs[message.details.patch].effects[message.details.effect].disable();else if (message.is(CommonCause.SET_PARAM)) {
+			if (message.is(CommonCause.TO_PATCH)) this.controller.toPatch(message.details.patch);else if (this.isActiveEffectCurrentPatch(message)) this.controller.activeEffect(message.details.effect);else if (this.isActiveEffectSpecificPatch(message)) this.controller.multistomp().patchs[message.details.patch].effects[message.details.effect].active();else if (this.isDisableEffectCurrentPatch(message)) this.controller.disableEffect(message.details.effect);else if (this.isDisableEffectSpecificPatch(message)) this.controller.multistomp().patchs[message.details.patch].effects[message.details.effect].disable();else if (message.is(CommonCause.SET_PARAM)) {
 				var idEffect = message.details.effect;
 				var idParam = message.details.param;
 				var newValue = message.details.value;
 
 				this.controller.setEffectParam(idEffect, idParam, newValue);
 			} else if (message.is(CommonCause.PATCH_NAME)) this.controller.multistomp().currentPatch().name = message.details.value;
+		}
+	}, {
+		key: "isActiveEffectCurrentPatch",
+		value: function isActiveEffectCurrentPatch(message) {
+			return message.is(CommonCause.ACTIVE_EFFECT) && message.details.patch == Messages.Details.NULL;
+		}
+	}, {
+		key: "isDisableEffectCurrentPatch",
+		value: function isDisableEffectCurrentPatch(message) {
+			return message.is(CommonCause.DISABLE_EFFECT) && message.details.patch == Messages.Details.NULL;
+		}
+	}, {
+		key: "isActiveEffectSpecificPatch",
+		value: function isActiveEffectSpecificPatch(message) {
+			message.is(CommonCause.ACTIVE_EFFECT) && message.details.patch != Details.NULL;
+		}
+	}, {
+		key: "isDisableEffectSpecificPatch",
+		value: function isDisableEffectSpecificPatch(message) {
+			message.is(CommonCause.ACTIVE_EFFECT) && message.details.patch != Details.NULL;
 		}
 	}]);
 
@@ -716,7 +913,7 @@ var PedalController = (function () {
   * @param pedal Multistomp
   */
 
-	function PedalController(pedal) {
+	function PedalController(midiConnection, pedal) {
 		_classCallCheck(this, PedalController);
 
 		this.controllerListenners = new Array();
@@ -727,7 +924,7 @@ var PedalController = (function () {
 
 		this.pedal = pedal;
 
-		this.connection = new MidiConnection(pedal, pedal.getPedalType());
+		this.connection = midiConnection;
 		this.connection.setListenner(this);
 
 		this.pedal.addListenner(this);
@@ -911,27 +1108,27 @@ var PedalController = (function () {
    * @param messages Messages
    */
 		value: function notify(listenners, messages) {
-			var _iteratorNormalCompletion2 = true;
-			var _didIteratorError2 = false;
-			var _iteratorError2 = undefined;
+			var _iteratorNormalCompletion3 = true;
+			var _didIteratorError3 = false;
+			var _iteratorError3 = undefined;
 
 			try {
-				for (var _iterator2 = listenners[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-					var listenner = _step2.value;
+				for (var _iterator3 = listenners[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+					var listenner = _step3.value;
 
 					listenner.onChange(messages);
 				}
 			} catch (err) {
-				_didIteratorError2 = true;
-				_iteratorError2 = err;
+				_didIteratorError3 = true;
+				_iteratorError3 = err;
 			} finally {
 				try {
-					if (!_iteratorNormalCompletion2 && _iterator2["return"]) {
-						_iterator2["return"]();
+					if (!_iteratorNormalCompletion3 && _iterator3["return"]) {
+						_iterator3["return"]();
 					}
 				} finally {
-					if (_didIteratorError2) {
-						throw _iteratorError2;
+					if (_didIteratorError3) {
+						throw _iteratorError3;
 					}
 				}
 			}
@@ -963,133 +1160,122 @@ var PedalController = (function () {
 
 "use strict";
 
-var PedalControllerFactory = (function () {
-	function PedalControllerFactory() {
-		_classCallCheck(this, PedalControllerFactory);
+var PedalGenerator = (function () {
+	function PedalGenerator(midiConnection) {
+		_classCallCheck(this, PedalGenerator);
+
+		this.midiConnection = midiConnection;
 	}
 
-	_createClass(PedalControllerFactory, null, [{
-		key: "searchPedal",
+	_createClass(PedalGenerator, [{
+		key: "generateFor",
+		value: function generateFor(pedalType) {
+			var pedal = MultistompFactory.For(pedalType);
 
-		/**
-   * Search the pedal connected on PC
-   * @return PedalController
-   */
-		value: function searchPedal() {
-			var _iteratorNormalCompletion3 = true;
-			var _didIteratorError3 = false;
-			var _iteratorError3 = undefined;
-
-			try {
-				for (var _iterator3 = PedalType.values[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-					var multistomp = _step3.value;
-
-					if (this.isConnected(multistomp)) return this.getPedal(multistomp);
-				}
-			} catch (err) {
-				_didIteratorError3 = true;
-				_iteratorError3 = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion3 && _iterator3["return"]) {
-						_iterator3["return"]();
-					}
-				} finally {
-					if (_didIteratorError3) {
-						throw _iteratorError3;
-					}
-				}
-			}
-
-			return new PedalController(new NullMultistomp());
-		}
-	}, {
-		key: "isConnected",
-
-		/**
-   * @param PedalType multistomp
-   * @return {Boolean}
-   */
-		value: function isConnected(multistomp) {
-			return MidiTransmition.findDevices(multistomp).length != 0;
-		}
-	}, {
-		key: "getPedal",
-
-		/**
-   * @param PedalType pedalType
-   * @return PedalController
-   */
-		value: function getPedal(pedalType) {
-			var pedal = undefined;
-			var company = pedalType.getCompany();
-
-			if (company == PedalCompany.ZoomCorp) pedal = new ZoomMultistompFactory().generate(pedalType);else if (company == PedalCompany.Roland) pedal = new NullMultistomp();else if (company == PedalCompany.Line6) pedal = new NullMultistomp();else pedal = new NullMultistomp();
-
-			return new PedalController(pedal);
+			return new PedalController(this.midiConnection, pedal);
 		}
 	}]);
 
-	return PedalControllerFactory;
+	return PedalGenerator;
 })();
 
-"use scrict";
+"use strict";
 
-var MidiConnection = (function () {
-
-	/**
- * @param Multistomp multistomp
-  * @param PedalType pedalType
+/**
+ * Load the real pedal patchs and generate the Pedal object
  */
 
-	function MidiConnection(multistomp, pedalType) {
-		_classCallCheck(this, MidiConnection);
+var PedalLoader = (function () {
+	function PedalLoader(selectPedalPromise) {
+		_classCallCheck(this, PedalLoader);
 
-		this.listenner = Optional.empty();
+		this.selectPedalPromise = selectPedalPromise;
 
-		this.multistomp = multistomp;
-
-		this.sender = new MidiSender(pedalType);
-		this.reader = new MidiReader(pedalType);
-		this.reader.setListenner(this);
-
-		this.encoder = MessageEncoderFactory.For(pedalType);
-		this.decoder = MessageDecoderFactory.For(pedalType);
+		this.midiSystem = new MidiSystem();
 	}
 
-	_createClass(MidiConnection, [{
-		key: "start",
-
-		/*************************************************/
-
-		value: function start() {
-			this.sender.start();
-			this.reader.start();
+	_createClass(PedalLoader, [{
+		key: "load",
+		value: function load() {
+			return this.midiSystem.start().then(this.findPedals.bind(this)).then(this.selectPedal.bind(this)).then(this.findPedalDevices.bind(this)).then(this.generateConnection.bind(this)).then(this.generateMultistomp.bind(this));
 		}
 	}, {
-		key: "stop",
-		value: function stop() {
-			this.sender.stop();
-			this.reader.stop();
+		key: "findPedals",
+		value: function findPedals() {
+			var finder = new PedalsFinder(this.midiSystem);
+			var pedalsFound = finder.find(PedalType.values);
+
+			return new Promise(function (resolve) {
+				return resolve(pedalsFound);
+			});
 		}
 	}, {
-		key: "send",
+		key: "selectPedal",
+		value: function selectPedal(pedalsFound) {
+			return this.selectPedalPromise(pedalsFound);
+		}
+	}, {
+		key: "findPedalDevices",
+		value: function findPedalDevices(pedalType) {
+			var pedalDevices = this.midiSystem.devicesOf(pedalType);
 
-		/*************************************************/
+			return new Promise(function (resolve) {
+				resolve({ pedalType: pedalType, pedalDevices: pedalDevices });
+			});
+		}
+	}, {
+		key: "generateConnection",
+		value: function generateConnection(pedal) {
+			var pedalType = pedal.pedalType;
+			var pedalDevices = pedal.pedalDevices;
 
-		/**
-  * @param messages Messages
-  */
-		value: function send(messages) {
+			var connection = new MidiConnection(pedalType, pedalDevices);
+
+			return new Promise(function (resolve) {
+				resolve({ connection: connection, pedalType: pedalType });
+			});
+		}
+	}, {
+		key: "generateMultistomp",
+		value: function generateMultistomp(params) {
+			var connection = params.connection;
+			var pedalType = params.pedalType;
+
+			var generator = new PedalGenerator(connection);
+			var multistomp = generator.generateFor(pedalType);
+
+			return new Promise(function (resolve) {
+				return resolve(multistomp);
+			});
+		}
+	}]);
+
+	return PedalLoader;
+})();
+
+"use strict";
+
+var PedalsFinder = (function () {
+	function PedalsFinder(midiSystem) {
+		_classCallCheck(this, PedalsFinder);
+
+		this.midiSystem = midiSystem;
+	}
+
+	_createClass(PedalsFinder, [{
+		key: "find",
+		value: function find(pedalsType) {
+			var pedals = new Array();
+
 			var _iteratorNormalCompletion4 = true;
 			var _didIteratorError4 = false;
 			var _iteratorError4 = undefined;
 
 			try {
-				for (var _iterator4 = this.generateMidiMessages(messages)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-					var midiMessage = _step4.value;
+				for (var _iterator4 = pedalsType[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+					var multistomp = _step4.value;
 
-					this.sendMidiMessage(midiMessage);
+					if (this.isConnected(multistomp)) pedals.push(multistomp);
 				}
 			} catch (err) {
 				_didIteratorError4 = true;
@@ -1105,6 +1291,308 @@ var MidiConnection = (function () {
 					}
 				}
 			}
+
+			return pedals;
+		}
+	}, {
+		key: "isConnected",
+		value: function isConnected(multistomp) {
+			return this.findDevicesFor(multistomp).length != 0;
+		}
+	}, {
+		key: "findDevicesFor",
+
+		/**
+   * @param PedalType type
+   * @return List<Info> all devices that corresponding the PedalType
+   */
+		value: function findDevicesFor(type) {
+			var devices = new Array();
+
+			var device = undefined;
+
+			var _iteratorNormalCompletion5 = true;
+			var _didIteratorError5 = false;
+			var _iteratorError5 = undefined;
+
+			try {
+				for (var _iterator5 = this.midiSystem.midiDevices[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+					device = _step5.value;
+
+					if (device.name.includes(type.USBName)) devices.push(device);
+				}
+			} catch (err) {
+				_didIteratorError5 = true;
+				_iteratorError5 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion5 && _iterator5["return"]) {
+						_iterator5["return"]();
+					}
+				} finally {
+					if (_didIteratorError5) {
+						throw _iteratorError5;
+					}
+				}
+			}
+
+			return devices;
+		}
+	}]);
+
+	return PedalsFinder;
+})();
+
+var MidiMessage = function MidiMessage() {
+	_classCallCheck(this, MidiMessage);
+
+	this.message = [];
+	var _iteratorNormalCompletion6 = true;
+	var _didIteratorError6 = false;
+	var _iteratorError6 = undefined;
+
+	try {
+		for (var _len = arguments.length, bytes = Array(_len), _key = 0; _key < _len; _key++) {
+			bytes[_key] = arguments[_key];
+		}
+
+		for (var _iterator6 = bytes[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+			var byte = _step6.value;
+
+			this.message.push(byte);
+		}
+	} catch (err) {
+		_didIteratorError6 = true;
+		_iteratorError6 = err;
+	} finally {
+		try {
+			if (!_iteratorNormalCompletion6 && _iterator6["return"]) {
+				_iterator6["return"]();
+			}
+		} finally {
+			if (_didIteratorError6) {
+				throw _iteratorError6;
+			}
+		}
+	}
+};
+
+var MidiMessages = (function (_MessagesCollection) {
+	_inherits(MidiMessages, _MessagesCollection);
+
+	function MidiMessages() {
+		_classCallCheck(this, MidiMessages);
+
+		_get(Object.getPrototypeOf(MidiMessages.prototype), "constructor", this).apply(this, arguments);
+	}
+
+	return MidiMessages;
+})(MessagesCollection);
+
+"use strict";
+
+var MidiSystem = (function () {
+	function MidiSystem() {
+		_classCallCheck(this, MidiSystem);
+	}
+
+	_createClass(MidiSystem, [{
+		key: "start",
+		value: function start() {
+			return navigator.requestMIDIAccess({ sysex: true }).then(this.onStartPromised.bind(this), this.onError.bind(this));
+		}
+	}, {
+		key: "onStartPromised",
+		value: function onStartPromised(midiAccess) {
+			this.onStart(midiAccess);
+
+			return new Promise(function (resolve) {
+				return resolve();
+			});
+		}
+	}, {
+		key: "onStart",
+		value: function onStart(midiAccess) {
+			this.midiInputs = midiAccess.inputs;
+			this.midiOutputs = midiAccess.outputs;
+
+			console.log("Connected");
+		}
+	}, {
+		key: "onError",
+		value: function onError(midiAccess) {
+			console.log(midiAccess);
+			console.log("Deu pau :/");
+		}
+	}, {
+		key: "devicesOf",
+		value: function devicesOf(pedalType) {
+			return {
+				"input": this.inputMidiDeviceOf(pedalType),
+				"output": this.outputMidiDeviceOf(pedalType)
+			};
+		}
+	}, {
+		key: "inputMidiDeviceOf",
+		value: function inputMidiDeviceOf(pedalType) {
+			return this.midiDeviceOfType(pedalType, this.midiInputs);
+		}
+	}, {
+		key: "outputMidiDeviceOf",
+		value: function outputMidiDeviceOf(pedalType) {
+			return this.midiDeviceOfType(pedalType, this.midiOutputs);
+		}
+	}, {
+		key: "midiDeviceOfType",
+		value: function midiDeviceOfType(pedalType, listDevices) {
+			var _iteratorNormalCompletion7 = true;
+			var _didIteratorError7 = false;
+			var _iteratorError7 = undefined;
+
+			try {
+				for (var _iterator7 = listDevices.values()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+					var device = _step7.value;
+
+					if (device.name.includes(pedalType.USBName)) return Optional.of(device);
+				}
+			} catch (err) {
+				_didIteratorError7 = true;
+				_iteratorError7 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion7 && _iterator7["return"]) {
+						_iterator7["return"]();
+					}
+				} finally {
+					if (_didIteratorError7) {
+						throw _iteratorError7;
+					}
+				}
+			}
+
+			return Optional.empty();
+		}
+	}, {
+		key: "midiDevices",
+		get: function get() {
+			var devices = [];
+
+			var _iteratorNormalCompletion8 = true;
+			var _didIteratorError8 = false;
+			var _iteratorError8 = undefined;
+
+			try {
+				for (var _iterator8 = this.midiInputs.values()[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+					var input = _step8.value;
+
+					devices.push(input);
+				}
+			} catch (err) {
+				_didIteratorError8 = true;
+				_iteratorError8 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion8 && _iterator8["return"]) {
+						_iterator8["return"]();
+					}
+				} finally {
+					if (_didIteratorError8) {
+						throw _iteratorError8;
+					}
+				}
+			}
+
+			var _iteratorNormalCompletion9 = true;
+			var _didIteratorError9 = false;
+			var _iteratorError9 = undefined;
+
+			try {
+				for (var _iterator9 = this.midiOutputs.values()[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+					var output = _step9.value;
+
+					devices.push(output);
+				}
+			} catch (err) {
+				_didIteratorError9 = true;
+				_iteratorError9 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion9 && _iterator9["return"]) {
+						_iterator9["return"]();
+					}
+				} finally {
+					if (_didIteratorError9) {
+						throw _iteratorError9;
+					}
+				}
+			}
+
+			return devices;
+		}
+	}]);
+
+	return MidiSystem;
+})();
+
+var MidiConnection = (function () {
+	function MidiConnection(pedalType, pedalDevices) {
+		_classCallCheck(this, MidiConnection);
+
+		this.listenner = Optional.empty();
+		this.analyzer = Optional.empty();
+
+		this.transmition = new MidiTransmition(pedalDevices);
+		this.transmition.setOnDataListenerReceived(this);
+
+		this.codification = MessageCodificationFactory.For(pedalType);
+	}
+
+	_createClass(MidiConnection, [{
+		key: "start",
+
+		/*************************************************/
+
+		value: function start() {
+			this.transmition.start();
+		}
+	}, {
+		key: "stop",
+		value: function stop() {
+			this.transmition.stop();
+		}
+	}, {
+		key: "send",
+
+		/*************************************************/
+
+		/**
+  * @param messages Messages
+  */
+		value: function send(messages) {
+			var _iteratorNormalCompletion10 = true;
+			var _didIteratorError10 = false;
+			var _iteratorError10 = undefined;
+
+			try {
+				for (var _iterator10 = this.generateMidiMessages(messages)[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+					var midiMessage = _step10.value;
+
+					this.sendMidiMessage(midiMessage);
+				}
+			} catch (err) {
+				_didIteratorError10 = true;
+				_iteratorError10 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion10 && _iterator10["return"]) {
+						_iterator10["return"]();
+					}
+				} finally {
+					if (_didIteratorError10) {
+						throw _iteratorError10;
+					}
+				}
+			}
 		}
 	}, {
 		key: "generateMidiMessages",
@@ -1115,7 +1603,7 @@ var MidiConnection = (function () {
    * @return List<MidiMessage>
   */
 		value: function generateMidiMessages(messages) {
-			return this.encoder.encode(messages);
+			return this.codification.encode(messages);
 		}
 	}, {
 		key: "sendMidiMessage",
@@ -1124,11 +1612,11 @@ var MidiConnection = (function () {
    * @param MidiMessage message
    */
 		value: function sendMidiMessage(message) {
+			console.log("PASSAR PARA ANALIZER");
 			console.log("MIDI sended: ");
-			//console.log(message);
-			console.log(" " + BinarioUtil.byteArrayToHex(message));
+			console.log(" " + BinarioUtil.byteArrayToHex(message.message));
 
-			this.sender.send(message);
+			this.transmition.send(message.message);
 		}
 	}, {
 		key: "setListenner",
@@ -1147,17 +1635,20 @@ var MidiConnection = (function () {
 		/**
    * @param message MidiMessage
    */
-		//@Override
+		//@override
 		value: function onDataReceived(message) {
+			console.log("PASSAR PARA ANALIZER");
 			console.log("MIDI received: ");
 			console.log(" " + BinarioUtil.byteArrayToHex(message));
 
-			if (!this.decoder.isForThis(message)) {
+			if (this.analyzer.isPresent()) this.analyzer.get().analyze(message);
+
+			if (!this.codification.isForThis(message)) {
 				console.log(" unknown ");
 				return;
 			}
 
-			var messagesDecoded = this.decoder.decode(message, this.multistomp);
+			var messagesDecoded = this.codification.decode(message);
 
 			if (this.listenner.isPresent()) this.listenner.get().update(messagesDecoded);
 		}
@@ -1185,36 +1676,162 @@ MidiConnection.OnUpdateListenner = (function () {
 
 "use strict";
 
-var MessageDecoderFactory = (function () {
-	function MessageDecoderFactory() {
-		_classCallCheck(this, MessageDecoderFactory);
+var MidiMessagesAnalyzer = (function () {
+	function MidiMessagesAnalyzer(pedalController, changes) {
+		_classCallCheck(this, MidiMessagesAnalyzer);
+
+		this.pedal = pedalController;
+		this.pedal.connection.analyzer = Optional.of(this);
+
+		this.started = false;
+		this.messages = undefined;
+		this.changes = changes;
 	}
 
-	_createClass(MessageDecoderFactory, null, [{
-		key: "For",
+	_createClass(MidiMessagesAnalyzer, [{
+		key: "start",
+		value: function start() {
+			this.started = true;
+			this.messages = [];
 
-		/**
-   * @param PedalType pedalType
-   * @return MessageEncoder
-   */
-		value: function For(pedalType) {
-			if (PedalType.G3 == pedalType) return new ZoomGSeriesMessageDecoder();
+			while (this.changes.hasNext()) this.changes.next();
+		}
+	}, {
+		key: "stop",
+		value: function stop() {
+			this.started = false;
+		}
+	}, {
+		key: "analyze",
+		value: function analyze(message) {
+			if (!this.started) return;
 
-			throw new Error("MessageDecoder not found for: " + pedalType);
+			this.messages.push(message);
 		}
 	}]);
 
-	return MessageDecoderFactory;
+	return MidiMessagesAnalyzer;
 })();
 
 "use strict";
 
-var MessageEncoderFactory = (function () {
-	function MessageEncoderFactory() {
-		_classCallCheck(this, MessageEncoderFactory);
+// FIXME - Utilize *yeld generators...
+
+var PedalChanges = (function () {
+	function PedalChanges(pedalController, totalChanges) {
+		_classCallCheck(this, PedalChanges);
+
+		this.totalChanges = totalChanges;
+		this.currentChange = 0;
+
+		this.pedal = pedalController;
 	}
 
-	_createClass(MessageEncoderFactory, null, [{
+	_createClass(PedalChanges, [{
+		key: "init",
+		value: function init() {}
+	}, {
+		key: "hasNext",
+		value: function hasNext() {
+			return this.currentChange < this.totalChanges;
+		}
+	}, {
+		key: "next",
+		value: function next() {
+			this.currentChange++;
+			this.nextImp();
+		}
+	}, {
+		key: "nextImp",
+		value: function nextImp() {}
+	}]);
+
+	return PedalChanges;
+})();
+
+var ZoomGSeriesDetectPedalChanges = (function (_PedalChanges) {
+	_inherits(ZoomGSeriesDetectPedalChanges, _PedalChanges);
+
+	function ZoomGSeriesDetectPedalChanges(pedalController) {
+		_classCallCheck(this, ZoomGSeriesDetectPedalChanges);
+
+		_get(Object.getPrototypeOf(ZoomGSeriesDetectPedalChanges.prototype), "constructor", this).call(this, pedalController, 25);
+	}
+
+	_createClass(ZoomGSeriesDetectPedalChanges, [{
+		key: "init",
+		value: function init() {
+			this.pedal.toPatch(8);
+			this.zeroParams(0);
+
+			this.pedal.send(ZoomGSeriesMessages.SET_EFFECT(1, 117));
+			this.pedal.send(ZoomGSeriesMessages.SET_EFFECT(2, 117));
+			this.pedal.send(ZoomGSeriesMessages.SET_EFFECT(3, 117));
+			this.pedal.send(ZoomGSeriesMessages.SET_EFFECT(4, 117));
+			this.pedal.send(ZoomGSeriesMessages.SET_EFFECT(5, 117));
+		}
+	}, {
+		key: "zeroParams",
+		value: function zeroParams(idPedal) {
+			this.pedal.setEffectParam(idPedal, 0, 0);
+			this.pedal.setEffectParam(idPedal, 1, 0);
+			this.pedal.setEffectParam(idPedal, 2, 0);
+			this.pedal.setEffectParam(idPedal, 3, 0);
+			this.pedal.setEffectParam(idPedal, 4, 0);
+			this.pedal.setEffectParam(idPedal, 5, 0);
+			this.pedal.setEffectParam(idPedal, 6, 0);
+			this.pedal.setEffectParam(idPedal, 7, 0);
+			this.pedal.setEffectParam(idPedal, 8, 0);
+		}
+	}, {
+		key: "nextImp",
+		value: function nextImp() {
+			this.pedal.send(ZoomGSeriesMessages.SET_EFFECT(1, this.currentPatch));
+			this.zeroParams(0);
+		}
+	}]);
+
+	return ZoomGSeriesDetectPedalChanges;
+})(PedalChanges);
+
+"use strict";
+
+var MessageCodification = (function () {
+	function MessageCodification(encoder, decoder) {
+		_classCallCheck(this, MessageCodification);
+
+		this.encoder = encoder;
+		this.decoder = decoder;
+	}
+
+	_createClass(MessageCodification, [{
+		key: "encode",
+		value: function encode(message) {
+			return this.encoder.encode(message);
+		}
+	}, {
+		key: "decode",
+		value: function decode(message) {
+			return this.decoder.decode(message);
+		}
+	}, {
+		key: "isForThis",
+		value: function isForThis(message) {
+			return this.decoder.isForThis(message);
+		}
+	}]);
+
+	return MessageCodification;
+})();
+
+"use strict";
+
+var MessageCodificationFactory = (function () {
+	function MessageCodificationFactory() {
+		_classCallCheck(this, MessageCodificationFactory);
+	}
+
+	_createClass(MessageCodificationFactory, null, [{
 		key: "For",
 
 		/**
@@ -1222,13 +1839,13 @@ var MessageEncoderFactory = (function () {
    * @return MessageEncoder
    */
 		value: function For(pedalType) {
-			if (PedalType.G3 == pedalType) return new ZoomGSeriesMessageEncoder();
+			if (PedalType.G3 == pedalType) return new MessageCodification(new ZoomGSeriesMessageEncoder(), new ZoomGSeriesMessageDecoder());
 
-			throw new Error("MessageEncoder not found for: " + pedalType);
+			throw new Error("MessageCodification not found for: " + pedalType);
 		}
 	}]);
 
-	return MessageEncoderFactory;
+	return MessageCodificationFactory;
 })();
 
 "use strict";
@@ -1239,70 +1856,52 @@ var MidiTransmition = (function () {
   * @param PedalType pedalType
   */
 
-	function MidiTransmition(pedalType) {
+	function MidiTransmition(midiDevices) {
 		_classCallCheck(this, MidiTransmition);
 
-		var devices = MidiTransmition.findDevices(pedalType);
+		if (!midiDevices.input.isPresent() || !midiDevices.output.isPresent()) throw new DeviceNotFoundError("Midi device(s) not found for: " + pedalType + " (" + pedalType.getUSBName() + ")");
 
-		var device = this.locateDeviceIn(devices);
-
-		if (!device.isPresent()) {
-			console.log("Midi " + this.deviceType() + " device not found for: " + pedalType + " (" + pedalType.getUSBName() + ")");
-			throw new DeviceNotFoundError("Midi " + this.deviceType() + " device not found for: " + pedalType + " (" + pedalType.getUSBName() + ")");
-		} else this.device = device.get();
+		this.sender = new MidiTransmitionSender(midiDevices.output.get());
+		this.reader = new MidiTransmitionReader(midiDevices.input.get());
 	}
 
 	_createClass(MidiTransmition, [{
-		key: "locateDeviceIn",
-
-		/**
-   * @param List<Info> devices
-   * @return Optional<MidiDevice>
-   */
-		value: function locateDeviceIn(devices) {
-			var _iteratorNormalCompletion5 = true;
-			var _didIteratorError5 = false;
-			var _iteratorError5 = undefined;
-
-			try {
-				for (var _iterator5 = devices[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-					var device = _step5.value;
-
-					if (this.isThis(device)) return Optional.of(device);
-				}
-			} catch (err) {
-				_didIteratorError5 = true;
-				_iteratorError5 = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion5 && _iterator5["return"]) {
-						_iterator5["return"]();
-					}
-				} finally {
-					if (_didIteratorError5) {
-						throw _iteratorError5;
-					}
-				}
-			}
-
-			return Optional.empty();
+		key: "start",
+		value: function start() {
+			this.sender.start();
+			this.reader.start();
 		}
 	}, {
-		key: "isThis",
-
-		/**
-   * @param MidiDevice device
-   * @return {Boolean}
-   */
-		value: function isThis(device) {}
+		key: "stop",
+		value: function stop() {
+			this.sender.stop();
+			this.reader.stop();
+		}
 	}, {
-		key: "deviceType",
-
-		/**
-   * @return String
-   */
-		value: function deviceType() {}
+		key: "setOnDataListenerReceived",
+		value: function setOnDataListenerReceived(listener) {
+			this.reader.setListenner(listener);
+		}
 	}, {
+		key: "send",
+		value: function send(midiMessage) {
+			this.sender.send(midiMessage);
+		}
+	}]);
+
+	return MidiTransmition;
+})();
+
+"use strict";
+
+var AbstractMidiTransmition = (function () {
+	function AbstractMidiTransmition(device) {
+		_classCallCheck(this, AbstractMidiTransmition);
+
+		this.device = device;
+	}
+
+	_createClass(AbstractMidiTransmition, [{
 		key: "start",
 		value: function start() {
 			this.device.open();
@@ -1312,138 +1911,10 @@ var MidiTransmition = (function () {
 		value: function stop() {
 			this.device.close();
 		}
-	}], [{
-		key: "findDevices",
-
-		///////////////////////////////////////////////////
-
-		/**
-   * @param PedalType type
-   * @return List<Info> all devices that corresponding the PedalType
-   */
-		value: function findDevices(type) {
-			var devices = new Array();
-
-			var device = undefined;
-
-			var _iteratorNormalCompletion6 = true;
-			var _didIteratorError6 = false;
-			var _iteratorError6 = undefined;
-
-			try {
-				for (var _iterator6 = midiSystem.midiDevices[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-					device = _step6.value;
-
-					if (device.name.includes(type.USBName)) devices.push(device);
-				}
-			} catch (err) {
-				_didIteratorError6 = true;
-				_iteratorError6 = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion6 && _iterator6["return"]) {
-						_iterator6["return"]();
-					}
-				} finally {
-					if (_didIteratorError6) {
-						throw _iteratorError6;
-					}
-				}
-			}
-
-			return devices;
-		}
 	}]);
 
-	return MidiTransmition;
+	return AbstractMidiTransmition;
 })();
-
-var MidiSystem = (function () {
-	function MidiSystem() {
-		_classCallCheck(this, MidiSystem);
-	}
-
-	_createClass(MidiSystem, [{
-		key: "onStart",
-		value: function onStart(midiAccess) {
-			this.midiInputs = midiAccess.inputs;
-			this.midiOutputs = midiAccess.outputs;
-
-			console.log("Connected");
-		}
-	}, {
-		key: "onError",
-		value: function onError(midiAccess) {
-			console.log(midiAccess);
-			console.log("Deu pau :/");
-		}
-	}, {
-		key: "midiDevices",
-		get: function get() {
-			var devices = [];
-
-			var _iteratorNormalCompletion7 = true;
-			var _didIteratorError7 = false;
-			var _iteratorError7 = undefined;
-
-			try {
-				for (var _iterator7 = this.midiInputs.values()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-					var input = _step7.value;
-
-					devices.push(input);
-				}
-			} catch (err) {
-				_didIteratorError7 = true;
-				_iteratorError7 = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion7 && _iterator7["return"]) {
-						_iterator7["return"]();
-					}
-				} finally {
-					if (_didIteratorError7) {
-						throw _iteratorError7;
-					}
-				}
-			}
-
-			var _iteratorNormalCompletion8 = true;
-			var _didIteratorError8 = false;
-			var _iteratorError8 = undefined;
-
-			try {
-				for (var _iterator8 = this.midiOutputs.values()[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-					var output = _step8.value;
-
-					devices.push(output);
-				}
-			} catch (err) {
-				_didIteratorError8 = true;
-				_iteratorError8 = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion8 && _iterator8["return"]) {
-						_iterator8["return"]();
-					}
-				} finally {
-					if (_didIteratorError8) {
-						throw _iteratorError8;
-					}
-				}
-			}
-
-			return devices;
-		}
-	}]);
-
-	return MidiSystem;
-})();
-
-var midiSystem = new MidiSystem();
-
-window.addEventListener("load", function () {
-	navigator.requestMIDIAccess({ sysex: true }).then(midiSystem.onStart.bind(midiSystem), midiSystem.onError.bind(midiSystem));
-});
 
 "use strict";
 
@@ -1451,50 +1922,24 @@ window.addEventListener("load", function () {
  * Send the messages to real Multistomp
  */
 
-var MidiReader = (function (_MidiTransmition) {
-	_inherits(MidiReader, _MidiTransmition);
+var MidiTransmitionReader = (function (_AbstractMidiTransmition) {
+	_inherits(MidiTransmitionReader, _AbstractMidiTransmition);
 
-	/**
-  * @param PedalType pedalType
-  */
+	function MidiTransmitionReader(device) {
+		var _this5 = this;
 
-	function MidiReader(pedalType) {
-		var _this3 = this;
+		_classCallCheck(this, MidiTransmitionReader);
 
-		_classCallCheck(this, MidiReader);
-
-		_get(Object.getPrototypeOf(MidiReader.prototype), "constructor", this).call(this, pedalType);
+		_get(Object.getPrototypeOf(MidiTransmitionReader.prototype), "constructor", this).call(this, device);
 
 		this.device.onmidimessage = function (message) {
-			return _this3.send(message);
+			return _this5.send(message);
 		};
 	}
 
-	_createClass(MidiReader, [{
-		key: "isThis",
-
-		/**
-   * @param MidiDevice device
-   * @return {Boolean}
-   */
-		//@Override
-		value: function isThis(device) {
-			return device.type == this.deviceType();
-		}
-	}, {
-		key: "deviceType",
-
-		/**
-   * @return {String}
-   */
-		//@Override
-		value: function deviceType() {
-			return "input";
-		}
-	}, {
+	_createClass(MidiTransmitionReader, [{
 		key: "setListenner",
 
-		/*************************************************/
 		/**
    * @param MidiReaderListenner listenner
    */
@@ -1512,8 +1957,8 @@ var MidiReader = (function (_MidiTransmition) {
 		}
 	}]);
 
-	return MidiReader;
-})(MidiTransmition);
+	return MidiTransmitionReader;
+})(AbstractMidiTransmition);
 
 "use strict";
 
@@ -1521,41 +1966,16 @@ var MidiReader = (function (_MidiTransmition) {
  * Send the messages to real Multistomp
  */
 
-var MidiSender = (function (_MidiTransmition2) {
-	_inherits(MidiSender, _MidiTransmition2);
+var MidiTransmitionSender = (function (_AbstractMidiTransmition2) {
+	_inherits(MidiTransmitionSender, _AbstractMidiTransmition2);
 
-	/**
-  * @param PedalType pedalType
-  */
+	function MidiTransmitionSender(device) {
+		_classCallCheck(this, MidiTransmitionSender);
 
-	function MidiSender(pedalType) {
-		_classCallCheck(this, MidiSender);
-
-		_get(Object.getPrototypeOf(MidiSender.prototype), "constructor", this).call(this, pedalType);
+		_get(Object.getPrototypeOf(MidiTransmitionSender.prototype), "constructor", this).call(this, device);
 	}
 
-	_createClass(MidiSender, [{
-		key: "isThis",
-
-		/**
-   * @param MidiDevice device
-   * @return {Boolean}
-   */
-		//@Override
-		value: function isThis(device) {
-			return device.type == this.deviceType();
-		}
-	}, {
-		key: "deviceType",
-
-		/**
-   * @return {String}
-   */
-		//@Override
-		value: function deviceType() {
-			return "output";
-		}
-	}, {
+	_createClass(MidiTransmitionSender, [{
 		key: "send",
 
 		/**
@@ -1566,8 +1986,61 @@ var MidiSender = (function (_MidiTransmition2) {
 		}
 	}]);
 
-	return MidiSender;
-})(MidiTransmition);
+	return MidiTransmitionSender;
+})(AbstractMidiTransmition);
+
+var MidiMessagesGenerator = (function () {
+	function MidiMessagesGenerator(messages, encoder) {
+		_classCallCheck(this, MidiMessagesGenerator);
+
+		this.messages = messages;
+		this.encoder = encoder;
+
+		this.messagesGenerated = new MidiMessages();
+	}
+
+	_createClass(MidiMessagesGenerator, [{
+		key: "forEachOfType",
+		value: function forEachOfType(cause) {
+			var _this6 = this;
+
+			var generate = function generate(method) {
+				var messages = _this6._generateMessages(method, cause);
+				_this6.messagesGenerated.concatWith(messages);
+			};
+
+			return {
+				generate: generate
+			};
+		}
+	}, {
+		key: "generateMidiMessages",
+		value: function generateMidiMessages() {
+			return this.messagesGenerated;
+		}
+	}, {
+		key: "_generateMessages",
+		value: function _generateMessages(method, cause) {
+			method = this._bind(method);
+
+			var messages = new MidiMessages();
+			var messagesOfCause = this.messages.getBy(cause);
+
+			messagesOfCause.forEach(function (message) {
+				messages.concatWith(method(message, cause));
+			});
+
+			return messages;
+		}
+	}, {
+		key: "_bind",
+		value: function _bind(method) {
+			return method.bind(this.encoder);
+		}
+	}]);
+
+	return MidiMessagesGenerator;
+})();
 
 "use strict";
 
@@ -1653,6 +2126,7 @@ CommonCause.TO_PATCH = "TO_PATCH";
 CommonCause.GENERAL_VOLUME = "GENERAL_VOLUME";
 
 // Patch
+CommonCause.PATCH_NUMBER = "PATCH_NUMBER";
 CommonCause.PATCH_VOLUME = "PATCH_VOLUME";
 CommonCause.PATCH_NAME = "PATCH_NAME";
 
@@ -1662,181 +2136,34 @@ CommonCause.DISABLE_EFFECT = "DISABLE_EFFECT";
 // Param
 CommonCause.SET_PARAM = "SET_PARAM";
 
-"use strict";
-
-var Messages = (function () {
-	_createClass(Messages, null, [{
-		key: "Empty",
-
-		/**
-   * @return Messages
-   */
-		value: function Empty() {
-			return new Messages();
-		}
-	}, {
-		key: "For",
-
-		/**
-   * @param Message ... messages
-   *
-   * @return Messages
-   */
-		value: function For() {
-			var returned = new Messages();
-
-			var _iteratorNormalCompletion9 = true;
-			var _didIteratorError9 = false;
-			var _iteratorError9 = undefined;
-
-			try {
-				for (var _len = arguments.length, messages = Array(_len), _key = 0; _key < _len; _key++) {
-					messages[_key] = arguments[_key];
-				}
-
-				for (var _iterator9 = messages[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-					var message = _step9.value;
-
-					returned.addMessage(message);
-				}
-			} catch (err) {
-				_didIteratorError9 = true;
-				_iteratorError9 = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion9 && _iterator9["return"]) {
-						_iterator9["return"]();
-					}
-				} finally {
-					if (_didIteratorError9) {
-						throw _iteratorError9;
-					}
-				}
-			}
-
-			return returned;
-		}
-	}]);
+var Messages = (function (_MessagesCollection2) {
+	_inherits(Messages, _MessagesCollection2);
 
 	function Messages() {
 		_classCallCheck(this, Messages);
 
-		this.messages = new Array();
+		_get(Object.getPrototypeOf(Messages.prototype), "constructor", this).apply(this, arguments);
 	}
 
 	_createClass(Messages, [{
-		key: "addCause",
-
-		/**
-   * @param Cause cause
-   */
-		value: function addCause(cause) {
-			this.addCause(cause, new Details());
-		}
-	}, {
-		key: "addCauseDetails",
-
-		/**
-   * @param Cause   cause
-   * @param Details details
-   */
-		value: function addCauseDetails(cause, details) {
-			this.addMessage(new Message(cause, details));
-		}
-	}, {
-		key: "addMessage",
-
-		/**
-   * @param Message message
-   */
-		value: function addMessage(message) {
-			this.messages.push(message);
-		}
-	}, {
-		key: "concatWith",
-
-		/**
-   * @param Messages messages
-   */
-		value: function concatWith(messages) {
-			var _this4 = this;
-
-			messages.forEach(function (message) {
-				return _this4.addMessage(message);
-			});
-		}
-	}, {
-		key: Symbol.iterator,
-
-		/**
-   * @return Iterator<Message>
-   */
-		//@Override
-		//iterator() {
-		value: function value() {
-			return this.messages[Symbol.iterator]();
-		}
-	}, {
-		key: "forEach",
-		value: function forEach(funcao) {
-			this.messages.forEach(funcao);
-		}
-	}, {
-		key: "get",
+		key: "getBy",
 
 		/**
    * @param Cause cause
    * @return Messages
    */
-		value: function get(cause) {
+		value: function getBy(cause) {
 			var returned = new Messages();
-
-			var _iteratorNormalCompletion10 = true;
-			var _didIteratorError10 = false;
-			var _iteratorError10 = undefined;
-
-			try {
-				for (var _iterator10 = this[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-					var message = _step10.value;
-
-					if (message.is(cause)) returned.addMessage(message);
-				}
-			} catch (err) {
-				_didIteratorError10 = true;
-				_iteratorError10 = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion10 && _iterator10["return"]) {
-						_iterator10["return"]();
-					}
-				} finally {
-					if (_didIteratorError10) {
-						throw _iteratorError10;
-					}
-				}
-			}
-
-			return returned;
-		}
-	}, {
-		key: "toString",
-
-		/**
-   * @return String
-   */
-		//@Override
-		value: function toString() {
-			var returned = "";
 
 			var _iteratorNormalCompletion11 = true;
 			var _didIteratorError11 = false;
 			var _iteratorError11 = undefined;
 
 			try {
-				for (var _iterator11 = this.messages[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+				for (var _iterator11 = this[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
 					var message = _step11.value;
 
-					returned += message.toString();
+					if (message.is(cause)) returned.add(message);
 				}
 			} catch (err) {
 				_didIteratorError11 = true;
@@ -1858,7 +2185,7 @@ var Messages = (function () {
 	}]);
 
 	return Messages;
-})();
+})(MessagesCollection);
 
 Messages.Details = (function () {
 	function Details() {
@@ -1912,7 +2239,7 @@ Messages.Message = (function () {
 	_createClass(Message, [{
 		key: "_MessageCause",
 		value: function _MessageCause(cause) {
-			this._MessageCauseDetails(cause, new Details());
+			this._MessageCauseDetails(cause, new Messages.Details());
 		}
 	}, {
 		key: "_MessageCauseDetails",
@@ -2136,14 +2463,9 @@ var Multistomp = (function () {
 		this.idCurrentPatch = 0;
 	}
 
-	_createClass(Multistomp, [{
+	_createDecoratedClass(Multistomp, [{
 		key: "getPedalType",
-
-		/*************************************************/
-
-		/**
-   * @return {PedalType} [description]
-   */
+		decorators: [abstract],
 		value: function getPedalType() {}
 	}, {
 		key: "addPatch",
@@ -2344,7 +2666,7 @@ var MultistompMessagesConverter = (function () {
 
 			if (message.is(MultistompCause.MULTISTOMP)) msg = this.convertToPatch(message, details);else if (message.is(MultistompCause.PATCH)) msg = this.convertPatch(message, details);else if (message.is(MultistompCause.EFFECT)) msg = this.convertStatusEffect(message, details);else if (message.is(MultistompCause.PARAM)) msg = this.convertSetParam(message, details);
 
-			if (msg != null) return Messages.For(msg);else return Messages.For();
+			if (msg != null) return new Messages().add(msg);else return new Messages();
 		}
 	}, {
 		key: "convertToPatch",
@@ -2363,7 +2685,7 @@ var MultistompMessagesConverter = (function () {
 	}, {
 		key: "convertPatch",
 		value: function convertPatch(message, details) {
-			if (!details.type == Details.TypeChange.PATCH_NAME) return Messages.Empty();
+			if (!details.type == Details.TypeChange.PATCH_NAME) return new Messages();
 
 			details.value = message.realMessage().details.newValue;
 
@@ -2922,6 +3244,33 @@ MultistompCause.PARAM = "PARAM";
 
 "use strict";
 
+var MultistompFactory = (function () {
+	function MultistompFactory() {
+		_classCallCheck(this, MultistompFactory);
+	}
+
+	_createClass(MultistompFactory, null, [{
+		key: "For",
+
+		/**
+   * @param PedalType pedalType
+   * @return PedalController
+   */
+		value: function For(pedalType) {
+			var pedal = undefined;
+			var company = pedalType.getCompany();
+
+			if (company == PedalCompany.ZoomCorp) pedal = new ZoomMultistompFactory().generate(pedalType);else if (company == PedalCompany.Roland) pedal = new NullMultistomp();else if (company == PedalCompany.Line6) pedal = new NullMultistomp();else pedal = new NullMultistomp();
+
+			return pedal;
+		}
+	}]);
+
+	return MultistompFactory;
+})();
+
+"use strict";
+
 var Log = (function () {
 
 	/**
@@ -3055,7 +3404,7 @@ var MultistompSimulator = (function (_Multistomp) {
    */
 		//@Override
 		value: function start() {
-			return Messages.Empty();
+			return new Messages();
 		}
 	}, {
 		key: "getPedalType",
@@ -3104,7 +3453,7 @@ var NullMultistomp = (function (_Multistomp2) {
    */
 		//@Override
 		value: function start() {
-			return Messages.Empty();
+			return new Messages();
 		}
 	}]);
 
@@ -3255,9 +3604,8 @@ var ZoomGSeries = (function (_Multistomp3) {
    */
 		//@Override
 		value: function start() {
-			var messages = Messages.Empty();
-			messages.concatWith(ZoomGSeriesMessages.LISSEN_ME());
-			messages.concatWith(ZoomGSeriesMessages.YOU_CAN_TALK());
+			var messages = new Messages();
+			messages.concatWith(ZoomGSeriesMessages.LISSEN_ME()).concatWith(ZoomGSeriesMessages.YOU_CAN_TALK());
 
 			return messages;
 		}
@@ -3348,11 +3696,11 @@ var ZoomGSeriesMessageDecoder = (function () {
 
 		this.decoders = new Array();
 
-		this.decoders.push(new ZoomGSeriesNameDecoder());
 		this.decoders.push(new ZoomGSeriesPatchDecoder());
+
+		this.decoders.push(new ZoomGSeriesSelectPatchDecoder());
 		//this.decoders.push(new ZoomGSeriesActiveEffectDecoder());
 		//this.decoders.push(new ZoomGSeriesDisableEffectDecoder());
-		this.decoders.push(new ZoomGSeriesSelectPatchDecoder());
 		//this.decoders.push(new ZoomGSeriesSetValueParamDecoder());
 	}
 
@@ -3375,25 +3723,20 @@ var ZoomGSeriesMessageDecoder = (function () {
    * @param Multistomp  multistomp
    * @return Messages
    */
-		value: function decode(message, multistomp) {
-			var decoders = this.decodesFor(message);
+		value: function decode(midiMessage, multistomp) {
+			var decoders = this.decodesFor(midiMessage);
 
-			var messages = Messages.Empty();
+			var messages = new Messages();
 
 			decoders.forEach(function (decoder) {
-				return messages.concatWith(decoder.decode(message, multistomp));
+				return messages.concatWith(decoder.decode(midiMessage, multistomp));
 			});
 
-			if (decoders.length == 0) throw new Error("The message isn't for this implementation");else return messages;
+			return messages;
 		}
 	}, {
 		key: "decodesFor",
-
-		/**
-   * @param MidiMessage message
-   * @return Optional<MessageDecoder>
-   */
-		value: function decodesFor(message) {
+		value: function decodesFor(midiMessage) {
 			var decoders = new Array();
 			var _iteratorNormalCompletion18 = true;
 			var _didIteratorError18 = false;
@@ -3403,7 +3746,7 @@ var ZoomGSeriesMessageDecoder = (function () {
 				for (var _iterator18 = this.decoders[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
 					var decoder = _step18.value;
 
-					if (decoder.isForThis(message)) decoders.push(decoder);
+					if (decoder.isForThis(midiMessage)) decoders.push(decoder);
 				}
 			} catch (err) {
 				_didIteratorError18 = true;
@@ -3427,8 +3770,6 @@ var ZoomGSeriesMessageDecoder = (function () {
 	return ZoomGSeriesMessageDecoder;
 })();
 
-"use strict";
-
 var ZoomGSeriesMessageEncoder = (function () {
 	function ZoomGSeriesMessageEncoder() {
 		_classCallCheck(this, ZoomGSeriesMessageEncoder);
@@ -3439,122 +3780,88 @@ var ZoomGSeriesMessageEncoder = (function () {
 
 		/**
    * @param Messages messages
-   * @return List<MidiMessage>
+   * @return MidiMessages
    */
 		//@Override
 		value: function encode(messages) {
-			var _this5 = this;
+			var generator = new MidiMessagesGenerator(messages, this);
 
-			var retorno = new Array();
+			generator.forEachOfType(CommonCause.TO_PATCH).generate(this.toPatchMessages);
 
-			messages.get(CommonCause.TO_PATCH).forEach(function (message) {
-				return retorno.push(_this5.toPatch(message));
-			});
+			generator.forEachOfType(CommonCause.ACTIVE_EFFECT).generate(this.statusEffectMessages);
+			generator.forEachOfType(CommonCause.DISABLE_EFFECT).generate(this.statusEffectMessages);
 
-			messages.get(CommonCause.ACTIVE_EFFECT).forEach(function (message) {
-				var messages = _this5.statusEffect(message, CommonCause.ACTIVE_EFFECT);
-				messages.forEach(function (message) {
-					return retorno.push(message);
-				});
-			});
-			messages.get(CommonCause.DISABLE_EFFECT).forEach(function (message) {
-				var messages = _this5.statusEffect(message, CommonCause.DISABLE_EFFECT);
-				messages.forEach(function (message) {
-					return retorno.push(message);
-				});
-			});
+			generator.forEachOfType(CommonCause.SET_PARAM).generate(this.setParamMessages);
 
-			messages.get(CommonCause.SET_PARAM).forEach(function (message) {
-				return retorno.push(_this5.setParam(message));
-			});
+			generator.forEachOfType(ZoomGSeriesCause.SET_EFFECT).generate(this.setEffectMessages);
 
-			messages.get(ZoomGSeriesCause.SET_EFFECT).forEach(function (message) {
-				return retorno.push(_this5.setEffect(message));
-			});
+			generator.forEachOfType(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER).generate(this.requestCurrentPatchNumberMessages);
+			generator.forEachOfType(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS).generate(this.requestCurrentPatchDetailsMessages);
+			generator.forEachOfType(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS).generate(this.requestSpecificPatchDetailsMessages);
 
-			messages.get(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER).forEach(function (message) {
-				return retorno.push(_this5.requestCurrentPatchNumber(message));
-			});
-			messages.get(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS).forEach(function (message) {
-				return retorno.push(_this5.requestCurrentPatchDetails(message));
-			});
-			messages.get(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS).forEach(function (message) {
-				return retorno.push(_this5.requestSpecificPatchDetails(message));
-			});
+			generator.forEachOfType(ZoomGSeriesCause.LISSEN_ME).generate(this.lissenMeMessages);
+			generator.forEachOfType(ZoomGSeriesCause.YOU_CAN_TALK).generate(this.youCanTalkMessages);
 
-			messages.get(ZoomGSeriesCause.LISSEN_ME).forEach(function (message) {
-				return retorno.push(_this5.lissenMe());
-			});
-			messages.get(ZoomGSeriesCause.YOU_CAN_TALK).forEach(function (message) {
-				return retorno.push(_this5.youCanTalk());
-			});
-
-			return retorno;
+			return generator.generateMidiMessages();
 		}
 	}, {
-		key: "toPatch",
-
-		/**
-   * @param Message message
-   * @return MidiMessage
-   */
-		value: function toPatch(message) {
+		key: "toPatchMessages",
+		value: function toPatchMessages(message) {
 			var SET_PATH = 0xc0; //ShortMessage.PROGRAM_CHANGE;
-
 			var patch = message.details.patch;
 
-			try {
-				return [SET_PATH, patch];
-			} catch (e) {
-				throw new Error(e);
-			}
+			var toPatch = new MidiMessage(SET_PATH, patch);
+
+			return new MidiMessages().add(toPatch);
 		}
 	}, {
-		key: "statusEffect",
+		key: "statusEffectMessages",
 
 		/**
    * @param Message     message
    * @param CommonCause cause
    *
-   * @return List<MidiMessage>
+   * @return MidiMessages
    */
-		value: function statusEffect(message, cause) {
+		value: function statusEffectMessages(message, cause) {
 			var effect = message.details.effect;
 
 			var actived = cause == CommonCause.ACTIVE_EFFECT;
 			var byteActived = actived ? 0x01 : 0x00;
 
-			return this.group(this.lissenMe(), this.manupuleEffect(effect, ZoomGSeriesMessageEncoder.SET_STATUS, byteActived));
+			var manipuleEffect = this.manipuleEffectMessages(effect, ZoomGSeriesMessageEncoder.SET_STATUS, byteActived);
+
+			return new MidiMessages().concatWith(this.lissenMeMessages()).concatWith(manipuleEffect);
 		}
 	}, {
-		key: "setParam",
+		key: "setParamMessages",
 
 		/**
    * @param Message message
    * @return MidiMessage
    */
-		value: function setParam(message) {
+		value: function setParamMessages(message) {
 			var effect = message.details.effect;
 			var param = message.details.param;
 			var value = message.details.value;
 
-			return this.manupuleEffect(effect, param + ZoomGSeriesMessageEncoder.PARAM_EFFECT, value);
+			return this.manipuleEffectMessages(effect, param + ZoomGSeriesMessageEncoder.PARAM_EFFECT, value);
 		}
 	}, {
-		key: "setEffect",
+		key: "setEffectMessages",
 
 		/**
    * @param Message message
    * @return MidiMessage
    */
-		value: function setEffect(message) {
+		value: function setEffectMessages(message) {
 			var effect = message.details.effect;
 			var value = message.details.value;
 
-			return this.manupuleEffect(effect, ZoomGSeriesMessageEncoder.CHANGE_EFFECT, value);
+			return this.manipuleEffectMessages(effect, ZoomGSeriesMessageEncoder.CHANGE_EFFECT, value);
 		}
 	}, {
-		key: "manupuleEffect",
+		key: "manipuleEffectMessages",
 		// Base
 
 		/**
@@ -3564,123 +3871,55 @@ var ZoomGSeriesMessageEncoder = (function () {
    *
    * @return MidiMessage
    */
-		value: function manupuleEffect(effect, type, value) {
+		value: function manipuleEffectMessages(effect, type, value) {
 			var value2 = value / 128 | 0;
 			value = value % 128;
 
-			return this.customMessageFor([0xF0, 0x52, 0x00, 0x5A, 0x31, effect, type, value, value2, 0xF7]);
+			var manupuleEffect = new MidiMessage(0xF0, 0x52, 0x00, 0x5A, 0x31, effect, type, value, value2, 0xF7);
+
+			return new MidiMessages().add(manupuleEffect);
 		}
 	}, {
-		key: "requestCurrentPatchNumber",
+		key: "requestCurrentPatchNumberMessages",
 
 		///////////////////////////////////////
 		// SPECIFIC ZOOM
 		///////////////////////////////////////
 
-		/**
-   * @param Message message
-   * @return MidiMessage
-   */
-		value: function requestCurrentPatchNumber(message) {
-			return this.customMessageFor([0xF0, 0x52, 0x00, 0x5A, 0x33, 0xF7]);
+		value: function requestCurrentPatchNumberMessages(message) {
+			var requestCurrentPatchNumber = new MidiMessage(0xF0, 0x52, 0x00, 0x5A, 0x33, 0xF7);
+
+			return new MidiMessages().add(requestCurrentPatchNumber);
 		}
 	}, {
-		key: "requestCurrentPatchDetails",
+		key: "requestCurrentPatchDetailsMessages",
+		value: function requestCurrentPatchDetailsMessages(message) {
+			var requestCurrentPatchDetails = new MidiMessage(0xF0, 0x52, 0x00, 0x5A, 0x29, 0xF7);
 
-		/**
-   * @param Message message
-   * @return MidiMessage
-   */
-		value: function requestCurrentPatchDetails(message) {
-			return this.customMessageFor([0xF0, 0x52, 0x00, 0x5A, 0x29, 0xF7]);
+			return new MidiMessages().add(requestCurrentPatchDetails);
 		}
 	}, {
-		key: "requestSpecificPatchDetails",
-
-		/**
-   * @param Message message
-   * @return MidiMessage
-   */
-		value: function requestSpecificPatchDetails(message) {
+		key: "requestSpecificPatchDetailsMessages",
+		value: function requestSpecificPatchDetailsMessages(message) {
 			var patch = message.details.patch;
 
-			var CURRENT_PATCH = [0xF0, 0x52, 0x00, 0x5A, 0x09, 0x00, 0x00, patch, 0xF7];
+			var requestSpecificPatchDetails = new MidiMessage(0xF0, 0x52, 0x00, 0x5A, 0x09, 0x00, 0x00, patch, 0xF7);
 
-			return this.customMessageFor(CURRENT_PATCH);
+			return new MidiMessages().add(requestSpecificPatchDetails);
 		}
 	}, {
-		key: "lissenMe",
+		key: "lissenMeMessages",
+		value: function lissenMeMessages() {
+			var lissenMe = new MidiMessage(0xF0, 0x52, 0x00, 0x5A, 0x50, 0xF7);
 
-		/**
-   * @return MidiMessage
-   */
-		value: function lissenMe() {
-			return this.customMessageFor([0xF0, 0x52, 0x00, 0x5A, 0x50, 0xF7]);
+			return new MidiMessages().add(lissenMe);
 		}
 	}, {
-		key: "youCanTalk",
+		key: "youCanTalkMessages",
+		value: function youCanTalkMessages() {
+			var youCanTalk = new MidiMessage(0xF0, 0x52, 0x00, 0x5A, 0x16, 0xF7);
 
-		/**
-   * @return MidiMessage
-   */
-		value: function youCanTalk() {
-			return this.customMessageFor([0xF0, 0x52, 0x00, 0x5A, 0x16, 0xF7]);
-		}
-	}, {
-		key: "group",
-
-		/**
-   * @param MidiMessage ... messages
-   * @return List<MidiMessage>
-   */
-		value: function group() {
-			var mensagens = new Array();
-
-			var _iteratorNormalCompletion19 = true;
-			var _didIteratorError19 = false;
-			var _iteratorError19 = undefined;
-
-			try {
-				for (var _len2 = arguments.length, messages = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-					messages[_key2] = arguments[_key2];
-				}
-
-				for (var _iterator19 = messages[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
-					var midiMessage = _step19.value;
-
-					mensagens.push(midiMessage);
-				}
-			} catch (err) {
-				_didIteratorError19 = true;
-				_iteratorError19 = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion19 && _iterator19["return"]) {
-						_iterator19["return"]();
-					}
-				} finally {
-					if (_didIteratorError19) {
-						throw _iteratorError19;
-					}
-				}
-			}
-
-			return mensagens;
-		}
-	}, {
-		key: "customMessageFor",
-
-		/**
-   * @param byte[] message
-   *
-   * @return SysexMessage
-   */
-		value: function customMessageFor(message) {
-			try {
-				return message; //new SysexMessage
-			} catch (e) {
-				throw new Error(e);
-			}
+			return new MidiMessages().add(youCanTalk);
 		}
 	}], [{
 		key: "SET_STATUS",
@@ -3713,7 +3952,7 @@ var ZoomGSeriesMessages = (function () {
    * @return Messages
    */
 		value: function REQUEST_CURRENT_PATCH_NUMBER() {
-			return Messages.For(new Messages.Message(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER));
+			return new Messages().add(new Messages.Message(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER));
 		}
 	}, {
 		key: "REQUEST_CURRENT_PATCH_DETAILS",
@@ -3722,7 +3961,7 @@ var ZoomGSeriesMessages = (function () {
    * @return Messages
    */
 		value: function REQUEST_CURRENT_PATCH_DETAILS() {
-			return Messages.For(new Messages.Message(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS));
+			return new Messages().add(new Messages.Message(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS));
 		}
 	}, {
 		key: "REQUEST_SPECIFIC_PATCH_DETAILS",
@@ -3735,7 +3974,7 @@ var ZoomGSeriesMessages = (function () {
 			var details = new Messages.Details();
 			details.patch = idPatch;
 
-			return Messages.For(new Messages.Message(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS, details));
+			return new Messages().add(new Messages.Message(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS, details));
 		}
 	}, {
 		key: "LISSEN_ME",
@@ -3744,7 +3983,7 @@ var ZoomGSeriesMessages = (function () {
    * @return Messages
    */
 		value: function LISSEN_ME() {
-			return Messages.For(new Messages.Message(ZoomGSeriesCause.LISSEN_ME));
+			return new Messages().add(new Messages.Message(ZoomGSeriesCause.LISSEN_ME));
 		}
 	}, {
 		key: "YOU_CAN_TALK",
@@ -3753,7 +3992,7 @@ var ZoomGSeriesMessages = (function () {
    * @return Messages
    */
 		value: function YOU_CAN_TALK() {
-			return Messages.For(new Messages.Message(ZoomGSeriesCause.YOU_CAN_TALK));
+			return new Messages().add(new Messages.Message(ZoomGSeriesCause.YOU_CAN_TALK));
 		}
 	}, {
 		key: "SET_EFFECT",
@@ -3769,122 +4008,158 @@ var ZoomGSeriesMessages = (function () {
 			details.effect = effectPos;
 			details.value = newEffect;
 
-			return Messages.For(new Messages.Message(ZoomGSeriesCause.SET_EFFECT, details));
+			return new Messages().add(new Messages.Message(ZoomGSeriesCause.SET_EFFECT, details));
 		}
 	}]);
 
 	return ZoomGSeriesMessages;
 })();
 
-"use strict";
-
-var AbstractZoomGSeriesPatchDecoder = (function () {
-	function AbstractZoomGSeriesPatchDecoder() {
-		_classCallCheck(this, AbstractZoomGSeriesPatchDecoder);
+var ZoomGSeriesPatchDecoder = (function () {
+	function ZoomGSeriesPatchDecoder() {
+		_classCallCheck(this, ZoomGSeriesPatchDecoder);
 	}
 
-	_createClass(AbstractZoomGSeriesPatchDecoder, [{
+	_createClass(ZoomGSeriesPatchDecoder, [{
 		key: "isForThis",
 
 		//@Override
-		/**
-   * @param MidiMessage message
-   * @return {Boolean}
-   */
 		value: function isForThis(message) {
+			var MESSAGE_SIZE = 120;
+
 			var tester = new MidiMessageTester(message);
 
-			return tester.init().sizeIs(this.size()).test();
+			return tester.init().sizeIs(MESSAGE_SIZE).test();
 		}
-	}, {
-		key: "size",
-
-		/**
-   * @return {[type]}
-   */
-		value: function size() {}
 	}, {
 		key: "decode",
 
-		//@Override
 		/**
    * @param MidiMessage message
-   * @param Multistomp multistomp
    * @return Messages
    */
-		value: function decode(message, multistomp) {
-			var PATCHES = this.patches();
+		//@Override
+		value: function decode(message) {
+			var messages = new Messages();
 
-			var effects = multistomp.currentPatch().effects;
+			var patchName = new ZoomGSeriesPatchNameDecoder();
+			var patchNumber = new ZoomGSeriesPatchNumberDecoder();
+			var effects = new ZoomGSeriesPatchEffectsDecoder();
 
-			var messages = Messages.Empty();
-			for (var i = 0; i < PATCHES.length; i++) {
-				var patch = PATCHES[i];
+			messages.concatWith(patchName.decode(message)).concatWith(patchNumber.decode(message)).concatWith(effects.decode(message));
+
+			return messages;
+		}
+	}]);
+
+	return ZoomGSeriesPatchDecoder;
+})();
+
+var ZoomGSeriesPatchEffectsDecoder = (function () {
+	function ZoomGSeriesPatchEffectsDecoder() {
+		_classCallCheck(this, ZoomGSeriesPatchEffectsDecoder);
+	}
+
+	_createClass(ZoomGSeriesPatchEffectsDecoder, [{
+		key: "isForThis",
+
+		//@Override
+		value: function isForThis(message) {
+			return true;
+		}
+	}, {
+		key: "decode",
+
+		/**
+   * @param MidiMessage message
+   * @return Messages
+   */
+		//@Override
+		value: function decode(message) {
+			var messages = new Messages();
+
+			var effectsStatus = new ZoomGSeriesPatchEffectsStatusDecoder();
+			//let typeEffects   = new ZoomGSeriesPatchEffectsTypeDecoder();
+
+			messages.concatWith(effectsStatus.decode(message));
+			//		.concatWith(typeEffects.decode(message));
+
+			return messages;
+		}
+	}]);
+
+	return ZoomGSeriesPatchEffectsDecoder;
+})();
+
+var ZoomGSeriesPatchEffectsStatusDecoder = (function () {
+	function ZoomGSeriesPatchEffectsStatusDecoder() {
+		_classCallCheck(this, ZoomGSeriesPatchEffectsStatusDecoder);
+	}
+
+	_createClass(ZoomGSeriesPatchEffectsStatusDecoder, [{
+		key: "isForThis",
+
+		//@Override
+		value: function isForThis(message) {
+			return true;
+		}
+	}, {
+		key: "decode",
+
+		/**
+   * @param MidiMessage message
+   * @return Messages
+   */
+		//@Override
+		value: function decode(message) {
+			var PATCHES = [6 + 5, 19 + 5, 33 + 5, 47 + 5, 60 + 5, 74 + 5];
+
+			var messages = new Messages();
+			for (var idPedal = 0; idPedal < PATCHES.length; idPedal++) {
+				var patch = PATCHES[idPedal];
 
 				var actived = this.hasActived(message, patch);
-				if (this.refressAll() || actived && !effects.get(i).hasActived()) messages.addMessage(this.generateMessageFor(actived, i));
+				messages.add(this.generateMessageFor(idPedal, actived));
 			}
 
 			return messages;
 		}
 	}, {
-		key: "refressAll",
+		key: "hasActived",
+		value: function hasActived(midiMessage, position) {
+			var LSB = 0x01; // Least Significant Bit
 
-		/**
-   * @return {Boolean}
-   */
-		value: function refressAll() {}
-	}, {
-		key: "patches",
+			var actived = midiMessage[position] & LSB;
 
-		/**
-   * @return int[]
-   */
-		value: function patches() {}
+			return actived == 1;
+		}
 	}, {
 		key: "generateMessageFor",
 
 		/**
-   * @param boolean actived
    * @param int     effect
+   * @param boolean actived
    * @return Messages.Message
    */
-		value: function generateMessageFor(actived, effect) {
+		value: function generateMessageFor(effect, actived) {
 			var cause = actived ? CommonCause.ACTIVE_EFFECT : CommonCause.DISABLE_EFFECT;
 
-			var details = new Messages.Details();
-			details.effect = effect;
+			var message = new Messages.Message(cause);
+			message.details.effect = effect;
 
-			return new Messages.Message(cause, details);
-		}
-	}, {
-		key: "hasActived",
-
-		/**
-   * @param MidiMessage message
-   * @param int         position
-   * @return {Boolean}
-   */
-		value: function hasActived(message, position) {
-			var LSB = 0x01; // Least Significant Bit
-
-			var actived = message[position] & LSB;
-
-			return actived == 1;
+			return message;
 		}
 	}]);
 
-	return AbstractZoomGSeriesPatchDecoder;
+	return ZoomGSeriesPatchEffectsStatusDecoder;
 })();
 
-"use strict";
-
-var ZoomGSeriesNameDecoder = (function () {
-	function ZoomGSeriesNameDecoder() {
-		_classCallCheck(this, ZoomGSeriesNameDecoder);
+var ZoomGSeriesPatchNameDecoder = (function () {
+	function ZoomGSeriesPatchNameDecoder() {
+		_classCallCheck(this, ZoomGSeriesPatchNameDecoder);
 	}
 
-	_createClass(ZoomGSeriesNameDecoder, [{
+	_createClass(ZoomGSeriesPatchNameDecoder, [{
 		key: "isForThis",
 
 		/**
@@ -3903,27 +4178,26 @@ var ZoomGSeriesNameDecoder = (function () {
 	}, {
 		key: "decode",
 
-		/**
-   * @param MidiMessage message
-   * @param Multistomp  multistomp
-   * @return Messages
-   */
 		//@Override
-		value: function decode(message, multistomp) {
-			var details = new Messages.Details();
+		value: function decode(midiMessage) {
+			var message = new Messages.Message(CommonCause.PATCH_NAME);
+			message.details.value = this.getNameBy(midiMessage);
 
-			var firstChar = ZoomGSeriesNameDecoder.FIRST_LETTER;
-			var lastChar = ZoomGSeriesNameDecoder.LAST_LETTER;
+			return new Messages().add(message);
+		}
+	}, {
+		key: "getNameBy",
+		value: function getNameBy(midiMessage) {
+			var firstChar = ZoomGSeriesPatchNameDecoder.FIRST_LETTER;
+			var lastChar = ZoomGSeriesPatchNameDecoder.LAST_LETTER;
 
 			var name = "";
 			for (var i = firstChar; i < lastChar; i++) {
-				var char = message[i];
+				var char = midiMessage[i];
 				name += String.fromCharCode(char);
 			}
 
-			details.value = name;
-
-			return Messages.For(new Messages.Message(CommonCause.PATCH_NAME, details));
+			return name;
 		}
 	}], [{
 		key: "FIRST_LETTER",
@@ -3935,77 +4209,141 @@ var ZoomGSeriesNameDecoder = (function () {
 		enumerable: true
 	}]);
 
-	return ZoomGSeriesNameDecoder;
+	return ZoomGSeriesPatchNameDecoder;
+})();
+
+var ZoomGSeriesPatchNumberDecoder = (function () {
+	function ZoomGSeriesPatchNumberDecoder() {
+		_classCallCheck(this, ZoomGSeriesPatchNumberDecoder);
+	}
+
+	_createClass(ZoomGSeriesPatchNumberDecoder, [{
+		key: "isForThis",
+
+		//@Override
+		value: function isForThis(midiMessage) {
+			var tester = new MidiMessageTester(midiMessage);
+
+			return tester.init().sizeIs(120).test();
+		}
+	}, {
+		key: "decode",
+
+		//@Override
+		value: function decode(midiMessage) {
+			var patchNumber = this.getPatchNumber(midiMessage);
+
+			return new Messages().add(this.generateMessageFor(patchNumber));
+		}
+	}, {
+		key: "getPatchNumber",
+		value: function getPatchNumber(midiMessage) {
+			var PATCH_INFO = 7;
+
+			return midiMessage[PATCH_INFO];
+		}
+	}, {
+		key: "generateMessageFor",
+		value: function generateMessageFor(patchNumber) {
+			var message = new Messages.Message(CommonCause.PATCH_NUMBER);
+			message.details.patch = patchNumber;
+
+			return message;
+		}
+	}]);
+
+	return ZoomGSeriesPatchNumberDecoder;
 })();
 
 "use strict";
 
-var ZoomGSeriesPatchDecoder = (function (_AbstractZoomGSeriesPatchDecoder) {
-	_inherits(ZoomGSeriesPatchDecoder, _AbstractZoomGSeriesPatchDecoder);
+// TODO - Agregar este dentro de PatchDecoder - Pode fazer um esquema de composição interna
 
-	function ZoomGSeriesPatchDecoder() {
-		_classCallCheck(this, ZoomGSeriesPatchDecoder);
-
-		_get(Object.getPrototypeOf(ZoomGSeriesPatchDecoder.prototype), "constructor", this).apply(this, arguments);
+var ZoomGSeriesPedalsDecoder = (function () {
+	function ZoomGSeriesPedalsDecoder() {
+		_classCallCheck(this, ZoomGSeriesPedalsDecoder);
 	}
 
-	_createClass(ZoomGSeriesPatchDecoder, [{
-		key: "decode",
+	_createClass(ZoomGSeriesPedalsDecoder, [{
+		key: "isForThis",
 
 		/**
    * @param MidiMessage message
-   * @param Multistomp  multistomp
-   * @return Messages
+   * @return {Boolean}
    */
+		//@Override
+		value: function isForThis(message) {
+			var tester = new MidiMessageTester(message);
+
+			var patchInfo = tester.init().sizeIs(120).test();
+			var changePedal = false; //tester.init().sizeIs(120).test();
+
+			return patchInfo || changePedal;
+		}
+	}, {
+		key: "decode",
+
+		/**
+  * @param MidiMessage message
+  * @param Multistomp  multistomp
+  * @return Messages
+  */
 		//@Override
 		value: function decode(message, multistomp) {
-			var returned = _get(Object.getPrototypeOf(ZoomGSeriesPatchDecoder.prototype), "decode", this).call(this, message, multistomp);
+			var details = new Messages.Details();
 
-			var patch = message[ZoomGSeriesPatchDecoder.PATCH];
-			returned.forEach(function (messagem) {
-				return messagem.details.patch = patch;
-			});
+			var _iteratorNormalCompletion19 = true;
+			var _didIteratorError19 = false;
+			var _iteratorError19 = undefined;
 
-			return returned;
+			try {
+				for (var _iterator19 = ZoomGSeriesPedalsDecoder.PEDALS_INDEX[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+					var index = _step19.value;
+
+					var actived = this.hasActived(message, index);
+
+					console.log(message[index] - 1, actived, actived ? message[index] - 1 : message[index]);
+				}
+			} catch (err) {
+				_didIteratorError19 = true;
+				_iteratorError19 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion19 && _iterator19["return"]) {
+						_iterator19["return"]();
+					}
+				} finally {
+					if (_didIteratorError19) {
+						throw _iteratorError19;
+					}
+				}
+			}
+
+			return new Messages();
 		}
 	}, {
-		key: "size",
+		key: "hasActived",
 
 		/**
-   * @return int
+   * @param MidiMessage message
+   * @param int         position
+   * @return {Boolean}
    */
-		//@Override
-		value: function size() {
-			return 120;
-		}
-	}, {
-		key: "patches",
+		value: function hasActived(message, position) {
+			var LSB = 0x01; // Least Significant Bit
 
-		/**
-   * @return int[]
-   */
-		//@Override
-		value: function patches() {
-			return [6 + 5, 19 + 5, 33 + 5, 47 + 5, 60 + 5, 74 + 5];
-		}
-	}, {
-		key: "refressAll",
+			var actived = message[position] & LSB;
 
-		/**
-   * @return Boolean
-   */
-		//@Override
-		value: function refressAll() {
-			return true;
+			return actived == 1;
 		}
 	}], [{
-		key: "PATCH",
-		value: 7,
+		key: "PEDALS_INDEX",
+		value: [8, 24, 38, 52, 65, 79],
 		enumerable: true
 	}]);
 
-	return ZoomGSeriesPatchDecoder;
-})(AbstractZoomGSeriesPatchDecoder);
+	return ZoomGSeriesPedalsDecoder;
+})();
 
 "use strict";
 
@@ -4036,17 +4374,12 @@ var ZoomGSeriesSelectPatchDecoder = (function () {
 	}, {
 		key: "decode",
 
-		/**
-   * @param MidiMessage message
-   * @param Multistomp  multistomp
-   * @return Messages
-   */
 		//@Override
-		value: function decode(message, multistomp) {
-			var details = new Messages.Details();
-			details.patch = message[ZoomGSeriesSelectPatchDecoder.PATCH];
+		value: function decode(midiMessage) {
+			var message = new Messages.Message(CommonCause.TO_PATCH);
+			message.details.patch = midiMessage[ZoomGSeriesSelectPatchDecoder.PATCH];
 
-			return Messages.For(new Messages.Message(CommonCause.TO_PATCH, details));
+			return new Messages().add(message);
 		}
 	}], [{
 		key: "PATCH",
@@ -4077,17 +4410,11 @@ var ZoomGSeriesSelectPatchDecoder = (function () {
 
 // boolean
 
-/** Multistomp */
-
-/** MidiSender */
-
-/** MidiReader */
-
-/** MessageEncoder */
-
-/** MessageDecoder */
-
 /** Optional<OnUpdateListenner> */
+
+/** Optional<MidiMessagesAnalyzer> */
+
+// MidiDevice
 
 // MidiDevice
 
@@ -4098,8 +4425,6 @@ var ZoomGSeriesSelectPatchDecoder = (function () {
 // PedalCompany
 
 // String
-
-// List<Message>
 
 // Cause
 
@@ -4120,6 +4445,12 @@ var ZoomGSeriesSelectPatchDecoder = (function () {
 /** List<Patch> */
 
 /** int */
+
+/*************************************************/
+
+/**
+ * @return {PedalType}
+ */
 
 /** String */
 

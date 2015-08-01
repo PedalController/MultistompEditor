@@ -8,11 +8,11 @@ export class ZoomGSeriesMessageDecoder implements MessageDecoder {
 	constructor() {
 		this.decoders = new Array();
 
-		this.decoders.push(new ZoomGSeriesNameDecoder());
 		this.decoders.push(new ZoomGSeriesPatchDecoder());
+
+		this.decoders.push(new ZoomGSeriesSelectPatchDecoder());
 		//this.decoders.push(new ZoomGSeriesActiveEffectDecoder());
 		//this.decoders.push(new ZoomGSeriesDisableEffectDecoder());
-		this.decoders.push(new ZoomGSeriesSelectPatchDecoder());
 		//this.decoders.push(new ZoomGSeriesSetValueParamDecoder());
 	}
 
@@ -30,27 +30,20 @@ export class ZoomGSeriesMessageDecoder implements MessageDecoder {
 	 * @param Multistomp  multistomp
 	 * @return Messages
 	 */
-	decode(message, multistomp) {
-		let decoders = this.decodesFor(message);
+	decode(midiMessage, multistomp) {
+		let decoders = this.decodesFor(midiMessage);
 
-		let messages = Messages.Empty();
+		let messages = new Messages();
 
-		decoders.forEach((decoder) => messages.concatWith(decoder.decode(message, multistomp)));
+		decoders.forEach((decoder) => messages.concatWith(decoder.decode(midiMessage, multistomp)));
 
-		if (decoders.length == 0)
-			throw new Error("The message isn't for this implementation");
-		else
-			return messages;
+		return messages;
 	}
 
-    /**
-     * @param MidiMessage message
-     * @return Optional<MessageDecoder>
-     */
-	decodesFor(message) {
+	decodesFor(midiMessage) {
 		let decoders = new Array();
 		for (let decoder of this.decoders)
-			if (decoder.isForThis(message))
+			if (decoder.isForThis(midiMessage))
 				decoders.push(decoder);
 
 		return decoders;

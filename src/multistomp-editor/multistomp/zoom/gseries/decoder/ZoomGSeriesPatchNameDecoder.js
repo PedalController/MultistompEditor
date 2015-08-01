@@ -1,6 +1,4 @@
-"use strict";
-
-export class ZoomGSeriesNameDecoder implements MessageDecoder {
+export class ZoomGSeriesPatchNameDecoder implements MessageDecoder {
 
 	static FIRST_LETTER = 102;
     static LAST_LETTER  = 102 + 11;
@@ -19,26 +17,24 @@ export class ZoomGSeriesNameDecoder implements MessageDecoder {
 		return patchInfo || changeName;
 	}
 
-	/**
-	 * @param MidiMessage message
-	 * @param Multistomp  multistomp
-	 * @return Messages
-	 */
 	//@Override
-	decode(message, multistomp) {
-		let details = new Messages.Details();
+	decode(midiMessage) {
+		let message = new Messages.Message(CommonCause.PATCH_NAME);
+        message.details.value = this.getNameBy(midiMessage);
 
-        let firstChar = ZoomGSeriesNameDecoder.FIRST_LETTER;
-        let lastChar  = ZoomGSeriesNameDecoder.LAST_LETTER;
+		return new Messages().add(message);
+	}
+
+	getNameBy(midiMessage) {
+		let firstChar = ZoomGSeriesPatchNameDecoder.FIRST_LETTER;
+        let lastChar  = ZoomGSeriesPatchNameDecoder.LAST_LETTER;
 
         let name = "";
         for (let i=firstChar; i<lastChar; i++) {
-            let char = message[i];
+            let char = midiMessage[i];
             name += String.fromCharCode(char);
         }
 
-        details.value = name;
-
-		return Messages.For(new Messages.Message(CommonCause.PATCH_NAME, details));
+		return name;
 	}
 }

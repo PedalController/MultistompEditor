@@ -17,12 +17,12 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 	/**
 	 * @param pedal Multistomp
 	 */
-	constructor(pedal) {
+	constructor(midiConnection, pedal) {
 		this.started = false;
 
 		this.pedal = pedal;
 
-		this.connection = new MidiConnection(pedal, pedal.getPedalType());
+		this.connection = midiConnection;
 		this.connection.setListenner(this);
 
 		this.pedal.addListenner(this);

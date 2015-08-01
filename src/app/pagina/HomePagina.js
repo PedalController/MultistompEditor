@@ -8,11 +8,22 @@ class HomePagina extends Pagina {
     }
 
     inicializar(parametros) {
-        this.pedal = PedalControllerFactory.searchPedal();
-        this.pedal.on();
-        this.pedal.addListenner(this);
+        let selectPedalPromise = (pedals) => {
+            return new Promise((resolve, reject) => resolve(pedals[0]));
+        };
+        let showPedalController = (pedalController) => {
+            console.log(pedalController);
 
-        this.pedal.send(ZoomGSeriesMessages.REQUEST_CURRENT_PATCH_NUMBER());
+            this.pedal = pedalController;
+
+            this.pedal.on();
+            this.pedal.addListenner(this);
+            this.pedal.send(ZoomGSeriesMessages.REQUEST_CURRENT_PATCH_NUMBER());
+        };
+
+        let pedalLoader = new PedalLoader(selectPedalPromise);
+
+        pedalLoader.load().then(showPedalController);
     }
 
     finalizar() {
@@ -22,14 +33,15 @@ class HomePagina extends Pagina {
     ////////////////////////////////////////
 
     onChange(messages) {
-        messages.get(CommonCause.ACTIVE_EFFECT).forEach(message => this.updateEffect(message, CommonCause.ACTIVE_EFFECT));
-		messages.get(CommonCause.DISABLE_EFFECT).forEach(message => this.updateEffect(message, CommonCause.DISABLE_EFFECT));
+        messages.getBy(CommonCause.ACTIVE_EFFECT).forEach(message => this.updateEffect(message, CommonCause.ACTIVE_EFFECT));
+		messages.getBy(CommonCause.DISABLE_EFFECT).forEach(message => this.updateEffect(message, CommonCause.DISABLE_EFFECT));
 
-		messages.get(CommonCause.TO_PATCH).forEach(message => this.setPatch(message));
+		messages.getBy(CommonCause.TO_PATCH).forEach(message => this.setPatch(message));
 
-		messages.get(CommonCause.SET_PARAM).forEach(message => console.log(pedal));
+		messages.getBy(CommonCause.SET_PARAM).forEach(message => console.log(this.pedal));
 
-        messages.get(CommonCause.PATCH_NAME).forEach(message => {this.controller.setTitle(message.details.value)});
+        messages.getBy(CommonCause.PATCH_NAME).forEach(message => {this.controller.setPatchTitle(message.details.value)});
+        messages.getBy(CommonCause.PATCH_NUMBER).forEach(message => {this.controller.setPatchNumber(message.details.value)});
     }
 
     updateEffect(message, cause) {
@@ -49,6 +61,7 @@ class HomePagina extends Pagina {
 		let idPatch = message.details.patch;
 
 		this.pedal.send(ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch));
+        this.controller.setPatchNumber(idPatch);
 	}
 
 	toogleEffectOf(effect) {

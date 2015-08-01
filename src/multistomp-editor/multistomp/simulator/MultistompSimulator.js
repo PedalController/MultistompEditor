@@ -47,7 +47,7 @@ export class MultistompSimulator extends Multistomp {
      */
     //@Override
 	start() {
-		return Messages.Empty();
+		return new Messages();
 	}
 
 

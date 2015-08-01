@@ -8,7 +8,7 @@ class Pagina {
     barra() {
         return this["router"].barra;
     }
-    
+
     router() {
         return this["router"];
     }
@@ -17,12 +17,12 @@ class Pagina {
      * quando a tela é chamada
      */
     inicializar() {
-        
+
     }
-    
+
     /** Realiza as ações de encerramento
      */
     finalizar() {
-        
+
     }
 }

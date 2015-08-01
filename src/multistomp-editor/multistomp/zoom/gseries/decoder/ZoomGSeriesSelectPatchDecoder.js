@@ -23,16 +23,11 @@ export class ZoomGSeriesSelectPatchDecoder implements MessageDecoder {
 				     .test();
 	}
 
-	/**
-	 * @param MidiMessage message
-	 * @param Multistomp  multistomp
-	 * @return Messages
-	 */
 	//@Override
-	decode(message, multistomp) {
-		let details = new Messages.Details();
-		details.patch = message[ZoomGSeriesSelectPatchDecoder.PATCH];
+	decode(midiMessage) {
+		let message = new Messages.Message(CommonCause.TO_PATCH);
+		message.details.patch = midiMessage[ZoomGSeriesSelectPatchDecoder.PATCH];
 
-		return Messages.For(new Messages.Message(CommonCause.TO_PATCH, details));
+		return new Messages().add(message);
 	}
 }

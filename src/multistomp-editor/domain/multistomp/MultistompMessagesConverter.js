@@ -23,9 +23,9 @@ export class MultistompMessagesConverter {
 			msg = this.convertSetParam(message, details);
 
 		if (msg != null)
-			return Messages.For(msg);
+			return new Messages().add(msg);
 		else
-			return Messages.For();
+			return new Messages();
 	}
 
     /**
@@ -42,7 +42,7 @@ export class MultistompMessagesConverter {
 
 	static convertPatch(message, details) {
 		if (!details.type == Details.TypeChange.PATCH_NAME)
-			return Messages.Empty();
+			return new Messages();
 
 		details.value = message.realMessage().details.newValue;
 

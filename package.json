@@ -1,0 +1,10 @@
+{
+  "name": "MultistompEditor",
+  "devDependencies": {
+    "gulp": "^3.9.0"
+  },
+  "dependencies": {
+    "core-decorators": "^0.1.5",
+    "harmony-reflect": "^1.4.0"
+  }
+}

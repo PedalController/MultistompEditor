@@ -15,8 +15,12 @@ class HomeController {
         this.pedalboard = new PedalboardComponent("pedalboard", this);
     }
 
-    setTitle(title) {
+    setPatchTitle(title) {
         this.patchDetails.setName(title);
+    }
+
+    setPatchNumber(number) {
+        this.patchDetails.setNumber(number);
     }
 
     active(effect) {
@@ -45,6 +49,9 @@ class PatchDetailsComponent {
     }
 
     setNumber(number) {
+        if (number < 10)
+            number = "0" + number;
+
         this.numberElement.innerHTML = number;
     }
 }

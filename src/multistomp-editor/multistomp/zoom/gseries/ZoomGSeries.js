@@ -72,9 +72,9 @@ export class ZoomGSeries extends Multistomp {
      */
 	//@Override
 	start() {
-		let messages = Messages.Empty();
-		messages.concatWith(ZoomGSeriesMessages.LISSEN_ME());
-		messages.concatWith(ZoomGSeriesMessages.YOU_CAN_TALK());
+		let messages = new Messages();
+		messages.concatWith(ZoomGSeriesMessages.LISSEN_ME())
+				.concatWith(ZoomGSeriesMessages.YOU_CAN_TALK());
 
 		return messages;
 	}

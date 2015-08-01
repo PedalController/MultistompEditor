@@ -1,92 +1,91 @@
-"use strict";
-
 export class ZoomGSeriesMessageEncoder implements MessageEncoder {
 
 	/**
 	 * @param Messages messages
-	 * @return List<MidiMessage>
+	 * @return MidiMessages
 	 */
 	//@Override
 	encode(messages) {
-		let retorno = new Array();
+		let generator = new MidiMessagesGenerator(messages, this);
 
-		messages.get(CommonCause.TO_PATCH).forEach(message => retorno.push(this.toPatch(message)));
+		generator.forEachOfType(CommonCause.TO_PATCH)
+				 .generate(this.toPatchMessages);
 
-		messages.get(CommonCause.ACTIVE_EFFECT).forEach(message => {
-            let messages = this.statusEffect(message, CommonCause.ACTIVE_EFFECT);
-            messages.forEach(message => retorno.push(message));
-        });
-		messages.get(CommonCause.DISABLE_EFFECT).forEach(message => {
-            let messages = this.statusEffect(message, CommonCause.DISABLE_EFFECT);
-            messages.forEach(message => retorno.push(message));
-        });
+		generator.forEachOfType(CommonCause.ACTIVE_EFFECT)
+				 .generate(this.statusEffectMessages);
+		generator.forEachOfType(CommonCause.DISABLE_EFFECT)
+				 .generate(this.statusEffectMessages);
 
-		messages.get(CommonCause.SET_PARAM).forEach(message => retorno.push(this.setParam(message)));
+		generator.forEachOfType(CommonCause.SET_PARAM)
+				 .generate(this.setParamMessages);
 
-		messages.get(ZoomGSeriesCause.SET_EFFECT).forEach(message => retorno.push(this.setEffect(message)));
+		generator.forEachOfType(ZoomGSeriesCause.SET_EFFECT)
+				 .generate(this.setEffectMessages);
 
-		messages.get(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER).forEach(message => retorno.push(this.requestCurrentPatchNumber(message)));
-		messages.get(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS).forEach(message => retorno.push(this.requestCurrentPatchDetails(message)));
-		messages.get(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS).forEach(message => retorno.push(this.requestSpecificPatchDetails(message)));
+		generator.forEachOfType(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER)
+				 .generate(this.requestCurrentPatchNumberMessages);
+		generator.forEachOfType(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS)
+				 .generate(this.requestCurrentPatchDetailsMessages);
+		generator.forEachOfType(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS)
+				 .generate(this.requestSpecificPatchDetailsMessages);
 
-		messages.get(ZoomGSeriesCause.LISSEN_ME).forEach(message => retorno.push(this.lissenMe()));
-		messages.get(ZoomGSeriesCause.YOU_CAN_TALK).forEach(message => retorno.push(this.youCanTalk()));
+		generator.forEachOfType(ZoomGSeriesCause.LISSEN_ME)
+				 .generate(this.lissenMeMessages);
+		generator.forEachOfType(ZoomGSeriesCause.YOU_CAN_TALK)
+				 .generate(this.youCanTalkMessages);
 
-		return retorno;
+		return generator.generateMidiMessages();
 	}
 
-    /**
-     * @param Message message
-     * @return MidiMessage
-     */
-	toPatch(message) {
+	toPatchMessages(message) {
 		const SET_PATH = 0xc0;//ShortMessage.PROGRAM_CHANGE;
-
 		let patch = message.details.patch;
 
-		try {
-			return [SET_PATH, patch];
-		} catch (e) {
-			throw new Error(e);
-		}
+		let toPatch = new MidiMessage(SET_PATH, patch);
+
+		return new MidiMessages().add(toPatch);
 	}
 
     /**
      * @param Message     message
      * @param CommonCause cause
      *
-     * @return List<MidiMessage>
+     * @return MidiMessages
      */
-	statusEffect(message, cause) {
+	statusEffectMessages(message, cause) {
 		let effect = message.details.effect;
 
 		let actived = cause == CommonCause.ACTIVE_EFFECT;
 		let byteActived = actived ? 0x01 : 0x00;
 
-		return this.group(this.lissenMe(), this.manupuleEffect(effect, ZoomGSeriesMessageEncoder.SET_STATUS, byteActived));
+		let manipuleEffect = this.manipuleEffectMessages(effect, ZoomGSeriesMessageEncoder.SET_STATUS, byteActived);
+
+		return new MidiMessages()
+				.concatWith(this.lissenMeMessages())
+				.concatWith(manipuleEffect);
 	}
 
     /**
      * @param Message message
      * @return MidiMessage
      */
-	setParam(message) {
+	setParamMessages(message) {
 		let effect = message.details.effect;
 		let param  = message.details.param;
 		let value  = message.details.value;
 
-		return this.manupuleEffect(effect, param + ZoomGSeriesMessageEncoder.PARAM_EFFECT, value);
+		return this.manipuleEffectMessages(effect, param + ZoomGSeriesMessageEncoder.PARAM_EFFECT, value);
 	}
 
     /**
      * @param Message message
      * @return MidiMessage
      */
-	setEffect(message) {
+	setEffectMessages(message) {
 		let effect = message.details.effect;
 		let value  = message.details.value;
 
-		return this.manupuleEffect(effect, ZoomGSeriesMessageEncoder.CHANGE_EFFECT, value);
+		return this.manipuleEffectMessages(effect, ZoomGSeriesMessageEncoder.CHANGE_EFFECT, value);
 	}
 
 	static SET_STATUS = 0;
@@ -100,16 +99,18 @@ export class ZoomGSeriesMessageEncoder implements MessageEncoder {
      *
      * @return MidiMessage
      */
-	manupuleEffect(effect, type, value) {
+	manipuleEffectMessages(effect, type, value) {
 		let value2 = (value/128)|0;
 		value = value % 128;
 
-		return this.customMessageFor([
+		let manupuleEffect = new MidiMessage(
 			0xF0,  0x52,   0x00,
 			0x5A,  0x31, effect,
 			type, value, value2,
 			0xF7
-		]);
+		);
+
+		return new MidiMessages().add(manupuleEffect);
 	}
 
 
@@ -117,87 +118,51 @@ export class ZoomGSeriesMessageEncoder implements MessageEncoder {
 	// SPECIFIC ZOOM
 	///////////////////////////////////////
 
-    /**
-     * @param Message message
-     * @return MidiMessage
-     */
-	requestCurrentPatchNumber(message) {
-		return this.customMessageFor([
+	requestCurrentPatchNumberMessages(message) {
+		let requestCurrentPatchNumber = new MidiMessage(
 			0xF0, 0x52, 0x00,
 			0x5A, 0x33, 0xF7
-		]);
+		);
+
+		return new MidiMessages().add(requestCurrentPatchNumber);
 	}
 
-    /**
-     * @param Message message
-     * @return MidiMessage
-     */
-	requestCurrentPatchDetails(message) {
-		return this.customMessageFor([
+	requestCurrentPatchDetailsMessages(message) {
+		let requestCurrentPatchDetails = new MidiMessage(
 			0xF0, 0x52, 0x00,
 			0x5A, 0x29, 0xF7
-		]);
+		);
+
+		return new MidiMessages().add(requestCurrentPatchDetails);
 	}
 
-    /**
-     * @param Message message
-     * @return MidiMessage
-     */
-	requestSpecificPatchDetails(message) {
+	requestSpecificPatchDetailsMessages(message) {
 		let patch = message.details.patch;
 
-		let CURRENT_PATCH = [
+		let requestSpecificPatchDetails = new MidiMessage(
 			0xF0,  0x52, 0x00,
 			0x5A,  0x09, 0x00,
 			0x00, patch, 0xF7
-		];
+		);
 
-		return this.customMessageFor(CURRENT_PATCH);
+		return new MidiMessages().add(requestSpecificPatchDetails);
 	}
 
-    /**
-     * @return MidiMessage
-     */
-	lissenMe() {
-		return this.customMessageFor([
+	lissenMeMessages() {
+		let lissenMe = new MidiMessage(
 			0xF0, 0x52, 0x00,
 			0x5A, 0x50, 0xF7
-		]);
+		);
+
+		return new MidiMessages().add(lissenMe);
 	}
 
-    /**
-     * @return MidiMessage
-     */
-	youCanTalk() {
-		return this.customMessageFor([
+	youCanTalkMessages() {
+		let youCanTalk = new MidiMessage(
 			0xF0, 0x52, 0x00,
 			0x5A, 0x16, 0xF7
-		]);
-	}
+		);
 
-    /**
-     * @param MidiMessage ... messages
-     * @return List<MidiMessage>
-     */
-	group(... messages) {
-		let mensagens = new Array();
-
-		for (let midiMessage of messages)
-			mensagens.push(midiMessage);
-
-		return mensagens;
-	}
-
-    /**
-     * @param byte[] message
-     *
-     * @return SysexMessage
-     */
-	customMessageFor(message) {
-		try {
-			return message;//new SysexMessage
-		} catch (e) {
-			throw new Error(e);
-		}
+		return new MidiMessages().add(youCanTalk);
 	}
 }

@@ -24,6 +24,6 @@ export class NullMultistomp extends Multistomp {
 	 */
 	//@Override
 	start() {
-		return Messages.Empty();
+		return new Messages();
 	}
 }

@@ -6,14 +6,14 @@ export class ZoomGSeriesMessages {
      * @return Messages
      */
 	static REQUEST_CURRENT_PATCH_NUMBER() {
-		return Messages.For(new Messages.Message(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER));
+		return new Messages().add(new Messages.Message(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER));
 	}
 
     /**
      * @return Messages
      */
 	static REQUEST_CURRENT_PATCH_DETAILS() {
-		return Messages.For(new Messages.Message(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS));
+		return new Messages().add(new Messages.Message(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS));
 	}
 
     /**
@@ -24,21 +24,21 @@ export class ZoomGSeriesMessages {
 		let details = new Messages.Details();
 		details.patch = idPatch;
 
-		return Messages.For(new Messages.Message(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS, details));
+		return new Messages().add(new Messages.Message(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS, details));
 	}
 
     /**
      * @return Messages
      */
 	static LISSEN_ME() {
-		return Messages.For(new Messages.Message(ZoomGSeriesCause.LISSEN_ME));
+		return new Messages().add(new Messages.Message(ZoomGSeriesCause.LISSEN_ME));
 	}
 
     /**
      * @return Messages
      */
 	static YOU_CAN_TALK() {
-		return Messages.For(new Messages.Message(ZoomGSeriesCause.YOU_CAN_TALK));
+		return new Messages().add(new Messages.Message(ZoomGSeriesCause.YOU_CAN_TALK));
 	}
 
     /**
@@ -52,6 +52,6 @@ export class ZoomGSeriesMessages {
 		details.effect = effectPos;
 		details.value  = newEffect;
 
-		return Messages.For(new Messages.Message(ZoomGSeriesCause.SET_EFFECT, details));
+		return new Messages().add(new Messages.Message(ZoomGSeriesCause.SET_EFFECT, details));
 	}
 }

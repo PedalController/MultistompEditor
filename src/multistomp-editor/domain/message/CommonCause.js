@@ -6,6 +6,7 @@ CommonCause.TO_PATCH ="TO_PATCH";
 CommonCause.GENERAL_VOLUME = "GENERAL_VOLUME";
 
 // Patch
+CommonCause.PATCH_NUMBER = "PATCH_NUMBER";
 CommonCause.PATCH_VOLUME = "PATCH_VOLUME";
 CommonCause.PATCH_NAME =  "PATCH_NAME";
 

@@ -25,4 +25,16 @@ class PedalGerador {
     knobsTemplateOf(pedalName) {
         return this.pedals.import.querySelector('template[data-name="'+pedalName+'"]');
     }
+
+    pedalsNames() {
+        let pedalsNames = [];
+        let pedals = this.pedals.import.querySelectorAll('template');
+
+        for (let i=0; i<pedals.length; i++) {
+            let pedal = pedals[i];
+            pedalsNames.push(pedal.getAttribute("data-name"));
+        }
+
+        return pedalsNames;
+    }
 }

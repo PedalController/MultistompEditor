@@ -1,98 +1,15 @@
-"use strict";
-
-export class Messages implements Iterable<Messages.Message> {
-
-    // List<Message>
-	messages = new Array();
-
-    /**
-     * @return Messages
-     */
-	static Empty() {
-		return new Messages();
-	}
-
-    /**
-     * @param Message ... messages
-     *
-     * @return Messages
-     */
-	static For(... messages) {
-		let returned = new Messages();
-
-		for (let message of messages)
-			returned.addMessage(message);
-
-		return returned;
-	}
-
-	constructor() {}
-
-    /**
-     * @param Cause cause
-     */
-	addCause(cause) {
-		this.addCause(cause, new Details());
-	}
-
-    /**
-     * @param Cause   cause
-     * @param Details details
-     */
-	addCauseDetails(cause, details) {
-		this.addMessage(new Message(cause, details));
-	}
-
-    /**
-     * @param Message message
-     */
-	addMessage(message) {
-		this.messages.push(message);
-	}
-
-    /**
-     * @param Messages messages
-     */
-	concatWith(messages) {
-		messages.forEach(message => this.addMessage(message));
-	}
-
-	/**
-	 * @return Iterator<Message>
-	 */
-	//@Override
-	//iterator() {
-	[Symbol.iterator]() {
-		return this.messages[Symbol.iterator]();
-	}
-
-	forEach(funcao) {
-		this.messages.forEach(funcao);
-	}
+export class Messages extends MessagesCollection {
 
     /**
      * @param Cause cause
      * @return Messages
      */
-	get(cause) {
+	getBy(cause) {
 		let returned = new Messages();
 
 		for (let message of this)
 			if (message.is(cause))
-				returned.addMessage(message);
-
-		return returned;
-	}
-
-    /**
-     * @return String
-     */
-	//@Override
-	toString() {
-		let returned = "";
-
-		for (let message of this.messages)
-			returned += message.toString();
+				returned.add(message);
 
 		return returned;
 	}
@@ -143,7 +60,7 @@ Messages.Message = class Message {
     }
 
     _MessageCause(cause) {
-        this._MessageCauseDetails(cause, new Details());
+        this._MessageCauseDetails(cause, new Messages.Details());
     }
 
     /**

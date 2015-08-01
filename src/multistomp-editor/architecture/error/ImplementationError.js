@@ -1,4 +1,4 @@
 "use strict"
 
-export class ImplemetationError extends Error {
+export class ImplemetationError extends ErrorClass {
 }

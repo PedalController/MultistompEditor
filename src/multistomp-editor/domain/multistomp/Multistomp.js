@@ -14,9 +14,9 @@ export class Multistomp implements OnChangeListenner<Patch> {
 	/*************************************************/
 
 	/**
-	 * @return {PedalType} [description]
+	 * @return {PedalType}
 	 */
-	getPedalType() {}
+	@abstract getPedalType() {}
 
 	/*************************************************/
 

@@ -14,13 +14,17 @@
 			"PedalGerador"
 		],
 
-
 		"multistomp-editor/architecture/error": [
+			"ErrorClass",
 			"ImplementationError",
 			"DeviceNotFoundError"
 		],
+		"multistomp-editor/architecture/annotation": [
+			"abstract"
+		],
 		"multistomp-editor/architecture/util": [
 			"BinarioUtil",
+			"MessagesCollection",
 			"MidiMessageTester",
 			"Optional"
 		],
@@ -28,19 +32,32 @@
 			"MultistompChanger",
 			"PedalCompany",
 			"PedalController",
-			"PedalControllerFactory"
+			"PedalGenerator",
+			"PedalLoader",
+			"PedalsFinder"
 		],
-		"multistomp-editor/connection": [
+		"multistomp-editor/comunication": [
+			"MidiMessage",
+			"MidiMessages",
+			"MidiSystem",
 			"MidiConnection"
 		],
-		"multistomp-editor/connection/codification": [
-			"MessageDecoderFactory",
-			"MessageEncoderFactory"
+		"multistomp-editor/comunication/analyzer": [
+			"MidiMessagesAnalyzer",
+			"PedalChanges"
 		],
-		"multistomp-editor/connection/transport": [
+		"multistomp-editor/comunication/codification": [
+			"MessageCodification",
+			"MessageCodificationFactory"
+		],
+		"multistomp-editor/comunication/transport": [
 			"MidiTransmition",
-			"MidiReader",
-			"MidiSender"
+			"AbstractMidiTransmition",
+			"MidiTransmitionReader",
+			"MidiTransmitionSender"
+		],
+		"multistomp-editor/comunication/utils": [
+			"MidiMessagesGenerator"
 		],
 		"multistomp-editor/domain": [
 			"PedalType"
@@ -61,6 +78,9 @@
 			"Details",
 			"MultistompCause"
 		],
+		"multistomp-editor/multistomp": [
+			"MultistompFactory"
+		],
 		"multistomp-editor/multistomp/simulator": [
 			"Log",
 			"MultistompSimulator"
@@ -80,9 +100,12 @@
 			"ZoomGSeriesMessages"
 		],
 		"multistomp-editor/multistomp/zoom/gseries/decoder": [
-			"AbstractZoomGSeriesPatchDecoder",
-			"ZoomGSeriesNameDecoder",
 			"ZoomGSeriesPatchDecoder",
+			"ZoomGSeriesPatchEffectsDecoder",
+			"ZoomGSeriesPatchEffectsStatusDecoder",
+			"ZoomGSeriesPatchNameDecoder",
+			"ZoomGSeriesPatchNumberDecoder",
+			"ZoomGSeriesPedalsDecoder",
 			"ZoomGSeriesSelectPatchDecoder"
 		]
 	}

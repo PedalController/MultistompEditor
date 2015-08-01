@@ -1,45 +1,30 @@
-"use strict";
+export class ZoomGSeriesPatchDecoder {
 
-export class ZoomGSeriesPatchDecoder extends AbstractZoomGSeriesPatchDecoder {
+	//@Override
+	isForThis(message) {
+		const MESSAGE_SIZE = 120;
 
-	static PATCH = 7;
+		let tester = new MidiMessageTester(message);
+
+		return tester.init().sizeIs(MESSAGE_SIZE).test();
+	}
 
 	/**
 	 * @param MidiMessage message
-	 * @param Multistomp  multistomp
 	 * @return Messages
 	 */
 	//@Override
-	decode(message, multistomp) {
-		let returned = super.decode(message, multistomp);
+	decode(message) {
+		let messages = new Messages();
 
-		const patch = message[ZoomGSeriesPatchDecoder.PATCH];
-		returned.forEach((messagem) => messagem.details.patch = patch);
+		let patchName    = new ZoomGSeriesPatchNameDecoder();
+		let patchNumber  = new ZoomGSeriesPatchNumberDecoder();
+		let effects      = new ZoomGSeriesPatchEffectsDecoder();
 
-		return returned;
-	}
+		messages.concatWith(patchName.decode(message))
+				.concatWith(patchNumber.decode(message))
+				.concatWith(effects.decode(message));
 
-	/**
-	 * @return int
-	 */
-	//@Override
-	size() {
-		return 120;
-	}
-
-	/**
-	 * @return int[]
-	 */
-	//@Override
-	patches() {
-		return [6+5, 19+5, 33+5, 47+5, 60+5, 74+5];
-	}
-
-	/**
-	 * @return Boolean
-	 */
-	//@Override
-	refressAll() {
-		return true;
+		return messages;
 	}
 }

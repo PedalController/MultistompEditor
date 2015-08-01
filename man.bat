@@ -5,4 +5,7 @@ D:
 cd %CD%
 start "" "http-server"
 
+cd auto
+start gulp Compile
+
 :: pause
