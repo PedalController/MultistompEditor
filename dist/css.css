@@ -1,0 +1,76 @@
+* {
+    box-sizing: border-box !important;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    background-color: #5A4E5B;
+
+    background:
+        radial-gradient(black 15%, transparent 16%) 0 0,
+        radial-gradient(black 15%, transparent 16%) 8px 8px,
+        radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
+        radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
+    background-color:#282828;
+    background-size:16px 16px;
+}
+
+#patchDetails {
+    border: 1px solid black;
+    background-color: rgba(255, 255, 255, .5);
+
+    margin: 5px;
+    height: calc(10vh - 10px);
+
+    font-size: 3.5em;
+}
+
+    #patchDetails #patchName {
+        font-family: 'Ubuntu', sans-serif;
+        width: 70vw;
+        text-align: center;
+        display: inline-block;
+
+        vertical-align: middle;
+    }
+
+    #patchDetails #patchNumber {
+        font-family: 'Orbitron', sans-serif;
+
+        vertical-align: middle;
+    }
+
+#pedalboard {
+    padding: 20px;
+    margin: 20px;
+    height: calc(90vh - 60px);
+    width: calc(100vw - 40px);
+
+    border: 1px solid black;
+    background-color: rgba(0, 0, 0, .3);
+
+    --pedal-body-color: #0000ff;
+    --pedal-body-color-dark: #0000bb;
+    --pedal-body-color-dark2: #0000dd;
+    --pedal-body-color-light: #5555ff;
+}
+#pedalboard ul {
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#pedalboard li {
+    padding: 0;
+    margin-left: 25px;
+}
+
+guitar-pedal {
+    height: 250px;
+    min-width: 160px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}

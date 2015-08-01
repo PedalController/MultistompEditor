@@ -1,0 +1,194 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<dom-module id="webaudio-knob">
+    <link rel="stylesheet" href="webaudio-knob.css" charset="utf-8">
+    <style is="custom-style">
+        :host {
+            display: inline-block;
+
+            min-width: 40px;
+            min-height: 40px;
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+    <template>
+        <div id="knob" on-mousedown="mousedown">
+            <span id="value-tip">{{tip}}</span>
+        </div>
+        <div class="knob-name">{{name}}</div>
+
+        <div id="content">
+            <content></content>
+        </div>
+    </template>
+<script>
+"use strict";
+
+class WebAudioKnobElement {
+    constructor() {
+        this.startPos = 0;
+        this.startVal = 0;
+        this.sprites = 24;
+        this.isSprite = true;
+        this.tip = null;
+        this.tips = [];
+
+        Polymer(WebAudioKnobElement.prototype);
+    }
+
+    get is() {
+        return "webaudio-knob";
+    }
+
+    get properties() {
+      return {
+        value: {
+            type:Number,
+            value: 0,
+            observer: 'valueChanged'
+        },
+        min: {
+            type:Number,
+            value: 0
+        },
+        max: {
+            type:Number,
+            value: 127
+        },
+        step:  {
+            type:Number,
+            value: 1
+        },
+        src: {
+            type:String,
+            value: 'dist/web-components/webaudio-knob/plastic_knob.png'
+        },
+        name: String,
+        listener: {
+            type:Object,
+            value:null
+        }
+      };
+    }
+
+    get valueTip() {
+        let tipsDefined = !(this.tips === undefined || this.tips.length == 0);
+
+        return tipsDefined ? this.tips[this.value] : this.value;
+    }
+
+    attached() {
+        this.$['knob'].style.backgroundImage = 'url('+this.src+')';
+        this.$['knob'].style.backgroundSize = this.offsetSize() + "px";
+
+        let sprite = new Image();
+
+        sprite.onload = function() {
+            this.calculeSprites(sprite);
+            this.update(this.value);
+
+            this.tips = this.findTips();
+            this.tip = this.valueTip;
+        }.bind(this);
+
+        sprite.src = this.src;
+    }
+
+    calculeSprites(sprite) {
+        this.isSprite = !(sprite.width == sprite.height);
+
+        if (this.isSprite)
+            this.sprites = sprite.height/sprite.width - 1;
+    }
+
+    findTips() {
+        let tipsElement = this.$.content.querySelectorAll("span[data-type=label]");
+
+        let tips = [];
+        for (let i=0; i<tipsElement.length; i++) {
+            let tip = tipsElement[i];
+            tips.push(tip.innerHTML);
+        }
+
+        return tips;
+    }
+
+    mousemove(e) {
+        var offset = (this.startPos - e.pageY) || 0;
+        var value = this.startVal + (e.shiftKey ? ~~(offset / 3) : this.step * offset);
+        this.update.bind(this)(value);
+    }
+
+    cancel(e) {
+        this.startPos = null;
+        this.$['value-tip'].style.opacity = 0;
+        window.removeEventListener('mousemove', this.boundMousemove, true);
+        window.removeEventListener('mouseup', this.boundCancel, true);
+    }
+
+    update(value) {
+        this.value = value < this.min ? this.min : value > this.max ? this.max : value;
+
+        let update = this.isSprite ? this.updateByImage : this.updateByRodate;
+        update.bind(this)(this.$.knob, this.value);
+
+        this.tip = this.valueTip;
+    }
+
+    updateByImage(knob, value) {
+        let valueY = '-' + ~~(this.sprites * this.calculePercentual(value)) * this.offsetSize() + 'px';
+
+        if('backgroundPositionY' in knob.style)
+            knob.style.backgroundPositionY = valueY;
+        else
+            knob.style.backgroundPosition="center " + valueY;
+    }
+
+    calculePercentual(value) {
+        let range = this.max - this.min;
+        return value / range;
+    }
+
+    updateByRodate(knob, value) {
+        let angle = this.calculeAngle(this.value);
+        knob.style.transform = 'rotate('+angle+'deg)';
+    }
+
+    calculeAngle(value) {
+        let angleMin = 30;
+        let angleRange = 360 - 2 * angleMin;
+
+        let range = this.max - this.min;
+        return angleMin + angleRange * this.value / range;
+    }
+
+    mousedown(e) {
+        this.$['value-tip'].style.opacity = 1;
+        this.startPos = e.pageY;
+        this.startVal = this.value;
+        this.boundMousemove = this.mousemove.bind(this);
+        this.boundCancel = this.cancel.bind(this);
+        window.addEventListener('mousemove', this.boundMousemove, true);
+        window.addEventListener('mouseup', this.boundCancel, true);
+        e.preventDefault();
+    }
+
+    offsetSize() {
+        let knob = this.$['knob'];
+        let tamanho = knob.clientWidth < knob.clientHeight ? knob.clientWidth : knob.clientHeight;
+
+        return tamanho;
+    }
+
+    valueChanged(newValue, oldValue) {
+        if (this.listener)
+            this.listenner.onKnobChange(this, this.value);
+
+        this.update(newValue);
+    }
+}
+
+new WebAudioKnobElement();
+</script>
+</dom-module>

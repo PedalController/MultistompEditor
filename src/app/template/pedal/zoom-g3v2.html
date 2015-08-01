@@ -1,0 +1,2379 @@
+<template data-name="Comp" data-category="Dynamics">
+	<webaudio-knob name="Sense" max="10" value="6"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="6"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="ATTCK" max="1" value="0">
+		<span data-type="labels">
+			<span data-type="label">Slow</span>
+			<span data-type="label">Fast</span>
+		</span>	</Ctrl>
+</template>
+<template data-name="RackComp" data-category="Dynamics">
+	<webaudio-knob name="THRSH" max="50" value="40"></webaudio-knob>
+	<webaudio-knob name="Ratio" max="9" value="5"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="ATTCK" max="9" value="6"></webaudio-knob>
+</template>
+<template data-name="M Comp" data-category="Dynamics">
+	<webaudio-knob name="THRSH" max="50" value="40"></webaudio-knob>
+	<webaudio-knob name="Ratio" max="9" value="3"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="ATTCK" max="9" value="0"></webaudio-knob>
+</template>
+<template data-name="SlowATTCK" data-category="Dynamics">
+	<webaudio-knob name="Time" max="49" value="20"></webaudio-knob>
+	<webaudio-knob name="Curve" max="10" value="10"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="ZNR" data-category="Dynamics">
+	<webaudio-knob name="THRSH" max="24" value="9"></webaudio-knob>
+	<webaudio-knob name="DETCT" max="1" value="1">
+		<span data-type="labels">
+			<span data-type="label">GtrIn</span>
+			<span data-type="label">EfxIn</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="NoiseGate" data-category="Dynamics">
+	<webaudio-knob name="THRSH" max="24" value="9"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="DirtyGate" data-category="Dynamics">
+	<webaudio-knob name="THRSH" max="24" value="9"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="GraphicEQ" data-category="Filter_EQ">
+	<webaudio-knob name="160Hz" max="24" value="12">
+		<span data-type="labels">
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="400Hz" max="24" value="12">
+		<span data-type="labels">
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="800Hz" max="24" value="12">
+		<span data-type="labels">
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="3.2kHz" max="24" value="12">
+		<span data-type="labels">
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="6.4kHz" max="24" value="12">
+		<span data-type="labels">
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="12kHz" max="24" value="12">
+		<span data-type="labels">
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="ParaEQ" data-category="Filter_EQ">
+	<webaudio-knob name="Freq1" max="30" value="8">
+		<span data-type="labels">
+			<span data-type="label">20Hz</span>
+			<span data-type="label">25Hz</span>
+			<span data-type="label">32Hz</span>
+			<span data-type="label">40Hz</span>
+			<span data-type="label">50Hz</span>
+			<span data-type="label">63Hz</span>
+			<span data-type="label">80Hz</span>
+			<span data-type="label">100Hz</span>
+			<span data-type="label">125Hz</span>
+			<span data-type="label">160Hz</span>
+			<span data-type="label">200Hz</span>
+			<span data-type="label">250Hz</span>
+			<span data-type="label">320Hz</span>
+			<span data-type="label">400Hz</span>
+			<span data-type="label">500Hz</span>
+			<span data-type="label">630Hz</span>
+			<span data-type="label">800Hz</span>
+			<span data-type="label">1.0kHz</span>
+			<span data-type="label">1.2kHz</span>
+			<span data-type="label">1.6kHz</span>
+			<span data-type="label">2.0kHz</span>
+			<span data-type="label">2.5kHz</span>
+			<span data-type="label">3.2kHz</span>
+			<span data-type="label">4.0kHz</span>
+			<span data-type="label">5.0kHz</span>
+			<span data-type="label">6.3kHz</span>
+			<span data-type="label">8.0kHz</span>
+			<span data-type="label">10kHz</span>
+			<span data-type="label">12kHz</span>
+			<span data-type="label">16kHz</span>
+			<span data-type="label">20kHz</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Q1" max="5" value="1">
+		<span data-type="labels">
+			<span data-type="label">0.5</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">4</span>
+			<span data-type="label">8</span>
+			<span data-type="label">16</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Gain1" max="24" value="12">
+		<span data-type="labels">
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Freq2" max="30" value="15">
+		<span data-type="labels">
+			<span data-type="label">20Hz</span>
+			<span data-type="label">25Hz</span>
+			<span data-type="label">32Hz</span>
+			<span data-type="label">40Hz</span>
+			<span data-type="label">50Hz</span>
+			<span data-type="label">63Hz</span>
+			<span data-type="label">80Hz</span>
+			<span data-type="label">100Hz</span>
+			<span data-type="label">125Hz</span>
+			<span data-type="label">160Hz</span>
+			<span data-type="label">200Hz</span>
+			<span data-type="label">250Hz</span>
+			<span data-type="label">320Hz</span>
+			<span data-type="label">400Hz</span>
+			<span data-type="label">500Hz</span>
+			<span data-type="label">630Hz</span>
+			<span data-type="label">800Hz</span>
+			<span data-type="label">1.0kHz</span>
+			<span data-type="label">1.2kHz</span>
+			<span data-type="label">1.6kHz</span>
+			<span data-type="label">2.0kHz</span>
+			<span data-type="label">2.5kHz</span>
+			<span data-type="label">3.2kHz</span>
+			<span data-type="label">4.0kHz</span>
+			<span data-type="label">5.0kHz</span>
+			<span data-type="label">6.3kHz</span>
+			<span data-type="label">8.0kHz</span>
+			<span data-type="label">10kHz</span>
+			<span data-type="label">12kHz</span>
+			<span data-type="label">16kHz</span>
+			<span data-type="label">20kHz</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Q2" max="5" value="1">
+		<span data-type="labels">
+			<span data-type="label">0.5</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">4</span>
+			<span data-type="label">8</span>
+			<span data-type="label">16</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Gain2" max="24" value="12">
+		<span data-type="labels">
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="CombFLTR" data-category="Filter_EQ">
+	<webaudio-knob name="Freq" max="49" value="24"></webaudio-knob>
+	<webaudio-knob name="Reso" max="20" value="15">
+		<span data-type="labels">
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="HiDMP" max="10" value="6"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="AutoWah" data-category="Filter_EQ">
+	<webaudio-knob name="Sense" max="19" value="17">
+		<span data-type="labels">
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Reso" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Resonance" data-category="Filter_EQ">
+	<webaudio-knob name="Sense" max="19" value="14">
+		<span data-type="labels">
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Reso" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Cry" data-category="Filter_EQ">
+	<webaudio-knob name="Range" max="9" value="6"></webaudio-knob>
+	<webaudio-knob name="Reso" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Sense" max="19" value="16">
+		<span data-type="labels">
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Bal" max="100" value="100"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="M-Filter" data-category="Filter_EQ">
+	<webaudio-knob name="Freq" max="100" value="56"></webaudio-knob>
+	<webaudio-knob name="Sense" max="10" value="5"></webaudio-knob>
+	<webaudio-knob name="Reso" max="10" value="7"></webaudio-knob>
+	<webaudio-knob name="Type" max="2" value="2">
+		<span data-type="labels">
+			<span data-type="label">HPF</span>
+			<span data-type="label">BPF</span>
+			<span data-type="label">LPF</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Chara" max="1" value="1">
+		<span data-type="labels">
+			<span data-type="label">2Pole</span>
+			<span data-type="label">4Pole</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="VLCTY" max="1" value="0">
+		<span data-type="labels">
+			<span data-type="label">Fast</span>
+			<span data-type="label">Slow</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Bal" max="100" value="100"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Step" data-category="Filter_EQ">
+	<webaudio-knob name="Depth" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Rate" max="78" value="25"></webaudio-knob>
+	<webaudio-knob name="Reso" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Shape" max="10" value="10"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="SeqFLTR" data-category="Filter_EQ">
+	<webaudio-knob name="Step" max="6" value="6"></webaudio-knob>
+	<webaudio-knob name="PTTRN" max="7" value="6"></webaudio-knob>
+	<webaudio-knob name="Speed" max="77" value="25"></webaudio-knob>
+	<webaudio-knob name="Shape" max="10" value="10"></webaudio-knob>
+	<webaudio-knob name="Reso" max="10" value="10"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="RndmFLTR" data-category="Filter_EQ">
+	<webaudio-knob name="Speed" max="77" value="34"></webaudio-knob>
+	<webaudio-knob name="Range" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Reso" max="10" value="6"></webaudio-knob>
+	<webaudio-knob name="Type" max="2" value="2">
+		<span data-type="labels">
+			<span data-type="label">HPF</span>
+			<span data-type="label">BPF</span>
+			<span data-type="label">LPF</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Chara" max="1" value="1">
+		<span data-type="labels">
+			<span data-type="label">2Pole</span>
+			<span data-type="label">4Pole</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Bal" max="100" value="90"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Booster" data-category="Stomp Modeling">
+	<webaudio-knob name="Gain" max="100" value="80"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="OverDrive" data-category="Stomp Modeling">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="T Scream" data-category="Stomp Modeling">
+	<webaudio-knob name="Gain" max="100" value="70"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Governor" data-category="Stomp Modeling">
+	<webaudio-knob name="Gain" max="100" value="80"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Dist+" data-category="Stomp Modeling">
+	<webaudio-knob name="Gain" max="100" value="80"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Dist 1" data-category="Stomp Modeling">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Squeak" data-category="Stomp Modeling">
+	<webaudio-knob name="Gain" max="100" value="40"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="FuzzSmile" data-category="Stomp Modeling">
+	<webaudio-knob name="Gain" max="100" value="70"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="GreatMuff" data-category="Stomp Modeling">
+	<webaudio-knob name="Gain" max="100" value="70"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="MetalWRLD" data-category="Stomp Modeling">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="HotBox" data-category="Stomp Modeling">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Z Clean" data-category="Original Amp">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Z MP1" data-category="Original Amp">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Z Bottom" data-category="Original Amp">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Z Dream" data-category="Original Amp">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Z Scream" data-category="Original Amp">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Z Neos" data-category="Original Amp">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Z Wild" data-category="Original Stomp">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Lead" data-category="Original Stomp">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="ExtremeDS" data-category="Original Stomp">
+	<webaudio-knob name="Gain" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Aco.Sim" data-category="Original Stomp">
+	<webaudio-knob name="Top" max="100" value="80"></webaudio-knob>
+	<webaudio-knob name="Body" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="FD COMBO" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="24"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="86"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="48"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="45"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="44"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="52"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="0">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="DELUXE-R" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="1">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="FD VIBRO" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="56"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="54"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="47"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="52"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="2">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="US BLUES" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="59"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="106"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="46"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="48"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="58"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="3">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="VX COMBO" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="31"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="44"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="49"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="53"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="4">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="VX JMI" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="5">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="BG CRUNCH" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="57"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="98"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="6">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="MATCH 30" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="28"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="46"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="46"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="45"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="53"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="7">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="CAR DRIVE" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="8">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="TW ROCK" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="53"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="51"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="9">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="TONE CITY" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="10">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="HW STACK" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="51"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="110"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="46"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="51"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="52"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="11">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="TANGERINE" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="69"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="95"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="52"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="45"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="12">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="B-BREAKER" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="13">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="MS CRUNCH" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="52"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="48"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="49"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="58"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="14">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="MS 1959" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="15">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="MS DRIVE" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="73"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="52"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="16">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="BGN DRIVE" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="17">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="BG DRIVE" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="41"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="98"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="44"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="51"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="18">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="DZ DRIVE" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="46"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="96"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="52"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="48"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="52"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="19">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="ALIEN" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="20">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="REVO-1" data-category="Amp Modeling">
+	<webaudio-knob name="Gain" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Tube" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Trebl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Middl" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Bass" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Prese" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="CAB" max="22" value="21">
+		<span data-type="labels">
+			<span data-type="label">FD COMBO 2x12</span>
+			<span data-type="label">DELUXE-R 1x12</span>
+			<span data-type="label">FD VIBRO 2x10</span>
+			<span data-type="label">US BLUES 4x10</span>
+			<span data-type="label">VX COMBO 2x12</span>
+			<span data-type="label">VX JMI 2x12</span>
+			<span data-type="label">BG CRUNCH 1x12</span>
+			<span data-type="label">MATCH 30 2x12</span>
+			<span data-type="label">CAR DRIVE 1x12</span>
+			<span data-type="label">TW ROCK 1x12</span>
+			<span data-type="label">TONE CITY 4x12</span>
+			<span data-type="label">HW STACK 4x12</span>
+			<span data-type="label">TANGERINE 4x12</span>
+			<span data-type="label">B-BREAKER 2x12</span>
+			<span data-type="label">MS CRUNCH 4x12</span>
+			<span data-type="label">MS 1959 4x12</span>
+			<span data-type="label">MS DRIVE 4x12</span>
+			<span data-type="label">BGN DRIVE 4x12</span>
+			<span data-type="label">BG DRIVE 4x12</span>
+			<span data-type="label">DZ DRIVE 4x12</span>
+			<span data-type="label">ALIEN 4x12</span>
+			<span data-type="label">REVO-1 4x12</span>
+			<span data-type="label">OFF</span>
+		</span>
+</template>
+<template data-name="Tremolo" data-category="Modulation">
+	<webaudio-knob name="Depth" max="100" value="80"></webaudio-knob>
+	<webaudio-knob name="Rate" max="78" value="33"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="130"></webaudio-knob>
+	<webaudio-knob name="Wave" max="29" value="21">
+		<span data-type="labels">
+			<span data-type="label">UP 0</span>
+			<span data-type="label">UP 1</span>
+			<span data-type="label">UP 2</span>
+			<span data-type="label">UP 3</span>
+			<span data-type="label">UP 4</span>
+			<span data-type="label">UP 5</span>
+			<span data-type="label">UP 6</span>
+			<span data-type="label">UP 7</span>
+			<span data-type="label">UP 8</span>
+			<span data-type="label">UP 9</span>
+			<span data-type="label">DWN 0</span>
+			<span data-type="label">DWN 1</span>
+			<span data-type="label">DWN 2</span>
+			<span data-type="label">DWN 3</span>
+			<span data-type="label">DWN 4</span>
+			<span data-type="label">DWN 5</span>
+			<span data-type="label">DWN 6</span>
+			<span data-type="label">DWN 7</span>
+			<span data-type="label">DWN 8</span>
+			<span data-type="label">DWN 9</span>
+			<span data-type="label">TRI 0</span>
+			<span data-type="label">TRI 1</span>
+			<span data-type="label">TRI 2</span>
+			<span data-type="label">TRI 3</span>
+			<span data-type="label">TRI 4</span>
+			<span data-type="label">TRI 5</span>
+			<span data-type="label">TRI 6</span>
+			<span data-type="label">TRI 7</span>
+			<span data-type="label">TRI 8</span>
+			<span data-type="label">TRI 9</span>
+		</span>
+</template>
+<template data-name="Slicer" data-category="Modulation">
+	<webaudio-knob name="PTTRN" max="19" value="0"></webaudio-knob>
+	<webaudio-knob name="Speed" max="77" value="24"></webaudio-knob>
+	<webaudio-knob name="Bal" max="100" value="100"></webaudio-knob>
+	<webaudio-knob name="THRSH" max="50" value="20"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="130"></webaudio-knob>
+</template>
+<template data-name="Phaser" data-category="Modulation">
+	<webaudio-knob name="Rate" max="77" value="11"></webaudio-knob>
+	<webaudio-knob name="Color" max="3" value="3">
+		<span data-type="labels">
+			<span data-type="label">4 STG</span>
+			<span data-type="label">8 STG</span>
+			<span data-type="label">inv 4</span>
+			<span data-type="label">inv 8</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="DuoPhase" data-category="Modulation">
+	<webaudio-knob name="RateA" max="77" value="46"></webaudio-knob>
+	<webaudio-knob name="RateB" max="51" value="5"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="ResoA" max="10" value="0"></webaudio-knob>
+	<webaudio-knob name="ResoB" max="10" value="6"></webaudio-knob>
+	<webaudio-knob name="Link" max="2" value="0">
+		<span data-type="labels">
+			<span data-type="label">Seri</span>
+			<span data-type="label">Para</span>
+			<span data-type="label">STR</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="DPT_A" max="99" value="36"></webaudio-knob>
+	<webaudio-knob name="DPT_B" max="99" value="62"></webaudio-knob>
+</template>
+<template data-name="WarpPhase" data-category="Modulation">
+	<webaudio-knob name="Speed" max="77" value="24"></webaudio-knob>
+	<webaudio-knob name="Reso" max="10" value="7"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="DRCTN" max="1" value="0">
+		<span data-type="labels">
+			<span data-type="label">Go</span>
+			<span data-type="label">Back</span>
+		</span>
+</template>
+<template data-name="Chorus" data-category="Modulation">
+	<webaudio-knob name="Depth" max="100" value="40"></webaudio-knob>
+	<webaudio-knob name="Rate" max="49" value="24"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="7"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Detune" data-category="Modulation">
+	<webaudio-knob name="Cent" max="50" value="35">
+		<span data-type="labels">
+			<span data-type="label">-25</span>
+			<span data-type="label">-24</span>
+			<span data-type="label">-23</span>
+			<span data-type="label">-22</span>
+			<span data-type="label">-21</span>
+			<span data-type="label">-20</span>
+			<span data-type="label">-19</span>
+			<span data-type="label">-18</span>
+			<span data-type="label">-17</span>
+			<span data-type="label">-16</span>
+			<span data-type="label">-15</span>
+			<span data-type="label">-14</span>
+			<span data-type="label">-13</span>
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+			<span data-type="label">13</span>
+			<span data-type="label">14</span>
+			<span data-type="label">15</span>
+			<span data-type="label">16</span>
+			<span data-type="label">17</span>
+			<span data-type="label">18</span>
+			<span data-type="label">19</span>
+			<span data-type="label">20</span>
+			<span data-type="label">21</span>
+			<span data-type="label">22</span>
+			<span data-type="label">23</span>
+			<span data-type="label">24</span>
+			<span data-type="label">25</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="PreD" max="50" value="0"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="52"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="VintageCE" data-category="Modulation">
+	<webaudio-knob name="Comp" max="9" value="2"></webaudio-knob>
+	<webaudio-knob name="Rate" max="49" value="24"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="StereoCho" data-category="Modulation">
+	<webaudio-knob name="Depth" max="100" value="80"></webaudio-knob>
+	<webaudio-knob name="Rate" max="49" value="29"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="7"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Ensemble" data-category="Modulation">
+	<webaudio-knob name="Depth" max="100" value="40"></webaudio-knob>
+	<webaudio-knob name="Rate" max="49" value="29"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="VinFLNGR" data-category="Modulation">
+	<webaudio-knob name="Depth" max="100" value="47"></webaudio-knob>
+	<webaudio-knob name="Rate" max="78" value="7"></webaudio-knob>
+	<webaudio-knob name="Reso" max="20" value="18">
+		<span data-type="labels">
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="PreD" max="50" value="4"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="65"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Flanger" data-category="Modulation">
+	<webaudio-knob name="Depth" max="100" value="47"></webaudio-knob>
+	<webaudio-knob name="Rate" max="78" value="7"></webaudio-knob>
+	<webaudio-knob name="Reso" max="20" value="18">
+		<span data-type="labels">
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="PreD" max="50" value="4"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="65"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="DynaFLNGR" data-category="Modulation">
+	<webaudio-knob name="Depth" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Rate" max="78" value="38"></webaudio-knob>
+	<webaudio-knob name="Sense" max="19" value="0">
+		<span data-type="labels">
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Reso" max="20" value="15">
+		<span data-type="labels">
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Vibrato" data-category="Modulation">
+	<webaudio-knob name="Depth" max="100" value="40"></webaudio-knob>
+	<webaudio-knob name="Rate" max="78" value="30"></webaudio-knob>
+	<webaudio-knob name="Bal" max="100" value="72"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="7"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="120"></webaudio-knob>
+</template>
+<template data-name="Octave" data-category="Modulation">
+	<webaudio-knob name="Oct1" max="100" value="80"></webaudio-knob>
+	<webaudio-knob name="Oct2" max="100" value="15"></webaudio-knob>
+	<webaudio-knob name="Dry" max="100" value="100"></webaudio-knob>
+	<webaudio-knob name="Chara" max="100" value="100"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="PitchSHFT" data-category="Modulation">
+	<webaudio-knob name="Shift" max="25" value="19">
+		<span data-type="labels">
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+			<span data-type="label">24</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="7"></webaudio-knob>
+	<webaudio-knob name="Bal" max="100" value="40"></webaudio-knob>
+	<webaudio-knob name="Fine" max="50" value="25">
+		<span data-type="labels">
+			<span data-type="label">-25</span>
+			<span data-type="label">-24</span>
+			<span data-type="label">-23</span>
+			<span data-type="label">-22</span>
+			<span data-type="label">-21</span>
+			<span data-type="label">-20</span>
+			<span data-type="label">-19</span>
+			<span data-type="label">-18</span>
+			<span data-type="label">-17</span>
+			<span data-type="label">-16</span>
+			<span data-type="label">-15</span>
+			<span data-type="label">-14</span>
+			<span data-type="label">-13</span>
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+			<span data-type="label">13</span>
+			<span data-type="label">14</span>
+			<span data-type="label">15</span>
+			<span data-type="label">16</span>
+			<span data-type="label">17</span>
+			<span data-type="label">18</span>
+			<span data-type="label">19</span>
+			<span data-type="label">20</span>
+			<span data-type="label">21</span>
+			<span data-type="label">22</span>
+			<span data-type="label">23</span>
+			<span data-type="label">24</span>
+			<span data-type="label">25</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="MonoPitch" data-category="Modulation">
+	<webaudio-knob name="Shift" max="25" value="0">
+		<span data-type="labels">
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+			<span data-type="label">24</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="6"></webaudio-knob>
+	<webaudio-knob name="Bal" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Fine" max="50" value="25">
+		<span data-type="labels">
+			<span data-type="label">-25</span>
+			<span data-type="label">-24</span>
+			<span data-type="label">-23</span>
+			<span data-type="label">-22</span>
+			<span data-type="label">-21</span>
+			<span data-type="label">-20</span>
+			<span data-type="label">-19</span>
+			<span data-type="label">-18</span>
+			<span data-type="label">-17</span>
+			<span data-type="label">-16</span>
+			<span data-type="label">-15</span>
+			<span data-type="label">-14</span>
+			<span data-type="label">-13</span>
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+			<span data-type="label">13</span>
+			<span data-type="label">14</span>
+			<span data-type="label">15</span>
+			<span data-type="label">16</span>
+			<span data-type="label">17</span>
+			<span data-type="label">18</span>
+			<span data-type="label">19</span>
+			<span data-type="label">20</span>
+			<span data-type="label">21</span>
+			<span data-type="label">22</span>
+			<span data-type="label">23</span>
+			<span data-type="label">24</span>
+			<span data-type="label">25</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="HPS" data-category="Modulation">
+	<webaudio-knob name="Scale" max="9" value="6">
+		<span data-type="labels">
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-m</span>
+			<span data-type="label">m</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Key" max="11" value="0">
+		<span data-type="labels">
+			<span data-type="label">C</span>
+			<span data-type="label">C#</span>
+			<span data-type="label">D</span>
+			<span data-type="label">D#</span>
+			<span data-type="label">E</span>
+			<span data-type="label">F</span>
+			<span data-type="label">F#</span>
+			<span data-type="label">G</span>
+			<span data-type="label">G#</span>
+			<span data-type="label">A</span>
+			<span data-type="label">A#</span>
+			<span data-type="label">B</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="70"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="6"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="BendCho" data-category="Modulation">
+	<webaudio-knob name="Depth" max="100" value="40"></webaudio-knob>
+	<webaudio-knob name="Time" max="50" value="50"></webaudio-knob>
+	<webaudio-knob name="Bal" max="100" value="100"></webaudio-knob>
+	<webaudio-knob name="Mode" max="1" value="0">
+		<span data-type="labels">
+			<span data-type="label">Up</span>
+			<span data-type="label">Down</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="RingMod" data-category="Modulation">
+	<webaudio-knob name="Freq" max="49" value="27"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="10"></webaudio-knob>
+	<webaudio-knob name="Bal" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="120"></webaudio-knob>
+</template>
+<template data-name="BitCrush" data-category="Modulation">
+	<webaudio-knob name="Bit" max="12" value="5"></webaudio-knob>
+	<webaudio-knob name="SMPL" max="50" value="2"></webaudio-knob>
+	<webaudio-knob name="Bal" max="100" value="90"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Bomber" data-category="SFX">
+	<webaudio-knob name="PTTRN" max="3" value="3">
+		<span data-type="labels">
+			<span data-type="label">HndGn</span>
+			<span data-type="label">Arm</span>
+			<span data-type="label">Bomb</span>
+			<span data-type="label">Thndr</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Decay" max="99" value="49"></webaudio-knob>
+	<webaudio-knob name="Bal" max="100" value="15"></webaudio-knob>
+	<webaudio-knob name="THRSH" max="50" value="40"></webaudio-knob>
+	<webaudio-knob name="Power" max="30" value="30"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="4"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="MonoSynth" data-category="SFX">
+	<webaudio-knob name="Synth" max="100" value="40"></webaudio-knob>
+	<webaudio-knob name="Dry" max="100" value="100"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Wave" max="3" value="2">
+		<span data-type="labels">
+			<span data-type="label">Sine</span>
+			<span data-type="label">Tri</span>
+			<span data-type="label">SawUp</span>
+			<span data-type="label">SawDn</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Speed" max="100" value="0"></webaudio-knob>
+</template>
+<template data-name="Z-Organ" data-category="SFX">
+	<webaudio-knob name="Upper" max="100" value="70"></webaudio-knob>
+	<webaudio-knob name="Lower" max="100" value="80"></webaudio-knob>
+	<webaudio-knob name="Dry" max="100" value="80"></webaudio-knob>
+	<webaudio-knob name="HPF" max="10" value="3"></webaudio-knob>
+	<webaudio-knob name="LPF" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Delay" data-category="Delay">
+	<webaudio-knob name="Time" max="2516" value="559"></webaudio-knob>
+	<webaudio-knob name="F.B" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="70"></webaudio-knob>
+	<webaudio-knob name="HiDMP" max="10" value="10"></webaudio-knob>
+	<webaudio-knob name="P-P" max="1" value="0">
+		<span data-type="labels">
+			<span data-type="label">MONO</span>
+			<span data-type="label">P-P</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="TapeEcho" data-category="Delay">
+	<webaudio-knob name="Time" max="2014" value="559"></webaudio-knob>
+	<webaudio-knob name="F.B" max="100" value="64"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="56"></webaudio-knob>
+	<webaudio-knob name="HiDMP" max="10" value="5"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="ModDelay" data-category="Delay">
+	<webaudio-knob name="Time" max="2014" value="499"></webaudio-knob>
+	<webaudio-knob name="F.B" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="62"></webaudio-knob>
+	<webaudio-knob name="Rate" max="49" value="20"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="AnalogDly" data-category="Delay">
+	<webaudio-knob name="Time" max="2516" value="359"></webaudio-knob>
+	<webaudio-knob name="F.B" max="100" value="28"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="40"></webaudio-knob>
+	<webaudio-knob name="HiDMP" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="P-P" max="1" value="0">
+		<span data-type="labels">
+			<span data-type="label">MONO</span>
+			<span data-type="label">P-P</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="ReverseDL" data-category="Delay">
+	<webaudio-knob name="Time" max="1251" value="990"></webaudio-knob>
+	<webaudio-knob name="F.B" max="100" value="20"></webaudio-knob>
+	<webaudio-knob name="Bal" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="HiDMP" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="MultiTapD" data-category="Delay">
+	<webaudio-knob name="Time" max="2516" value="2499"></webaudio-knob>
+	<webaudio-knob name="PTTRN" max="7" value="1"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="20"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="10"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="DynaDelay" data-category="Delay">
+	<webaudio-knob name="Time" max="2014" value="359"></webaudio-knob>
+	<webaudio-knob name="Sense" max="19" value="5">
+		<span data-type="labels">
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="80"></webaudio-knob>
+	<webaudio-knob name="F.B" max="100" value="30"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="FilterDly" data-category="Delay">
+	<webaudio-knob name="Time" max="2014" value="499"></webaudio-knob>
+	<webaudio-knob name="F.B" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="90"></webaudio-knob>
+	<webaudio-knob name="Rate" max="49" value="6"></webaudio-knob>
+	<webaudio-knob name="Depth" max="100" value="100"></webaudio-knob>
+	<webaudio-knob name="Reso" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="PitchDly" data-category="Delay">
+	<webaudio-knob name="Time" max="1999" value="89"></webaudio-knob>
+	<webaudio-knob name="Pitch" max="30" value="21">
+		<span data-type="labels">
+			<span data-type="label">-12</span>
+			<span data-type="label">-11</span>
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">-0.15</span>
+			<span data-type="label">-0.10</span>
+			<span data-type="label">-0.05</span>
+			<span data-type="label">0</span>
+			<span data-type="label">0.05</span>
+			<span data-type="label">0.10</span>
+			<span data-type="label">0.15</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+			<span data-type="label">11</span>
+			<span data-type="label">12</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="80"></webaudio-knob>
+	<webaudio-knob name="F.B" max="100" value="80"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="StereoDly" data-category="Delay">
+	<webaudio-knob name="TimeL" max="1010" value="164"></webaudio-knob>
+	<webaudio-knob name="TimeR" max="1010" value="504"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="100"></webaudio-knob>
+	<webaudio-knob name="LchFB" max="100" value="55"></webaudio-knob>
+	<webaudio-knob name="RchFB" max="100" value="37"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="LchLv" max="100" value="100"></webaudio-knob>
+	<webaudio-knob name="RchLv" max="100" value="100"></webaudio-knob>
+</template>
+<template data-name="PhaseDly" data-category="Delay">
+	<webaudio-knob name="Time" max="2014" value="499"></webaudio-knob>
+	<webaudio-knob name="F.B" max="100" value="28"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="57"></webaudio-knob>
+	<webaudio-knob name="Rate" max="49" value="49"></webaudio-knob>
+	<webaudio-knob name="Color" max="3" value="3">
+		<span data-type="labels">
+			<span data-type="label">4 STG</span>
+			<span data-type="label">8 STG</span>
+			<span data-type="label">inv 4</span>
+			<span data-type="label">inv 8</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="TrgHldDly" data-category="Delay">
+	<webaudio-knob name="Time" max="990" value="40"></webaudio-knob>
+	<webaudio-knob name="Duty" max="75" value="75"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="100"></webaudio-knob>
+	<webaudio-knob name="THRSH" max="30" value="20"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="HD Reverb" data-category="Reverb">
+	<webaudio-knob name="Decay" max="100" value="10"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="7"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="46"></webaudio-knob>
+	<webaudio-knob name="PreD" max="199" value="53"></webaudio-knob>
+	<webaudio-knob name="HPF" max="10" value="7"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Hall" data-category="Reverb">
+	<webaudio-knob name="Decay" max="29" value="9"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="5"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="46"></webaudio-knob>
+	<webaudio-knob name="PreD" max="99" value="48"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Room" data-category="Reverb">
+	<webaudio-knob name="Decay" max="29" value="9"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="PreD" max="99" value="4"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="TiledRoom" data-category="Reverb">
+	<webaudio-knob name="Decay" max="29" value="19"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="4"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="46"></webaudio-knob>
+	<webaudio-knob name="PreD" max="99" value="9"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Spring" data-category="Reverb">
+	<webaudio-knob name="Decay" max="29" value="19"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="PreD" max="99" value="0"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Arena" data-category="Reverb">
+	<webaudio-knob name="Decay" max="29" value="14"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="7"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="56"></webaudio-knob>
+	<webaudio-knob name="PreD" max="99" value="89"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="EarlyRef" data-category="Reverb">
+	<webaudio-knob name="Decay" max="29" value="14"></webaudio-knob>
+	<webaudio-knob name="Shape" max="20" value="20">
+		<span data-type="labels">
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">0</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="6"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Air" data-category="Reverb">
+	<webaudio-knob name="Size" max="99" value="19"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="8"></webaudio-knob>
+	<webaudio-knob name="Mix" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Ref" max="10" value="5"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Comp+OD" data-category="Combination Fx">
+	<webaudio-knob name="Comp" max="10" value="3"></webaudio-knob>
+	<webaudio-knob name="Gain" max="100" value="20"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Tone" max="100" value="50"></webaudio-knob>
+</template>
+<template data-name="Comp+Phsr" data-category="Combination Fx">
+	<webaudio-knob name="Comp" max="10" value="6"></webaudio-knob>
+	<webaudio-knob name="Rate" max="77" value="11"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Color" max="3" value="3">
+		<span data-type="labels">
+			<span data-type="label">4 STG</span>
+			<span data-type="label">8 STG</span>
+			<span data-type="label">inv 4</span>
+			<span data-type="label">inv 8</span>
+		</span>
+</template>
+<template data-name="Comp+AWah" data-category="Combination Fx">
+	<webaudio-knob name="Comp" max="10" value="6"></webaudio-knob>
+	<webaudio-knob name="Sense" max="19" value="17">
+		<span data-type="labels">
+			<span data-type="label">-10</span>
+			<span data-type="label">-9</span>
+			<span data-type="label">-8</span>
+			<span data-type="label">-7</span>
+			<span data-type="label">-6</span>
+			<span data-type="label">-5</span>
+			<span data-type="label">-4</span>
+			<span data-type="label">-3</span>
+			<span data-type="label">-2</span>
+			<span data-type="label">-1</span>
+			<span data-type="label">1</span>
+			<span data-type="label">2</span>
+			<span data-type="label">3</span>
+			<span data-type="label">4</span>
+			<span data-type="label">5</span>
+			<span data-type="label">6</span>
+			<span data-type="label">7</span>
+			<span data-type="label">8</span>
+			<span data-type="label">9</span>
+			<span data-type="label">10</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Reso" max="10" value="8"></webaudio-knob>
+</template>
+<template data-name="Cho+Dly" data-category="Combination Fx">
+	<webaudio-knob name="ChoRt" max="49" value="24"></webaudio-knob>
+	<webaudio-knob name="ChoMx" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="DlyTm" max="2014" value="164"></webaudio-knob>
+	<webaudio-knob name="DlyFB" max="100" value="40"></webaudio-knob>
+	<webaudio-knob name="DlyMx" max="100" value="24"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Dly+Rev" data-category="Combination Fx">
+	<webaudio-knob name="DlyTm" max="1512" value="164"></webaudio-knob>
+	<webaudio-knob name="DlyMx" max="100" value="24"></webaudio-knob>
+	<webaudio-knob name="RevMx" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="DlyFB" max="100" value="40"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="Cho+Rev" data-category="Combination Fx">
+	<webaudio-knob name="ChoRt" max="49" value="24"></webaudio-knob>
+	<webaudio-knob name="ChoMx" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="RevMx" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="FLG+VCho" data-category="Combination Fx">
+	<webaudio-knob name="FlgDp" max="100" value="40"></webaudio-knob>
+	<webaudio-knob name="FlgRt" max="78" value="5"></webaudio-knob>
+	<webaudio-knob name="ChoMx" max="100" value="50"></webaudio-knob>
+	<webaudio-knob name="ChoRt" max="49" value="24"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="PedalVx" data-category="Pedal Fx">
+	<webaudio-knob name="Freq" max="49" value="14"></webaudio-knob>
+	<webaudio-knob name="DryMX" max="100" value="0"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="PedalCry" data-category="Pedal Fx">
+	<webaudio-knob name="Freq" max="49" value="14"></webaudio-knob>
+	<webaudio-knob name="DryMX" max="100" value="0"></webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="TheVibe" data-category="Modulation">
+	<webaudio-knob name="Speed" max="50" value="25"></webaudio-knob>
+	<webaudio-knob name="Depth" max="100" value="60"></webaudio-knob>
+	<webaudio-knob name="Bias" max="100" value="48"></webaudio-knob>
+	<webaudio-knob name="Wave" max="100" value="24"></webaudio-knob>
+	<webaudio-knob name="Mode" max="1" value="1">
+		<span data-type="labels">
+			<span data-type="label">VIBRT</span>
+			<span data-type="label">CHORS</span>
+		</span>	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
+<template data-name="PDL Pitch" data-category="Pedal Fx">
+	<webaudio-knob name="Color" max="8" value="0"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="10"></webaudio-knob>
+	<webaudio-knob name="Bend" max="100" value="0"></webaudio-knob>
+	<webaudio-knob name="Mode" max="1" value="0">
+		<span data-type="labels">
+				<span data-type="label">Up</span>
+				<span data-type="label">Down</span>
+			</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+	<webaudio-knob name="Bend" max="100" value="0"></webaudio-knob>
+</template>
+<template data-name="PDL MnPit" data-category="Pedal Fx">
+	<webaudio-knob name="Color" max="8" value="0"></webaudio-knob>
+	<webaudio-knob name="Tone" max="10" value="10"></webaudio-knob>
+	<webaudio-knob name="Bend" max="100" value="0"></webaudio-knob>
+	<webaudio-knob name="Mode" max="1" value="0">
+		<span data-type="labels">
+			<span data-type="label">Up</span>
+			<span data-type="label">Down</span>
+		</span>
+    </webaudio-knob>
+	<webaudio-knob name="Level" max="150" value="100"></webaudio-knob>
+</template>
