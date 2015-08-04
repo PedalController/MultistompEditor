@@ -2,6 +2,8 @@
 
 class MidiMessagesAnalyzer {
     constructor(pedalController, changes) {
+        changes.init();
+
         this.pedal = pedalController;
         this.pedal.connection.analyzer = Optional.of(this);
 

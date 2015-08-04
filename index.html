@@ -10,7 +10,6 @@
 
         <link rel="import" href="dist/web-components/guitar-pedal/guitar-pedal.html">
 
-        <script src="node_modules/harmony-reflect/reflect.js" charset="utf-8"></script>
         <script src="dist/cache/babel.js" charset="utf-8"></script>
 
         <link rel="import" href="src/app/template/pedal/zoom-g3v2.html">
@@ -38,10 +37,20 @@
             window.addEventListener("load", function() {
                 setTimeout(
                     function() {
-                        router.irParaPaginaHome();
+                        //router.irParaPaginaHome();
 
                         var a = new PedalGerador();
                         document.querySelector("#pedalboard").appendChild(a.generateFor("FD COMBO"))
+
+                        console.log(`
+                            TO TEST:
+                            a = new AnalyzerLoader()
+                            a.load()
+                            // wait a small time
+                            b = a.analyze(ZoomGSeriesDetectPedalChanges)
+                            // wait a small time
+                            b.messages
+                        `)
                     },
                     1000
                 );

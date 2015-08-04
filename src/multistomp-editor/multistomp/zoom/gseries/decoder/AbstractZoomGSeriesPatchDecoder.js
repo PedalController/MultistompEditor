@@ -32,7 +32,7 @@ export class AbstractZoomGSeriesPatchDecoder implements MessageDecoder {
 			let patch = PATCHES[idPedal];
 
 			let actived = this.hasActived(message, patch);
-			messages.addMessage(this.generateMessageFor(idPedal, actived));
+			messages.add(this.generateMessageFor(idPedal, actived));
 		}
 
 		return messages;

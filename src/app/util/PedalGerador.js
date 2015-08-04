@@ -3,8 +3,6 @@
 class PedalGerador {
     constructor() {
         this.pedals = this.getContentOf("src/app/template/pedal/zoom-g3v2.html");
-
-        console.log(this.pedals);
     }
 
     getContentOf(href) {

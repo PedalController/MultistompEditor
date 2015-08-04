@@ -34,6 +34,12 @@ class HomeController {
     toogleEffectOf(index) {
         this.presenter.toogleEffectOf(index);
     }
+
+    setEffectParam(effect, param, value) {
+        console.log(effect, param, value);
+        let pedal = document.querySelector("#pedalboard > guitar-pedal");
+        pedal.knobs[param].value = value;
+    }
 }
 
 class PatchDetailsComponent {
@@ -51,6 +57,7 @@ class PatchDetailsComponent {
     setNumber(number) {
         if (number < 10)
             number = "0" + number;
+
         this.numberElement.innerHTML = number;
     }
 }
@@ -109,8 +116,6 @@ class HomePagina extends Pagina {
             return new Promise((resolve, reject) => resolve(pedals[0]));
         };
         let showPedalController = (pedalController) => {
-            console.log(pedalController);
-
             this.pedal = pedalController;
 
             this.pedal.on();
@@ -135,7 +140,9 @@ class HomePagina extends Pagina {
 
 		messages.getBy(CommonCause.TO_PATCH).forEach(message => this.setPatch(message));
 
-		messages.getBy(CommonCause.SET_PARAM).forEach(message => console.log(this.pedal));
+		messages.getBy(CommonCause.SET_PARAM).forEach(
+            message => this.controller.setEffectParam(message.details.effect, message.details.param, message.details.value)
+        );
 
         messages.getBy(CommonCause.PATCH_NAME).forEach(message => {this.controller.setPatchTitle(message.details.value)});
         messages.getBy(CommonCause.PATCH_NUMBER).forEach(message => {this.controller.setPatchNumber(message.details.value)});
@@ -281,8 +288,6 @@ class Includer {
 class PedalGerador {
     constructor() {
         this.pedals = this.getContentOf("src/app/template/pedal/zoom-g3v2.html");
-
-        console.log(this.pedals);
     }
 
     getContentOf(href) {
@@ -314,6 +319,35 @@ class PedalGerador {
         }
 
         return pedalsNames;
+    }
+}
+
+export class AnalyzerLoader {
+    connection;
+    analyzer;
+
+    load() {
+        let pedalLoader = new PedalLoader(this.selectFirstPedal.bind(this));
+
+        pedalLoader.load().then(this.initializate.bind(this));
+    }
+
+    selectFirstPedal(pedals) {
+        return new Promise((resolve, reject) => resolve(pedals[0]));
+    }
+
+    initializate(controller) {
+        this.controller = controller;
+        this.controller.on();
+    }
+
+    analyze(pedalChangesClass) {
+        let pedalChanges = new pedalChangesClass(this.controller);
+
+        let analyzer = new MidiMessagesAnalyzer(this.controller, pedalChanges);
+        analyzer.start();
+
+        return analyzer;
     }
 }
 
@@ -587,6 +621,8 @@ export class MultistompChanger {
      * @param Message message
      */
 	attempt(message) {
+		this.controller.disableNotificationChangesToDevice();
+
 		if (message.is(CommonCause.TO_PATCH))
 			this.controller.toPatch(message.details.patch);
 
@@ -612,6 +648,7 @@ export class MultistompChanger {
 		} else if (message.is(CommonCause.PATCH_NAME))
 			this.controller.multistomp().currentPatch().name = message.details.value;
 
+		this.controller.activeNotificationChangesToDevice();
 	}
 
 	isActiveEffectCurrentPatch(message) {
@@ -675,6 +712,8 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 	// MidiConnection
 	connection;
 
+	notifyChangesToDevice = true;
+
 	// List<OnMultistompListenner>
 	controllerListenners = new Array();
 	// List<OnMultistompListenner>
@@ -709,7 +748,6 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 		this.connection.start();
 
 		this.connection.send(this.pedal.start());
-		this.realChange = false; // FIXME - GAMBIARRA
 	}
 
 	/** Close connection and turn off the pedal
@@ -800,6 +838,15 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 	}
 
 	/*************************************************/
+	disableNotificationChangesToDevice() {
+		this.notifyChangesToDevice = false;
+	}
+
+	activeNotificationChangesToDevice() {
+		this.notifyChangesToDevice = true;
+	}
+	/*************************************************/
+
 	toString() {
 		let retorno = "State: ";
 		retorno += started ? "On" : "Off";
@@ -809,29 +856,15 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 	}
 
 	/** Multistomp Change */
-	/**
-	 * @param messages Messages
-	 */
 	onChange(messages) {
-		if (this.realChange) {
-			this.realChange = false;
+		if (!this.notifyChangesToDevice)
 			return;
-		}
 
 		this.connection.send(messages);
 		this.notify(this.controllerListenners, messages);
 	}
 
-	// boolean
-	realChange = false;
-
-	/** Real multistomp Change */
-	/**
-	 * @param messages Messages
-	 */
 	update(messages) {
-		this.realChange = true;
-
 		let changer = new MultistompChanger(this);
 		messages.forEach((message) => changer.attempt(message));
 
@@ -847,20 +880,13 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 			listenner.onChange(messages);
 	}
 
-	/**
-	 * @param SysexMessage
-	 */
 	//@Deprecated
 	sendMessage(sysexMessage) {
 		this.connection.send(sysexMessage);
 	}
 
-	/**
-	 * @param messages Messages
-	 */
 	send(messages) {
 		this.connection.send(messages);
-		this.realChange = true;
 	}
 }
 
@@ -1072,7 +1098,11 @@ export class MidiConnection implements MidiReaderListenner {
 	analyzer = Optional.empty();
 
 	constructor(pedalType, pedalDevices) {
-		this.transmition = new MidiTransmition(pedalDevices);
+		if (!pedalDevices.input.isPresent() ||
+            !pedalDevices.output.isPresent())
+            throw new DeviceNotFoundError("Midi device(s) not found for: " + pedalType + " ("+pedalType.getUSBName()+")");
+
+		this.transmition = new MidiTransmition(pedalDevices.input.get(), pedalDevices.output.get());
 		this.transmition.setOnDataListenerReceived(this);
 
 		this.codification = MessageCodificationFactory.For(pedalType);
@@ -1162,6 +1192,8 @@ MidiConnection.OnUpdateListenner = class OnUpdateListenner {
 
 class MidiMessagesAnalyzer {
     constructor(pedalController, changes) {
+        changes.init();
+
         this.pedal = pedalController;
         this.pedal.connection.analyzer = Optional.of(this);
 
@@ -1201,7 +1233,7 @@ export class PedalChanges {
         this.pedal = pedalController;
     }
 
-    init() {}
+    @abstract init() {}
 
     hasNext() {
         return this.currentChange < this.totalChanges;
@@ -1212,12 +1244,12 @@ export class PedalChanges {
         this.nextImp();
     }
 
-    nextImp() {}
+    @abstract nextImp() {}
 }
 
 export class ZoomGSeriesDetectPedalChanges extends PedalChanges {
     constructor(pedalController) {
-        super(pedalController, 25);
+        super(pedalController, 1);
     }
 
     init() {
@@ -1236,16 +1268,17 @@ export class ZoomGSeriesDetectPedalChanges extends PedalChanges {
         this.pedal.setEffectParam(idPedal, 1, 0);
         this.pedal.setEffectParam(idPedal, 2, 0);
         this.pedal.setEffectParam(idPedal, 3, 0);
-        this.pedal.setEffectParam(idPedal, 4, 0);
+        /*this.pedal.setEffectParam(idPedal, 4, 0);
         this.pedal.setEffectParam(idPedal, 5, 0);
         this.pedal.setEffectParam(idPedal, 6, 0);
         this.pedal.setEffectParam(idPedal, 7, 0);
-        this.pedal.setEffectParam(idPedal, 8, 0);
+        this.pedal.setEffectParam(idPedal, 8, 0);*/
     }
 
     nextImp() {
-        this.pedal.send(ZoomGSeriesMessages.SET_EFFECT(1, this.currentPatch));
-        this.zeroParams(0);
+        this.pedal.send(ZoomGSeriesMessages.SET_EFFECT(0, 0));
+        this.pedal.send(ZoomGSeriesMessages.REQUEST_CURRENT_PATCH_DETAILS())
+        //this.zeroParams(0);
     }
 }
 
@@ -1301,13 +1334,9 @@ export class MidiTransmition {
     /**
      * @param PedalType pedalType
      */
-	constructor(midiDevices) {
-        if (!midiDevices.input.isPresent() ||
-            !midiDevices.output.isPresent())
-            throw new DeviceNotFoundError("Midi device(s) not found for: " + pedalType + " ("+pedalType.getUSBName()+")");
-
-        this.sender = new MidiTransmitionSender(midiDevices.output.get());
-        this.reader = new MidiTransmitionReader(midiDevices.input.get());
+	constructor(inputDevice, outputDevice) {
+        this.sender = new MidiTransmitionSender(outputDevice);
+        this.reader = new MidiTransmitionReader(inputDevice);
 	}
 
     start() {
@@ -2725,9 +2754,9 @@ export class ZoomGSeriesMessageDecoder implements MessageDecoder {
 		this.decoders.push(new ZoomGSeriesPatchDecoder());
 
 		this.decoders.push(new ZoomGSeriesSelectPatchDecoder());
-		//this.decoders.push(new ZoomGSeriesActiveEffectDecoder());
-		//this.decoders.push(new ZoomGSeriesDisableEffectDecoder());
-		//this.decoders.push(new ZoomGSeriesSetValueParamDecoder());
+		this.decoders.push(new ZoomGSeriesActiveEffectDecoder());
+		this.decoders.push(new ZoomGSeriesDisableEffectDecoder());
+		this.decoders.push(new ZoomGSeriesSetValueParamDecoder());
 	}
 
 	/**
@@ -2991,6 +3020,151 @@ export class ZoomGSeriesMessages {
 	}
 }
 
+/**
+ * f0 52 00 5a 31   05    02   02   00 f7
+ * f0 52 00 5a 31 Pedal Param Value 00 f7
+ */
+export class AbstractZoomGSeriesEffectParamDecoder implements MessageDecoder {
+    static EFFECT = 5;
+    static PARAM = 6;
+    static VALUE = 7;
+
+	//@Override
+	isForThis(message) {
+		const begin = [0xf0, 0x52, 0x00, 0x5a];
+		const end   = [0xf7];
+
+		let tester = new MidiMessageTester(message);
+
+		return tester.init()
+					 .sizeIs(10)
+				     .startingWith(begin)
+				     .endingWith(end)
+				     .test();
+	}
+
+	//@Override
+	decode(message) {
+        const EFFECT = AbstractZoomGSeriesEffectParamDecoder.EFFECT;
+        const PARAM = AbstractZoomGSeriesEffectParamDecoder.PARAM;
+        const VALUE = AbstractZoomGSeriesEffectParamDecoder.VALUE;
+
+		let details = new Messages.Details();
+
+		details.effect = message[EFFECT];
+		details.param = message[PARAM] - 2;
+		details.value = 128 * message[VALUE + 1] + message[VALUE];
+
+		return this.decodeThe(details);
+	}
+
+    @abstract decodeThe(details) {}
+}
+
+"use strict";
+
+export class AbstractZoomGSeriesPatchDecoder implements MessageDecoder {
+
+	/**
+	 * @param MidiMessage message
+	 * @return {Boolean}
+	 */
+	//@Override
+	isForThis(message) {
+		let tester = new MidiMessageTester(message);
+
+		return tester.init().sizeIs(this.messageSize()).test();
+	}
+
+    /**
+     * @return {[type]}
+     */
+	@abstract messageSize() {}
+
+	/**
+	 * @param MidiMessage message
+	 * @param Multistomp multistomp
+	 * @return Messages
+	 */
+	//@Override
+	decode(message) {
+		const PATCHES = this.patches();
+
+		let messages = new Messages();
+		for (let idPedal = 0; idPedal < PATCHES.length; idPedal++) {
+			let patch = PATCHES[idPedal];
+
+			let actived = this.hasActived(message, patch);
+			messages.add(this.generateMessageFor(idPedal, actived));
+		}
+
+		return messages;
+	}
+
+    /**
+     * @return int[]
+     */
+	@abstract patches() {}
+
+    /**
+     * @param boolean actived
+     * @param int     effect
+     * @return Messages.Message
+     */
+	generateMessageFor(effect, actived) {
+		let cause = actived ? CommonCause.ACTIVE_EFFECT : CommonCause.DISABLE_EFFECT;
+
+		let details = new Messages.Details();
+		details.effect = effect;
+
+		return new Messages.Message(cause, details);
+	}
+
+    /**
+     * @param MidiMessage message
+     * @param int         position
+     * @return {Boolean}
+     */
+	hasActived(message, position) {
+		const LSB = 0x01; // Least Significant Bit
+
+		let actived = message[position] & LSB;
+
+		return actived == 1;
+	}
+}
+
+export class ZoomGSeriesActiveEffectDecoder extends AbstractZoomGSeriesPatchDecoder {
+
+	//@Override
+	messageSize() {
+		return 110;
+	}
+
+	//@Override
+	patches() {
+		return [6, 19, 33, 47, 60, 74];
+	}
+}
+
+export class ZoomGSeriesDisableEffectDecoder extends AbstractZoomGSeriesEffectParamDecoder {
+
+	//@Override
+	isForThis(message) {
+		return super.isForThis(message) &&
+			   message[AbstractZoomGSeriesEffectParamDecoder.PARAM] == 0;
+	}
+
+	//@Override
+	decodeThe(details) {
+		details.param = Messages.Details.NULL;
+		details.value = Messages.Details.NULL;
+
+        let disable = new Messages.Message(CommonCause.DISABLE_EFFECT, details);
+		return new Messages().add(disable);
+	}
+}
+
 export class ZoomGSeriesPatchDecoder {
 
 	//@Override
@@ -3251,5 +3425,20 @@ export class ZoomGSeriesSelectPatchDecoder implements MessageDecoder {
 		message.details.patch = midiMessage[ZoomGSeriesSelectPatchDecoder.PATCH];
 
 		return new Messages().add(message);
+	}
+}
+
+export class ZoomGSeriesSetValueParamDecoder extends AbstractZoomGSeriesEffectParamDecoder {
+
+	//@Override
+	isForThis(message) {
+		return super.isForThis(message) &&
+			   message[AbstractZoomGSeriesEffectParamDecoder.PARAM] >= 2;
+	}
+
+	//@Override
+	decodeThe(details) {
+        let setParam = new Messages.Message(CommonCause.SET_PARAM, details);
+		return new Messages().add(setParam);
 	}
 }

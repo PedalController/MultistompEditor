@@ -102,6 +102,10 @@ class GuitarPedalElement {
     addKnobs(knobs) {
         this.$.knobs.appendChild(knobs);
     }
+
+    get knobs() {
+        return this.$.knobs.children;
+    }
 }
 new GuitarPedalElement();
 

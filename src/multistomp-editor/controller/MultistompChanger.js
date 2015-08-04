@@ -18,6 +18,8 @@ export class MultistompChanger {
      * @param Message message
      */
 	attempt(message) {
+		this.controller.disableNotificationChangesToDevice();
+
 		if (message.is(CommonCause.TO_PATCH))
 			this.controller.toPatch(message.details.patch);
 
@@ -43,6 +45,7 @@ export class MultistompChanger {
 		} else if (message.is(CommonCause.PATCH_NAME))
 			this.controller.multistomp().currentPatch().name = message.details.value;
 
+		this.controller.activeNotificationChangesToDevice();
 	}
 
 	isActiveEffectCurrentPatch(message) {

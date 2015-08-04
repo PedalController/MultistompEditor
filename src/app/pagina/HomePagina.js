@@ -12,8 +12,6 @@ class HomePagina extends Pagina {
             return new Promise((resolve, reject) => resolve(pedals[0]));
         };
         let showPedalController = (pedalController) => {
-            console.log(pedalController);
-
             this.pedal = pedalController;
 
             this.pedal.on();
@@ -38,7 +36,9 @@ class HomePagina extends Pagina {
 
 		messages.getBy(CommonCause.TO_PATCH).forEach(message => this.setPatch(message));
 
-		messages.getBy(CommonCause.SET_PARAM).forEach(message => console.log(this.pedal));
+		messages.getBy(CommonCause.SET_PARAM).forEach(
+            message => this.controller.setEffectParam(message.details.effect, message.details.param, message.details.value)
+        );
 
         messages.getBy(CommonCause.PATCH_NAME).forEach(message => {this.controller.setPatchTitle(message.details.value)});
         messages.getBy(CommonCause.PATCH_NUMBER).forEach(message => {this.controller.setPatchNumber(message.details.value)});

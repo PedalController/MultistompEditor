@@ -14,6 +14,10 @@
 			"PedalGerador"
 		],
 
+		"multistomp-dev": [
+			"AnalyzerLoader"
+		],
+
 		"multistomp-editor/architecture/error": [
 			"ErrorClass",
 			"ImplementationError",
@@ -100,13 +104,19 @@
 			"ZoomGSeriesMessages"
 		],
 		"multistomp-editor/multistomp/zoom/gseries/decoder": [
+			"AbstractZoomGSeriesEffectParamDecoder",
+			"AbstractZoomGSeriesPatchDecoder",
+
+			"ZoomGSeriesActiveEffectDecoder",
+			"ZoomGSeriesDisableEffectDecoder",
 			"ZoomGSeriesPatchDecoder",
 			"ZoomGSeriesPatchEffectsDecoder",
 			"ZoomGSeriesPatchEffectsStatusDecoder",
 			"ZoomGSeriesPatchNameDecoder",
 			"ZoomGSeriesPatchNumberDecoder",
 			"ZoomGSeriesPedalsDecoder",
-			"ZoomGSeriesSelectPatchDecoder"
+			"ZoomGSeriesSelectPatchDecoder",
+			"ZoomGSeriesSetValueParamDecoder"
 		]
 	}
 }

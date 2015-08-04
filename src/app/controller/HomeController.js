@@ -34,6 +34,12 @@ class HomeController {
     toogleEffectOf(index) {
         this.presenter.toogleEffectOf(index);
     }
+
+    setEffectParam(effect, param, value) {
+        console.log(effect, param, value);
+        let pedal = document.querySelector("#pedalboard > guitar-pedal");
+        pedal.knobs[param].value = value;
+    }
 }
 
 class PatchDetailsComponent {

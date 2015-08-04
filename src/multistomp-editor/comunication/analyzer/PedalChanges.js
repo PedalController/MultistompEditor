@@ -9,7 +9,7 @@ export class PedalChanges {
         this.pedal = pedalController;
     }
 
-    init() {}
+    @abstract init() {}
 
     hasNext() {
         return this.currentChange < this.totalChanges;
@@ -20,12 +20,12 @@ export class PedalChanges {
         this.nextImp();
     }
 
-    nextImp() {}
+    @abstract nextImp() {}
 }
 
 export class ZoomGSeriesDetectPedalChanges extends PedalChanges {
     constructor(pedalController) {
-        super(pedalController, 25);
+        super(pedalController, 1);
     }
 
     init() {
@@ -44,15 +44,16 @@ export class ZoomGSeriesDetectPedalChanges extends PedalChanges {
         this.pedal.setEffectParam(idPedal, 1, 0);
         this.pedal.setEffectParam(idPedal, 2, 0);
         this.pedal.setEffectParam(idPedal, 3, 0);
-        this.pedal.setEffectParam(idPedal, 4, 0);
+        /*this.pedal.setEffectParam(idPedal, 4, 0);
         this.pedal.setEffectParam(idPedal, 5, 0);
         this.pedal.setEffectParam(idPedal, 6, 0);
         this.pedal.setEffectParam(idPedal, 7, 0);
-        this.pedal.setEffectParam(idPedal, 8, 0);
+        this.pedal.setEffectParam(idPedal, 8, 0);*/
     }
 
     nextImp() {
-        this.pedal.send(ZoomGSeriesMessages.SET_EFFECT(1, this.currentPatch));
-        this.zeroParams(0);
+        this.pedal.send(ZoomGSeriesMessages.SET_EFFECT(0, 0));
+        this.pedal.send(ZoomGSeriesMessages.REQUEST_CURRENT_PATCH_DETAILS())
+        //this.zeroParams(0);
     }
 }

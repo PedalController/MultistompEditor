@@ -11,13 +11,9 @@ export class MidiTransmition {
     /**
      * @param PedalType pedalType
      */
-	constructor(midiDevices) {
-        if (!midiDevices.input.isPresent() ||
-            !midiDevices.output.isPresent())
-            throw new DeviceNotFoundError("Midi device(s) not found for: " + pedalType + " ("+pedalType.getUSBName()+")");
-
-        this.sender = new MidiTransmitionSender(midiDevices.output.get());
-        this.reader = new MidiTransmitionReader(midiDevices.input.get());
+	constructor(inputDevice, outputDevice) {
+        this.sender = new MidiTransmitionSender(outputDevice);
+        this.reader = new MidiTransmitionReader(inputDevice);
 	}
 
     start() {

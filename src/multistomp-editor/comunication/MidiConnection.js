@@ -10,7 +10,11 @@ export class MidiConnection implements MidiReaderListenner {
 	analyzer = Optional.empty();
 
 	constructor(pedalType, pedalDevices) {
-		this.transmition = new MidiTransmition(pedalDevices);
+		if (!pedalDevices.input.isPresent() ||
+            !pedalDevices.output.isPresent())
+            throw new DeviceNotFoundError("Midi device(s) not found for: " + pedalType + " ("+pedalType.getUSBName()+")");
+
+		this.transmition = new MidiTransmition(pedalDevices.input.get(), pedalDevices.output.get());
 		this.transmition.setOnDataListenerReceived(this);
 
 		this.codification = MessageCodificationFactory.For(pedalType);

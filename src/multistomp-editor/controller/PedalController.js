@@ -9,6 +9,8 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 	// MidiConnection
 	connection;
 
+	notifyChangesToDevice = true;
+
 	// List<OnMultistompListenner>
 	controllerListenners = new Array();
 	// List<OnMultistompListenner>
@@ -43,7 +45,6 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 		this.connection.start();
 
 		this.connection.send(this.pedal.start());
-		this.realChange = false; // FIXME - GAMBIARRA
 	}
 
 	/** Close connection and turn off the pedal
@@ -134,6 +135,15 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 	}
 
 	/*************************************************/
+	disableNotificationChangesToDevice() {
+		this.notifyChangesToDevice = false;
+	}
+
+	activeNotificationChangesToDevice() {
+		this.notifyChangesToDevice = true;
+	}
+	/*************************************************/
+
 	toString() {
 		let retorno = "State: ";
 		retorno += started ? "On" : "Off";
@@ -143,29 +153,15 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 	}
 
 	/** Multistomp Change */
-	/**
-	 * @param messages Messages
-	 */
 	onChange(messages) {
-		if (this.realChange) {
-			this.realChange = false;
+		if (!this.notifyChangesToDevice)
 			return;
-		}
 
 		this.connection.send(messages);
 		this.notify(this.controllerListenners, messages);
 	}
 
-	// boolean
-	realChange = false;
-
-	/** Real multistomp Change */
-	/**
-	 * @param messages Messages
-	 */
 	update(messages) {
-		this.realChange = true;
-
 		let changer = new MultistompChanger(this);
 		messages.forEach((message) => changer.attempt(message));
 
@@ -181,19 +177,12 @@ export class PedalController implements OnMultistompListenner, OnUpdateListenner
 			listenner.onChange(messages);
 	}
 
-	/**
-	 * @param SysexMessage
-	 */
 	//@Deprecated
 	sendMessage(sysexMessage) {
 		this.connection.send(sysexMessage);
 	}
 
-	/**
-	 * @param messages Messages
-	 */
 	send(messages) {
 		this.connection.send(messages);
-		this.realChange = true;
 	}
 }

@@ -11,9 +11,9 @@ export class ZoomGSeriesMessageDecoder implements MessageDecoder {
 		this.decoders.push(new ZoomGSeriesPatchDecoder());
 
 		this.decoders.push(new ZoomGSeriesSelectPatchDecoder());
-		//this.decoders.push(new ZoomGSeriesActiveEffectDecoder());
-		//this.decoders.push(new ZoomGSeriesDisableEffectDecoder());
-		//this.decoders.push(new ZoomGSeriesSetValueParamDecoder());
+		this.decoders.push(new ZoomGSeriesActiveEffectDecoder());
+		this.decoders.push(new ZoomGSeriesDisableEffectDecoder());
+		this.decoders.push(new ZoomGSeriesSetValueParamDecoder());
 	}
 
 	/**
