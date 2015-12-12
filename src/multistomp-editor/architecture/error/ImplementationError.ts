@@ -1,0 +1,2 @@
+class ImplemetationError extends ErrorClass {
+}

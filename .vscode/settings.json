@@ -1,0 +1,17 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+	"files.exclude": {
+		"**/.git": true,
+		"**/*.js": { "when": "$(basename).ts"},
+		"**/*.js.map": true,
+		"bower_components/": true,
+		"node_modules/": true,
+		"package.json": true,
+		"tsd.json": true,
+		"README.md": true,
+		"bower.json": true,
+		".eslintrc" : true,
+		".gitignore" : true,
+		"typings/" : true
+	}
+}

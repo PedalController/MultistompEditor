@@ -1,4 +1,3 @@
-"use strict"
-
-export class DeviceNotFoundError extends ErrorClass {
+class DeviceNotFoundError extends ErrorClass {
 }
+//# sourceMappingURL=DeviceNotFoundError.js.map

@@ -39,18 +39,23 @@
                     function() {
                         //router.irParaPaginaHome();
 
+                        /*
                         var a = new PedalGerador();
                         document.querySelector("#pedalboard").appendChild(a.generateFor("FD COMBO"))
 
                         console.log(`
                             TO TEST:
-                            a = new AnalyzerLoader()
-                            a.load()
-                            // wait a small time
-                            b = a.analyze(ZoomGSeriesDetectPedalChanges)
-                            // wait a small time
-                            b.messages
-                        `)
+loader = new AnalyzerLoader()
+loader.load()
+// wait a small time
+analyzer = loader.analyze(ZoomGSeriesDetectPedalChanges);
+// wait a small time
+analyzer.stop();
+console.log(analyzer.report().toString())
+                        `);
+
+                        console.log("Implementar noh.defina() para mosrar todas as comparações ou algo assim ...")
+                        */
                     },
                     1000
                 );

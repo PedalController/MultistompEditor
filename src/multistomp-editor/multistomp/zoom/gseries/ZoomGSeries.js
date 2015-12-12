@@ -62,7 +62,7 @@ export class ZoomGSeries extends Multistomp {
 
 		for (let i=0; i < totalEffects; i++)
 			//effects.push(new ZoomGenericEffect(i, "Position "+i, SIZE_PARAMS));
-			effects.push(ZoomGSeriesEffect.COMP.generate());
+			effects.push(ZoomGSeriesEffect.MFILTER.generate());
 
 		return effects;
 	}

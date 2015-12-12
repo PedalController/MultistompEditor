@@ -14,10 +14,6 @@
 			"PedalGerador"
 		],
 
-		"multistomp-dev": [
-			"AnalyzerLoader"
-		],
-
 		"multistomp-editor/architecture/error": [
 			"ErrorClass",
 			"ImplementationError",
@@ -34,6 +30,7 @@
 		],
 		"multistomp-editor/controller": [
 			"MultistompChanger",
+			"MultistompLoader",
 			"PedalCompany",
 			"PedalController",
 			"PedalGenerator",
@@ -47,6 +44,9 @@
 			"MidiConnection"
 		],
 		"multistomp-editor/comunication/analyzer": [
+			"AnalyzerLoader",
+			"MessageAnalyzer",
+			"MessagesReport",
 			"MidiMessagesAnalyzer",
 			"PedalChanges"
 		],
@@ -96,6 +96,8 @@
 			"ZoomMultistompFactory"
 		],
 		"multistomp-editor/multistomp/zoom/gseries": [
+			"ZoomG3V2Pedals",
+
 			"ZoomGSeries",
 			"ZoomGSeriesCause",
 			"ZoomGSeriesEffect",
@@ -109,14 +111,23 @@
 
 			"ZoomGSeriesActiveEffectDecoder",
 			"ZoomGSeriesDisableEffectDecoder",
+
 			"ZoomGSeriesPatchDecoder",
 			"ZoomGSeriesPatchEffectsDecoder",
 			"ZoomGSeriesPatchEffectsStatusDecoder",
+			"ZoomGSeriesPatchEffectsTypeDecoder",
+			"ZoomGSeriesPatchEffectsParamsDecoder",
 			"ZoomGSeriesPatchNameDecoder",
 			"ZoomGSeriesPatchNumberDecoder",
+
 			"ZoomGSeriesPedalsDecoder",
 			"ZoomGSeriesSelectPatchDecoder",
 			"ZoomGSeriesSetValueParamDecoder"
+		],
+
+		"multistomp-dev": [
+			"ZoomGSeriesDetectPedalChanges",
+			"tudo"
 		]
 	}
 }

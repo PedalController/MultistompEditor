@@ -1,6 +1,4 @@
-"use strict";
-
-export ZoomG3V2Pedals = {
+let ZoomG3V2Pedals = {
   "0": "M-Filter",
   "1": "TheVibe",
   "2": "Z-Organ",

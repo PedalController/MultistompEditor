@@ -1,18 +1,13 @@
 "use strict";
-
 /**
  * Send the messages to real Multistomp
  */
-export class MidiTransmitionSender extends AbstractMidiTransmition {
-
-	constructor(device) {
-		super(device);
-	}
-
-    /**
-     * @param MidiMessage message
-     */
-	send(message) {
-		this.device.send(message);
-	}
+class MidiTransmitionSender extends AbstractMidiTransmition {
+    constructor(device) {
+        super(device);
+    }
+    send(message) {
+        this.device.send(message);
+    }
 }
+//# sourceMappingURL=MidiTransmitionSender.js.map

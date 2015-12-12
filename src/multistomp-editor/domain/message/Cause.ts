@@ -1,0 +1,3 @@
+interface Cause {
+	name : string;
+}

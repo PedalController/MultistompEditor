@@ -1,0 +1,2 @@
+class DeviceNotFoundError extends ErrorClass {
+}

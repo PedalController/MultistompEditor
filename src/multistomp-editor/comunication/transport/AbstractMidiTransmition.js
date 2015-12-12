@@ -1,19 +1,13 @@
 "use strict";
-
-export class AbstractMidiTransmition {
-
-    // MidiDevice
-    device;
-
-	constructor(device) {
+class AbstractMidiTransmition {
+    constructor(device) {
         this.device = device;
-	}
-
-	start() {
-		this.device.open();
-	}
-
-	stop() {
-    	this.device.close();
+    }
+    start() {
+        this.device.open();
+    }
+    stop() {
+        this.device.close();
     }
 }
+//# sourceMappingURL=AbstractMidiTransmition.js.map

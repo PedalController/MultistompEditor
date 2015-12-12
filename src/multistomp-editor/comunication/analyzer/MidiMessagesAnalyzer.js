@@ -2,22 +2,21 @@
 
 class MidiMessagesAnalyzer {
     constructor(pedalController, changes) {
-        changes.init();
-
         this.pedal = pedalController;
         this.pedal.connection.analyzer = Optional.of(this);
 
         this.started = false;
         this.messages = undefined;
         this.changes = changes;
+
+        this.changes.init();
     }
 
     start() {
         this.started = true;
         this.messages = [];
 
-        while (this.changes.hasNext())
-            this.changes.next();
+        this.changes.start();
     }
 
     stop() {
@@ -29,5 +28,9 @@ class MidiMessagesAnalyzer {
             return;
 
         this.messages.push(message);
+    }
+
+    report() {
+        return new MessagesReport(this, this.changes);
     }
 }

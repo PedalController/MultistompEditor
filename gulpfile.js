@@ -3,21 +3,21 @@
 /* --------------------------------------- */
 /* | Import                                */
 /* --------------------------------------- */
-var gulp = require('gulp');
+require('typescript-require');
+let gulp = require('gulp');
 
-var runSequence = require('run-sequence');
-
-var config = require('./config');
+let config = require('./config');
 
 /* --------------------------------------- */
 /* | Gulp imports                          */
 /* --------------------------------------- */
-var Compile = require(__dirname + '/gulp_modules/Compile.js');
-
+let Compile = require('./gulp_modules/Compile.ts').Compile;
+let CompileSimple = require('./gulp_modules/CompileSimple.ts').CompileSimple;
 
 /* --------------------------------------- */
 /* | INIT                                  */
 /* --------------------------------------- */
-Compile.constructor(config);
+//Compile.constructor(config);
+new CompileSimple(config);
 
 gulp.watch(config.includes, ['Compile']);

@@ -1,4 +1,3 @@
-"use strict"
-
-export class ImplemetationError extends ErrorClass {
+class ImplemetationError extends ErrorClass {
 }
+//# sourceMappingURL=ImplementationError.js.map

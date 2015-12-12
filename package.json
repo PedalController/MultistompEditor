@@ -1,10 +1,12 @@
 {
   "name": "MultistompEditor",
   "devDependencies": {
-    "gulp": "^3.9.0"
+    "gulp": "^3.9.0",
+    "gulp-sourcemaps": "^1.6.0"
   },
   "dependencies": {
     "core-decorators": "^0.1.5",
-    "harmony-reflect": "^1.4.0"
+    "harmony-reflect": "^1.4.0",
+    "typescript-require": "^0.2.9"
   }
 }

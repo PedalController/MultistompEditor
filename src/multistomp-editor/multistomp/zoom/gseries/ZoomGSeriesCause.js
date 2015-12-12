@@ -1,12 +1,9 @@
-"use strict";
-
-export class ZoomGSeriesCause extends CommonCause {}
-
-ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER   = "REQUEST_CURRENT_PATCH_NUMBER";
-ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS  = "REQUEST_CURRENT_PATCH_DETAILS";
+class ZoomGSeriesCause extends CommonCause {
+}
+ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER = "REQUEST_CURRENT_PATCH_NUMBER";
+ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS = "REQUEST_CURRENT_PATCH_DETAILS";
 ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS = "REQUEST_SPECIFIC_PATCH_DETAILS";
-
-ZoomGSeriesCause.LISSEN_ME    = "LISSEN_ME";
-ZoomGSeriesCause.YOU_CAN_TALK = "YOU_CAN_TALK"
-
+ZoomGSeriesCause.LISSEN_ME = "LISSEN_ME";
+ZoomGSeriesCause.YOU_CAN_TALK = "YOU_CAN_TALK";
 ZoomGSeriesCause.SET_EFFECT = "SET_EFFECT";
+//# sourceMappingURL=ZoomGSeriesCause.js.map
